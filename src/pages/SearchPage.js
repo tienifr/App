@@ -114,9 +114,9 @@ class SearchPage extends Component {
         }
 
         const optionListItems = SidebarUtils.getOrderedReportIDs();
-        sections[0].data = _.filter(sections[0].data, section => _.contains(optionListItems, section.reportID));
+        const modifiedSections = _.each(sections, sectionType => ({...sectionType, data: _.filter(sectionType.data, section => _.contains(optionListItems, section.reportID))}));
 
-        return sections;
+        return modifiedSections;
     }
 
     updateOptions() {
