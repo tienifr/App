@@ -326,7 +326,7 @@ class BasePaymentsPage extends React.Component {
                     isVisible={this.state.shouldShowAddPaymentMenu}
                     onClose={this.hideAddPaymentMenu}
                     anchorPosition={{
-                        bottom: this.state.anchorPositionBottom,
+                        ...(this.props.positionOfMethodMenu === CONST.MODAL.ANCHOR_ORIGIN_VERTICAL.BOTTOM ? {top: this.state.anchorPositionTop} : {bottom: this.state.anchorPositionBottom}),
                         right: this.state.anchorPositionRight - 10,
                     }}
                     onItemSelected={method => this.addPaymentMethodTypePressed(method)}
