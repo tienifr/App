@@ -7,6 +7,7 @@ import bankAccountPropTypes from '../../../../components/bankAccountPropTypes';
 import cardPropTypes from '../../../../components/cardPropTypes';
 import userWalletPropTypes from '../../../EnablePayments/userWalletPropTypes';
 import walletTermsPropTypes from '../../../EnablePayments/walletTermsPropTypes';
+import CONST from '../../../../CONST';
 
 const propTypes = {
     /** Wallet balance transfer props */
@@ -26,6 +27,8 @@ const propTypes = {
 
     /** Information about the network */
     network: networkPropTypes.isRequired,
+
+    positionOfMethodMenu: PropTypes.oneOf([CONST.MODAL.ANCHOR_ORIGIN_VERTICAL.TOP, CONST.MODAL.ANCHOR_ORIGIN_VERTICAL.BOTTOM]),
 
     /** List of bank accounts */
     bankAccountList: PropTypes.objectOf(bankAccountPropTypes),

@@ -1,8 +1,9 @@
 import React from 'react';
+import CONST from '../../../../CONST';
 import BasePaymentsPage from './BasePaymentsPage';
 
 const PaymentsPage = () => (
-    <BasePaymentsPage shouldListenForResize />
+    <BasePaymentsPage shouldListenForResize positionOfMethodMenu={CONST.MODAL.ANCHOR_ORIGIN_VERTICAL.BOTTOM} />
 );
 
 PaymentsPage.displayName = 'PaymentsPage';
