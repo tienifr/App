@@ -9,6 +9,7 @@ import CONST from '../../CONST';
 import styles from '../../styles/styles';
 import TextInput from '../../components/TextInput';
 import * as ComponentUtils from '../../libs/ComponentUtils';
+import didClickOutsideInputField from '../../libs/didClickOutsideInputField';
 
 const propTypes = {
     /** String to control the first password box in the form */
@@ -41,7 +42,14 @@ class NewPasswordForm extends React.Component {
         }
     }
 
-    onBlurNewPassword() {
+    onBlurNewPassword(event) {
+        // just trigger onBlur when clicking outside the input on web
+        const shouldShowPasswordError = didClickOutsideInputField(event);
+
+        if (!shouldShowPasswordError) {
+            return;
+        }
+
         if (this.state.passwordHintError) {
             return;
         }
@@ -76,8 +84,13 @@ class NewPasswordForm extends React.Component {
                     autoComplete={ComponentUtils.NEW_PASSWORD_AUTOCOMPLETE_TYPE}
                     textContentType="newPassword"
                     value={this.props.password}
-                    onChangeText={password => this.props.updatePassword(password)}
-                    onBlur={() => this.onBlurNewPassword()}
+                    onChangeText={(password) => {
+                        if (this.state.passwordHintError) {
+                            this.setState({passwordHintError: false});
+                        }
+                        this.props.updatePassword(password);
+                    }}
+                    onBlur={(event) => { this.onBlurNewPassword(event); }}
                     onSubmitEditing={() => this.props.onSubmitEditing()}
                 />
                 <Text
