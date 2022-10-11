@@ -103,6 +103,7 @@ export default function getTooltipStyles(
     const wrapperWidth = tooltipTextWidth && tooltipTextWidth < maxWidth
         ? tooltipTextWidth + (spacing.ph2.paddingHorizontal * 2) + 1
         : maxWidth;
+    const isShowMuiltipleLineTooltip = tooltipTextWidth && tooltipTextWidth > maxWidth;
 
     return {
         animationStyle: {
@@ -158,7 +159,7 @@ export default function getTooltipStyles(
             fontSize: tooltipFontSize,
             overflowWrap: 'normal',
             overflow: 'hidden',
-            whiteSpace: 'nowrap',
+            whiteSpace: isShowMuiltipleLineTooltip ? 'nowrap' : 'break-spaces',
         },
         pointerWrapperStyle: {
             position: 'fixed',
