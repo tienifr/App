@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import _ from 'underscore';
 import lodashGet from 'lodash/get';
 import React, {Component} from 'react';
@@ -39,7 +38,6 @@ class BaseOptionsSelector extends Component {
         this.relatedTarget = null;
 
         const allOptions = this.flattenSections();
-
         this.state = {
             allOptions,
             focusedIndex: this.setFocusedIndexInit(),
