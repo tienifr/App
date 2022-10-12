@@ -38,9 +38,10 @@ class BaseOptionsSelector extends Component {
         this.relatedTarget = null;
 
         const allOptions = this.flattenSections();
+        const focusedIndex = this.props.shouldDisplayHighlightFirst ? 0 : -1;
         this.state = {
             allOptions,
-            focusedIndex: this.props.shouldTextInputAppearBelowOptions ? allOptions.length : 0,
+            focusedIndex: this.props.shouldTextInputAppearBelowOptions ? allOptions.length : focusedIndex,
         };
     }
 

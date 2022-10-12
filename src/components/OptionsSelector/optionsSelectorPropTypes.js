@@ -89,6 +89,9 @@ const propTypes = {
 
     /** Whether to show options list */
     shouldShowOptions: PropTypes.bool,
+
+    /** Whether to show highlight in first selection */
+    shouldDisplayHighlightFirst: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -113,6 +116,7 @@ const defaultProps = {
     shouldShowOptions: true,
     disableArrowKeysActions: false,
     isDisabled: false,
+    shouldDisplayHighlightFirst: true,
 };
 
 export {propTypes, defaultProps};
