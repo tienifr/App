@@ -90,8 +90,8 @@ const propTypes = {
     /** Whether to show options list */
     shouldShowOptions: PropTypes.bool,
 
-    /** Whether to show highlight in first selection */
-    shouldDisplayHighlightFirst: PropTypes.bool,
+    /** Whether to auto show highlight in the selection list */
+    autoHighlightSelection: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -116,7 +116,7 @@ const defaultProps = {
     shouldShowOptions: true,
     disableArrowKeysActions: false,
     isDisabled: false,
-    shouldDisplayHighlightFirst: true,
+    autoHighlightSelection: true,
 };
 
 export {propTypes, defaultProps};

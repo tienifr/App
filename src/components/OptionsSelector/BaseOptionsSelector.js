@@ -39,10 +39,10 @@ class BaseOptionsSelector extends Component {
         this.relatedTarget = null;
 
         const allOptions = this.flattenSections();
-        const focusedIndex = this.props.shouldDisplayHighlightFirst ? 0 : -1;
+
         this.state = {
             allOptions,
-            focusedIndex: this.props.shouldTextInputAppearBelowOptions ? allOptions.length : focusedIndex,
+            focusedIndex: this.setFocusedIndexInit(),
         };
     }
 
@@ -101,6 +101,10 @@ class BaseOptionsSelector extends Component {
             return;
         }
 
+        if (this.state.focusedIndex === -1) {
+            return;
+        }
+
         const newOptions = this.flattenSections();
         const newFocusedIndex = this.props.selectedOptions.length;
         // eslint-disable-next-line react/no-did-update-set-state
@@ -120,10 +124,6 @@ class BaseOptionsSelector extends Component {
             }
             this.scrollToIndex(this.state.focusedIndex);
         });
-
-        if (this.textInput.value.length === 0) {
-            this.setState({focusedIndex: this.props.shouldDisplayHighlightFirst ? 0 : -1});
-        }
     }
 
     componentWillUnmount() {
@@ -134,6 +134,11 @@ class BaseOptionsSelector extends Component {
         if (this.unsubscribeCTRLEnter) {
             this.unsubscribeCTRLEnter();
         }
+    }
+
+    setFocusedIndexInit() {
+        const focusedIndex = this.props.autoHighlightSelection ? 0 : -1;
+        return this.props.shouldTextInputAppearBelowOptions ? this.allOptions.length : focusedIndex;
     }
 
     /**
