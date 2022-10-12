@@ -40,7 +40,7 @@ class BaseOptionsSelector extends Component {
         const allOptions = this.flattenSections();
         this.state = {
             allOptions,
-            focusedIndex: this.setFocusedIndexInit(),
+            focusedIndex: this.initFocusedIndex(),
         };
     }
 
@@ -134,9 +134,10 @@ class BaseOptionsSelector extends Component {
         }
     }
 
-    setFocusedIndexInit() {
-        const focusedIndex = this.props.autoHighlightSelection ? 0 : -1;
-        return this.props.shouldTextInputAppearBelowOptions ? this.allOptions.length : focusedIndex;
+    initFocusedIndex() {
+        if (this.props.shouldTextInputAppearBelowOptions) { return this.allOptions.length; }
+        if (this.props.autoHighlightSelection) { return 0; }
+        return -1;
     }
 
     /**
