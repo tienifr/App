@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import _ from 'underscore';
 import lodashGet from 'lodash/get';
 import React, {Component} from 'react';
@@ -119,6 +120,10 @@ class BaseOptionsSelector extends Component {
             }
             this.scrollToIndex(this.state.focusedIndex);
         });
+
+        if (this.textInput.value.length === 0) {
+            this.setState({focusedIndex: this.props.shouldDisplayHighlightFirst ? 0 : -1});
+        }
     }
 
     componentWillUnmount() {
