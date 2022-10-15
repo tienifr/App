@@ -121,6 +121,9 @@ class ReportActionsView extends React.Component {
         }
 
         if (lodashGet(nextProps.network, 'isOffline') !== lodashGet(this.props.network, 'isOffline')) {
+            if (!lodashGet(nextProps.network, 'isOffline') && this.props.report.isLoadingMoreReportActions) {
+                Report.resetLoadMoreReportActions(this.props.report.reportID);
+            }
             return true;
         }
 
@@ -270,7 +273,6 @@ class ReportActionsView extends React.Component {
             .pluck('sequenceNumber')
             .min()
             .value();
-
         if (minSequenceNumber === 0) {
             return;
         }

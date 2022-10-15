@@ -723,6 +723,9 @@ function openReport(reportID) {
             }],
         });
 }
+function resetLoadMoreReportActions(reportID) {
+    Onyx.merge(`${ONYXKEYS.COLLECTION.REPORT}${reportID}`, {isLoadingMoreReportActions: false});
+}
 
 /**
  * Get the latest report history without marking the report as read.
@@ -1488,6 +1491,7 @@ export {
     markCommentAsUnread,
     readNewestAction,
     readOldestAction,
+    resetLoadMoreReportActions,
     openReport,
     openPaymentDetailsPage,
     updatePolicyRoomName,
