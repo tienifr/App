@@ -268,7 +268,6 @@ class ReportActionsView extends React.Component {
         if (this.props.report.isLoadingMoreReportActions) {
             return;
         }
-
         const minSequenceNumber = _.chain(this.props.reportActions)
             .pluck('sequenceNumber')
             .min()
