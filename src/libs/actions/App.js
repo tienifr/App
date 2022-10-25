@@ -1,5 +1,5 @@
 import moment from 'moment-timezone';
-import {AppState} from 'react-native';
+import { AppState } from 'react-native';
 import Onyx from 'react-native-onyx';
 import lodashGet from 'lodash/get';
 import Str from 'expensify-common/lib/str';
@@ -64,7 +64,7 @@ Onyx.connect({
     callback: (policies) => {
         const policiesExcludingWorkspacesCreatedOffline = _.reject(policies,
             policy => lodashGet(policy, 'pendingAction', null) === CONST.RED_BRICK_ROAD_PENDING_ACTION.ADD
-            && lodashGet(policy, 'type', null) === CONST.POLICY.TYPE.FREE);
+                && lodashGet(policy, 'type', null) === CONST.POLICY.TYPE.FREE);
         policyIDListExcludingWorkspacesCreatedOffline = _.compact(_.pluck(policiesExcludingWorkspacesCreatedOffline, 'id'));
     },
 });
@@ -90,7 +90,7 @@ function setLocale(locale) {
 
     API.write('UpdatePreferredLocale', {
         value: locale,
-    }, {optimisticData});
+    }, { optimisticData });
 }
 
 function setSidebarLoaded() {
@@ -116,7 +116,7 @@ AppState.addEventListener('change', (nextAppState) => {
  * Fetches data needed for app initialization
  */
 function openApp() {
-    API.read('OpenApp', {policyIDList}, {
+    API.read('OpenApp', { policyIDList }, {
         optimisticData: [{
             onyxMethod: CONST.ONYX.METHOD.MERGE,
             key: ONYXKEYS.IS_LOADING_REPORT_DATA,
@@ -139,7 +139,7 @@ function openApp() {
  * Refreshes data when the app reconnects
  */
 function reconnectApp() {
-    API.read('ReconnectApp', {policyIDListExcludingWorkspacesCreatedOffline}, {
+    API.write('ReconnectApp', { policyIDListExcludingWorkspacesCreatedOffline }, {
         optimisticData: [{
             onyxMethod: CONST.ONYX.METHOD.MERGE,
             key: ONYXKEYS.IS_LOADING_REPORT_DATA,
@@ -194,8 +194,8 @@ function setUpPoliciesAndNavigate(session) {
     const makeMeAdmin = url.searchParams.get('makeMeAdmin');
 
     const shouldCreateFreePolicy = !isLoggingInAsNewUser
-                        && Str.startsWith(url.pathname, Str.normalizeUrl(ROUTES.TRANSITION_FROM_OLD_DOT))
-                        && exitTo === ROUTES.WORKSPACE_NEW;
+        && Str.startsWith(url.pathname, Str.normalizeUrl(ROUTES.TRANSITION_FROM_OLD_DOT))
+        && exitTo === ROUTES.WORKSPACE_NEW;
     if (shouldCreateFreePolicy) {
         Policy.createWorkspace(ownerEmail, makeMeAdmin);
         return;
