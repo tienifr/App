@@ -5,7 +5,6 @@ import Text from '../../components/Text';
 import withLocalize, {
     withLocalizePropTypes,
 } from '../../components/withLocalize';
-import CONST from '../../CONST';
 import styles from '../../styles/styles';
 import TextInput from '../../components/TextInput';
 import * as ComponentUtils from '../../libs/ComponentUtils';
@@ -17,55 +16,16 @@ const propTypes = {
     /** Function to update the first password box in the form */
     updatePassword: PropTypes.func.isRequired,
 
-    /** Callback function called with boolean value for if the password form is valid  */
-    updateIsFormValid: PropTypes.func.isRequired,
-
     /** Callback function for when form is submitted  */
     onSubmitEditing: PropTypes.func.isRequired,
+
+    /** Boolean to show the error */
+    shouldShowPasswordError: PropTypes.bool.isRequired,
+
     ...withLocalizePropTypes,
 };
 
-class NewPasswordForm extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            passwordHintError: false,
-        };
-    }
-
-    componentDidUpdate(prevProps) {
-        const passwordChanged = (this.props.password !== prevProps.password);
-        if (passwordChanged) {
-            this.props.updateIsFormValid(this.isValidForm());
-        }
-    }
-
-    onBlurNewPassword() {
-        if (this.state.passwordHintError) {
-            return;
-        }
-        if (this.props.password && !this.isValidPassword()) {
-            this.setState({passwordHintError: true});
-        }
-    }
-
-    isValidPassword() {
-        return this.props.password.match(CONST.PASSWORD_COMPLEXITY_REGEX_STRING);
-    }
-
-    /**
-     * checks if the password invalid
-     * @returns {Boolean}
-    */
-    isInvalidPassword() {
-        return this.state.passwordHintError && this.props.password && !this.isValidPassword();
-    }
-
-    isValidForm() {
-        return this.isValidPassword();
-    }
-
+class NewPasswordForm extends React.PureComponent {
     render() {
         return (
             <View style={styles.mb6}>
@@ -77,14 +37,13 @@ class NewPasswordForm extends React.Component {
                     textContentType="newPassword"
                     value={this.props.password}
                     onChangeText={password => this.props.updatePassword(password)}
-                    onBlur={() => this.onBlurNewPassword()}
                     onSubmitEditing={() => this.props.onSubmitEditing()}
                 />
                 <Text
                     style={[
                         styles.formHelp,
                         styles.mt1,
-                        this.isInvalidPassword() && styles.formError,
+                        this.props.shouldShowPasswordError && styles.formError,
                     ]}
                 >
                     {this.props.translate('setPasswordPage.newPasswordPrompt')}

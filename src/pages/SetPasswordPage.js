@@ -21,6 +21,7 @@ import NewPasswordForm from './settings/NewPasswordForm';
 import FormAlertWithSubmitButton from '../components/FormAlertWithSubmitButton';
 import * as ErrorUtils from '../libs/ErrorUtils';
 import OfflineIndicator from '../components/OfflineIndicator';
+import CONST from '../CONST';
 
 const propTypes = {
     /* Onyx Props */
@@ -73,7 +74,7 @@ class SetPasswordPage extends Component {
 
         this.state = {
             password: '',
-            isFormValid: false,
+            shouldShowPasswordError: false,
         };
     }
 
@@ -82,12 +83,17 @@ class SetPasswordPage extends Component {
     }
 
     validateAndSubmitForm() {
-        if (!this.state.isFormValid) {
+        if (!this.isValidPassword()) {
+            this.setState({shouldShowPasswordError: true});
             return;
         }
         const accountID = lodashGet(this.props.route.params, 'accountID', '');
         const validateCode = lodashGet(this.props.route.params, 'validateCode', '');
         Session.updatePasswordAndSignin(accountID, validateCode, this.state.password);
+    }
+
+    isValidPassword() {
+        return this.state.password.match(CONST.PASSWORD_COMPLEXITY_REGEX_STRING);
     }
 
     render() {
@@ -104,8 +110,13 @@ class SetPasswordPage extends Component {
                         <NewPasswordForm
                             onSubmitEditing={() => {}}
                             password={this.state.password}
-                            updatePassword={password => this.setState({password})}
-                            updateIsFormValid={isValid => this.setState({isFormValid: isValid})}
+                            updatePassword={(password) => {
+                                if (this.state.shouldShowPasswordError) {
+                                    this.setState({shouldShowPasswordError: false});
+                                }
+                                this.setState({password});
+                            }}
+                            shouldShowPasswordError={this.state.shouldShowPasswordError}
                         />
                     </View>
                     <View>
@@ -116,7 +127,6 @@ class SetPasswordPage extends Component {
                             containerStyles={[styles.mb2, styles.mh0]}
                             message={error}
                             isAlertVisible={!_.isEmpty(error)}
-                            isDisabled={!this.state.isFormValid}
                         />
                     </View>
                     <OfflineIndicator containerStyles={[styles.mv1]} />
