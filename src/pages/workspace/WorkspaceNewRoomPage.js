@@ -8,18 +8,18 @@ import withLocalize, {withLocalizePropTypes} from '../../components/withLocalize
 import compose from '../../libs/compose';
 import HeaderWithCloseButton from '../../components/HeaderWithCloseButton';
 import Navigation from '../../libs/Navigation/Navigation';
-import ScreenWrapper from '../../components/ScreenWrapper';
 import styles from '../../styles/styles';
 import RoomNameInput from '../../components/RoomNameInput';
 import Picker from '../../components/Picker';
 import ONYXKEYS from '../../ONYXKEYS';
 import CONST from '../../CONST';
 import Text from '../../components/Text';
-import Button from '../../components/Button';
-import FixedFooter from '../../components/FixedFooter';
 import Permissions from '../../libs/Permissions';
 import Log from '../../libs/Log';
 import * as ValidationUtils from '../../libs/ValidationUtils';
+import Form from '../../components/Form';
+import TestClass from '../../components/TestClass';
+import TestFunctional from '../../components/TestFunctional';
 
 const propTypes = {
     /** All reports shared with the user */
@@ -50,68 +50,51 @@ class WorkspaceNewRoomPage extends React.Component {
         this.state = {
             roomName: '',
             policyID: '',
-            visibility: CONST.REPORT.VISIBILITY.RESTRICTED,
+            visibilityDescription: this.props.translate('newRoomPage.restrictedDescription'),
             errors: {},
-            workspaceOptions: [],
         };
 
-        this.validateAndAddPolicyReport = this.validateAndAddPolicyReport.bind(this);
-        this.focusRoomNameInput = this.focusRoomNameInput.bind(this);
+        this.validate = this.validate.bind(this);
+        this.submit = this.submit.bind(this);
+        this.updateVisibilityDescription = this.updateVisibilityDescription.bind(this);
     }
 
-    componentDidMount() {
-        // Workspaces are policies with type === 'free'
-        const workspaces = _.filter(this.props.policies, policy => policy && policy.type === CONST.POLICY.TYPE.FREE);
-        this.setState({workspaceOptions: _.map(workspaces, policy => ({label: policy.name, key: policy.id, value: policy.id}))});
+    updateVisibilityDescription(visibility) {
+        const visibilityDescription = this.props.translate(`newRoomPage.${visibility}Description`);
+        this.setState({visibilityDescription});
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.policies.length === prevProps.policies.length) {
-            return;
-        }
-
-        // Workspaces are policies with type === 'free'
-        const workspaces = _.filter(this.props.policies, policy => policy && policy.type === CONST.POLICY.TYPE.FREE);
-
-        // eslint-disable-next-line react/no-did-update-set-state
-        this.setState({workspaceOptions: _.map(workspaces, policy => ({label: policy.name, key: policy.id, value: policy.id}))});
-    }
-
-    validateAndAddPolicyReport() {
-        if (!this.validate()) {
-            return;
-        }
-        const policy = this.props.policies[`${ONYXKEYS.COLLECTION.POLICY}${this.state.policyID}`];
-        Report.addPolicyReport(policy, this.state.roomName, this.state.visibility);
-    }
-
-    /**
-     * @returns {Boolean}
-     */
-    validate() {
+    validate(values) {
         const errors = {};
+        console.log(values);
+        this.updateVisibilityDescription(values.visibility);
 
         // We error if the user doesn't enter a room name or left blank
-        if (!this.state.roomName || this.state.roomName === CONST.POLICY.ROOM_PREFIX) {
+        if (!values.roomName || values.roomName === CONST.POLICY.ROOM_PREFIX) {
             errors.roomName = this.props.translate('newRoomPage.pleaseEnterRoomName');
         }
 
         // We error if the room name already exists.
-        if (ValidationUtils.isExistingRoomName(this.state.roomName, this.props.reports, this.state.policyID)) {
+        if (ValidationUtils.isExistingRoomName(values.roomName, this.props.reports, values.workspace)) {
             errors.roomName = this.props.translate('newRoomPage.roomAlreadyExistsError');
         }
 
         // Certain names are reserved for default rooms and should not be used for policy rooms.
-        if (ValidationUtils.isReservedRoomName(this.state.roomName)) {
+        if (ValidationUtils.isReservedRoomName(values.roomName)) {
             errors.roomName = this.props.translate('newRoomPage.roomNameReservedError');
         }
 
-        if (!this.state.policyID) {
-            errors.policyID = this.props.translate('newRoomPage.pleaseSelectWorkspace');
+        // We error if the user doesn't select a workspace
+        if (!values.workspace) {
+            errors.workspace = this.props.translate('newRoomPage.pleaseSelectWorkspace');
         }
 
-        this.setState({errors});
-        return _.isEmpty(errors);
+        return errors;
+    }
+
+    submit(values) {
+        const policyID = this.props.policies[`${ONYXKEYS.COLLECTION.POLICY}${values.workspace}`];
+        Report.addPolicyReport(policyID, values.roomName, values.visibility);
     }
 
     /**
@@ -128,14 +111,6 @@ class WorkspaceNewRoomPage extends React.Component {
         }));
     }
 
-    focusRoomNameInput() {
-        if (!this.roomNameInputRef) {
-            return;
-        }
-
-        this.roomNameInputRef.focus();
-    }
-
     render() {
         if (!Permissions.canUsePolicyRooms(this.props.betas)) {
             Log.info('Not showing create Policy Room page since user is not on policy rooms beta');
@@ -143,6 +118,8 @@ class WorkspaceNewRoomPage extends React.Component {
             return null;
         }
 
+        const workspaces = _.filter(this.props.policies, policy => policy && policy.type === CONST.POLICY.TYPE.FREE);
+        const workspaceOptions = _.map(workspaces, policy => ({label: policy.name, key: policy.id, value: policy.id}));
         const visibilityOptions = _.map(_.values(CONST.REPORT.VISIBILITY), visibilityOption => ({
             label: this.props.translate(`newRoomPage.visibilityOptions.${visibilityOption}`),
             value: visibilityOption,
@@ -150,15 +127,22 @@ class WorkspaceNewRoomPage extends React.Component {
         }));
 
         return (
-            <ScreenWrapper onTransitionEnd={this.focusRoomNameInput}>
+            <>
                 <HeaderWithCloseButton
                     title={this.props.translate('newRoomPage.newRoom')}
                     onCloseButtonPress={() => Navigation.dismissModal()}
                 />
-                <ScrollView style={styles.flex1} contentContainerStyle={styles.p5}>
+                <Form
+                    formID={ONYXKEYS.FORMS.NEW_ROOM_FORM}
+                    submitButtonText={this.props.translate('newRoomPage.createRoom')}
+                    style={[styles.mh5, styles.mt5, styles.flexGrow1]}
+                    validate={this.validate}
+                    onSubmit={this.submit}
+                    enabledWhenOffline
+                >
                     <View style={styles.mb5}>
                         <RoomNameInput
-                            ref={el => this.roomNameInputRef = el}
+                            inputID="roomName"
                             policyID={this.state.policyID}
                             errorText={this.state.errors.roomName}
                             onChangeText={roomName => this.clearErrorAndSetValue('roomName', roomName)}
@@ -166,37 +150,32 @@ class WorkspaceNewRoomPage extends React.Component {
                         />
                     </View>
                     <View style={styles.mb5}>
+                        <TestClass />
+                    </View>
+                    <View style={styles.mb5}>
+                        <TestFunctional />
+                    </View>
+                    <View style={styles.mb5}>
                         <Picker
-                            value={this.state.policyID}
+                            inputID="workspace"
                             label={this.props.translate('workspace.common.workspace')}
+                            items={workspaceOptions}
                             placeholder={{value: '', label: this.props.translate('newRoomPage.selectAWorkspace')}}
-                            items={this.state.workspaceOptions}
-                            errorText={this.state.errors.policyID}
-                            onInputChange={policyID => this.clearErrorAndSetValue('policyID', policyID)}
                         />
                     </View>
                     <View style={styles.mb2}>
                         <Picker
-                            value={this.state.visibility}
+                            inputID="visibility"
                             label={this.props.translate('newRoomPage.visibility')}
                             items={visibilityOptions}
-                            onInputChange={visibility => this.setState({visibility})}
+                            defaultValue={CONST.REPORT.VISIBILITY.RESTRICTED}
                         />
                     </View>
                     <Text style={[styles.textLabel, styles.colorMuted]}>
-                        {_.find(visibilityOptions, option => option.value === this.state.visibility).description}
+                        {this.state.visibilityDescription}
                     </Text>
-                </ScrollView>
-                <FixedFooter>
-                    <Button
-                        success
-                        pressOnEnter
-                        onPress={this.validateAndAddPolicyReport}
-                        style={[styles.w100]}
-                        text={this.props.translate('newRoomPage.createRoom')}
-                    />
-                </FixedFooter>
-            </ScreenWrapper>
+                </Form>
+            </>
         );
     }
 }
