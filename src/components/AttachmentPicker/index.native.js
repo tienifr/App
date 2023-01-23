@@ -102,6 +102,7 @@ class AttachmentPicker extends Component {
 
         this.state = {
             isVisible: false,
+            isPickingAttachment: false,
         };
 
         this.menuItemData = [
@@ -141,6 +142,8 @@ class AttachmentPicker extends Component {
       * @returns {Promise}
       */
     pickAttachment(attachments = []) {
+        this.props.onClose();
+        this.setState({isPickingAttachment: false});
         if (attachments.length === 0) {
             return;
         }
@@ -293,7 +296,7 @@ class AttachmentPicker extends Component {
             200,
         );
 
-        this.close();
+        this.setState({isVisible: false, isPickingAttachment: true});
     }
 
     /**
@@ -314,7 +317,14 @@ class AttachmentPicker extends Component {
                     onClose={this.close}
                     isVisible={this.state.isVisible}
                     anchorPosition={styles.createMenuPosition}
-                    onModalHide={this.onModalHide}
+                    onModalHide={() => {
+                        if (this.onModalHide) {
+                            this.onModalHide();
+                        }
+                        if (!this.state.isPickingAttachment) {
+                            this.props.onClose();
+                        }
+                    }}
                 >
                     <View style={this.props.isSmallScreenWidth ? {} : styles.createMenuContainer}>
                         {

@@ -134,6 +134,7 @@ class ReportActionCompose extends React.Component {
         this.getInputPlaceholder = this.getInputPlaceholder.bind(this);
         this.getIOUOptions = this.getIOUOptions.bind(this);
         this.addAttachment = this.addAttachment.bind(this);
+        this.onCloseModal = this.onCloseModal.bind(this);
 
         this.comment = props.comment;
         this.shouldFocusInputOnScreenFocus = canFocusInputOnScreenFocus();
@@ -153,6 +154,7 @@ class ReportActionCompose extends React.Component {
 
             // If we are on a small width device then don't show last 3 items from conciergePlaceholderOptions
             conciergePlaceholderRandomIndex: _.random(this.props.translate('reportActionCompose.conciergePlaceholderOptions').length - (this.props.isSmallScreenWidth ? 4 : 1)),
+            shouldRefocus: false,
         };
     }
 
@@ -513,6 +515,12 @@ class ReportActionCompose extends React.Component {
         this.props.onSubmit(comment);
     }
 
+    onCloseModal() {
+        if (this.state.shouldRefocus) {
+            this.focus();
+        }
+    }
+
     render() {
         // Waiting until ONYX variables are loaded before displaying the component
         if (_.isEmpty(this.props.personalDetails)) {
@@ -553,10 +561,13 @@ class ReportActionCompose extends React.Component {
                     <AttachmentModal
                         headerTitle={this.props.translate('reportActionCompose.sendAttachment')}
                         onConfirm={this.addAttachment}
+                        onModalHide={this.onCloseModal}
                     >
                         {({displayFileInModal}) => (
                             <>
-                                <AttachmentPicker>
+                                <AttachmentPicker
+                                    onClose={this.onCloseModal}
+                                >
                                     {({openPicker}) => (
                                         <>
                                             <View style={[
@@ -621,7 +632,10 @@ class ReportActionCompose extends React.Component {
                                             <PopoverMenu
                                                 animationInTiming={CONST.ANIMATION_IN_TIMING}
                                                 isVisible={this.state.isMenuVisible}
-                                                onClose={() => this.setMenuVisibility(false)}
+                                                onClose={() => {
+                                                    this.setMenuVisibility(false);
+                                                    this.onCloseModal();
+                                                }}
                                                 onItemSelected={() => this.setMenuVisibility(false)}
                                                 anchorPosition={styles.createMenuPositionReportActionCompose}
                                                 menuItems={[...this.getIOUOptions(reportParticipants),
@@ -635,6 +649,9 @@ class ReportActionCompose extends React.Component {
                                                         },
                                                     },
                                                 ]}
+                                                onBecomingVisible={(didCloseKeyboard) => {
+                                                    this.setState({shouldRefocus: didCloseKeyboard});
+                                                }}
                                             />
                                         </>
                                     )}

@@ -53,6 +53,8 @@ const propTypes = {
 
     /** Whether disable the animations */
     disableAnimation: PropTypes.bool,
+
+    onBecomingVisible: PropTypes.func,
 };
 
 const defaultProps = {
