@@ -825,8 +825,8 @@ function editReportComment(reportID, originalReportAction, textForNewComment) {
     // https://github.com/Expensify/App/issues/9090
     // https://github.com/Expensify/App/issues/13221
     const originalCommentHTML = lodashGet(originalReportAction, 'message[0].html');
-    const markdownForNewComment = handleUserDeletedLinks(textForNewComment, originalCommentHTML);
-
+    let markdownForNewComment = handleUserDeletedLinks(textForNewComment, originalCommentHTML);
+    markdownForNewComment = markdownForNewComment.trim();
     const autolinkFilter = {filterRules: _.filter(_.pluck(parser.rules, 'name'), name => name !== 'autolink')};
     const htmlForNewComment = parser.replace(markdownForNewComment, autolinkFilter);
     const parsedOriginalCommentHTML = parser.replace(parser.htmlToMarkdown(originalCommentHTML), autolinkFilter);
