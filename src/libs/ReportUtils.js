@@ -418,6 +418,7 @@ function canShowReportRecipientLocalTime(personalDetails, report) {
  * @returns {String}
  */
 function formatReportLastMessageText(lastMessageText) {
+    console.log('lastMessageText', lastMessageText);
     return String(lastMessageText)
         .replace(CONST.REGEX.AFTER_FIRST_LINE_BREAK, '')
         .substring(0, CONST.REPORT.LAST_MESSAGE_TEXT_MAX_LENGTH);
@@ -736,6 +737,8 @@ function buildOptimisticAddCommentReportAction(text, file) {
     const isAttachment = _.isEmpty(text) && file !== undefined;
     const attachmentInfo = isAttachment ? file : {};
     const htmlForNewComment = isAttachment ? 'Uploading Attachment...' : commentText;
+
+    console.log('htmlForNewComment', htmlForNewComment);
 
     // Remove HTML from text when applying optimistic offline comment
     const textForNewComment = isAttachment ? '[Attachment]'
@@ -1211,6 +1214,10 @@ function isIOUOwnedByCurrentUser(report, currentUserLogin, iouReports = {}) {
     return false;
 }
 
+function isDirectMessage(report) {
+    return _.isEmpty(getChatType(report));
+}
+
 /**
  * Assuming the passed in report is a default room, lets us know whether we can see it or not, based on permissions and
  * the various subsets of users we've allowed to use default rooms.
@@ -1264,6 +1271,10 @@ function canSeeDefaultRoom(report, policies, betas) {
 function shouldReportBeInOptionList(report, reportIDFromRoute, isInGSDMode, currentUserLogin, iouReports, betas, policies) {
     const isInDefaultMode = !isInGSDMode;
 
+    if (report && report.displayName && (report.displayName.startsWith('christianwen18+11') || report.displayName.startsWith('#ann'))) {
+        // console.log('report here', report);
+    }
+
     // Exclude reports that have no data because there wouldn't be anything to show in the option item.
     // This can happen if data is currently loading from the server or a report is in various stages of being created.
     if (!report || !report.reportID || !report.participants || _.isEmpty(report.participants) || isIOUReport(report)) {
@@ -1310,6 +1321,10 @@ function shouldReportBeInOptionList(report, reportIDFromRoute, isInGSDMode, curr
 
     // Include policy expense chats if the user isn't in the policy expense chat beta
     if (isPolicyExpenseChat(report) && !Permissions.canUsePolicyExpenseChat(betas)) {
+        return false;
+    }
+
+    if (isDirectMessage(report) && _.isEmpty(report.lastMessageText)) {
         return false;
     }
 

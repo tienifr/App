@@ -201,6 +201,7 @@ function addActions(reportID, text = '', file) {
 
     if (text) {
         const reportComment = ReportUtils.buildOptimisticAddCommentReportAction(text);
+        console.log('reportComment', reportComment);
         reportCommentAction = reportComment.reportAction;
         reportCommentText = reportComment.commentText;
     }
@@ -217,6 +218,8 @@ function addActions(reportID, text = '', file) {
     const lastAction = attachmentAction || reportCommentAction;
 
     const currentTime = DateUtils.getDBTime();
+
+    console.log('(lastAction.message[0].text', lastAction.message[0].text);
 
     const optimisticReport = {
         lastActionCreated: currentTime,
@@ -316,6 +319,7 @@ function addAttachment(reportID, file, text = '') {
  * @param {String} text
  */
 function addComment(reportID, text) {
+    console.log('addComment', text);
     addActions(reportID, text);
 }
 
@@ -624,6 +628,17 @@ function saveReportComment(reportID, comment) {
  */
 function setReportWithDraft(reportID, hasDraft) {
     return Onyx.merge(`${ONYXKEYS.COLLECTION.REPORT}${reportID}`, {hasDraft});
+}
+
+/**
+ * Immediate indication whether the report already has a comment.
+ *
+ * @param {String} reportID
+ * @param {Boolean} hasComment
+ * @returns {Promise}
+ */
+function setReportWithComment(reportID, hasComment) {
+    return Onyx.merge(`${ONYXKEYS.COLLECTION.REPORT}${reportID}`, {hasComment});
 }
 
 /**
@@ -1206,4 +1221,5 @@ export {
     clearIOUError,
     subscribeToNewActionEvent,
     showReportActionNotification,
+    setReportWithComment,
 };
