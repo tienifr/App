@@ -100,6 +100,8 @@ const ReportActionItemFragment = (props) => {
             }
             const {html, text} = props.fragment;
 
+            console.log('rendered html', html, 'text', text);
+
             // If the only difference between fragment.text and fragment.html is <br /> tags
             // we render it as text, not as html.
             // This is done to render emojis with line breaks between them as text.
@@ -107,8 +109,10 @@ const ReportActionItemFragment = (props) => {
 
             // Only render HTML if we have html in the fragment
             if (!differByLineBreaksOnly) {
+                console.log('rendering html');
                 const editedTag = props.fragment.isEdited ? '<edited></edited>' : '';
                 const htmlContent = html + editedTag;
+                console.log('htmlContent', htmlContent);
                 return (
                     <RenderHTML
                         html={props.source === 'email'

@@ -39,6 +39,10 @@ const customHTMLElementModels = {
         tagName: 'email-comment',
         mixedUAStyles: {whiteSpace: 'normal'},
     }),
+    'expensify-emoji': defaultHTMLElementModels.span.extend({
+        tagName: 'expensify-emoji',
+        mixedUAStyles: {fontStyle: 'normal'},
+    }),
 };
 
 const defaultViewProps = {style: [styles.alignItemsStart, styles.userSelectText]};

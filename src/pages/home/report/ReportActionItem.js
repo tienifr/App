@@ -158,6 +158,7 @@ class ReportActionItem extends Component {
             );
         } else {
             const message = _.last(lodashGet(this.props.action, 'message', [{}]));
+            console.log('message rendered', message);
             const isAttachment = _.has(this.props.action, 'isAttachment')
                 ? this.props.action.isAttachment
                 : ReportUtils.isReportMessageAttachment(message);
