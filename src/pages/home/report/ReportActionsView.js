@@ -197,35 +197,10 @@ class ReportActionsView extends React.Component {
         const didScreenSizeIncrease = prevProps.isSmallScreenWidth && !this.props.isSmallScreenWidth;
         const didReportBecomeVisible = isReportFullyVisible && (didSidebarClose || didScreenSizeIncrease);
         if (didReportBecomeVisible) {
-            this.setState({
-                newMarkerReportActionID: ReportUtils.isUnread(this.props.report)
-                    ? ReportUtils.getNewMarkerReportActionID(this.props.report, this.sortedAndFilteredReportActions)
-                    : '',
-            });
             this.openReportIfNecessary();
         }
 
-        // If the report is unread, we want to check if the number of actions has decreased. If so, then it seems that one of them was deleted. In this case, if the deleted action was the
-        // one marking the unread point, we need to recalculate which action should be the unread marker.
-        if (ReportUtils.isUnread(this.props.report) && ReportActionsUtils.filterReportActionsForDisplay(prevProps.reportActions).length > this.sortedAndFilteredReportActions.length) {
-            this.setState({newMarkerReportActionID: ReportUtils.getNewMarkerReportActionID(this.props.report, this.sortedAndFilteredReportActions)});
-        }
-
-        // When the user navigates to the LHN the ReportActionsView doesn't unmount and just remains hidden.
-        // The next time we navigate to the same report (e.g. by swiping or tapping the LHN row) we want the new marker to clear.
-        const didSidebarOpen = !prevProps.isDrawerOpen && this.props.isDrawerOpen;
-        const didUserNavigateToSidebarAfterReadingReport = didSidebarOpen && !ReportUtils.isUnread(this.props.report);
-        if (didUserNavigateToSidebarAfterReadingReport) {
-            this.setState({newMarkerReportActionID: ''});
-        }
-
-        // Checks to see if a report comment has been manually "marked as unread". All other times when the lastReadTime
-        // changes it will be because we marked the entire report as read.
-        const didManuallyMarkReportAsUnread = (prevProps.report.lastReadTime !== this.props.report.lastReadTime)
-            && ReportUtils.isUnread(this.props.report);
-        if (didManuallyMarkReportAsUnread) {
-            this.setState({newMarkerReportActionID: ReportUtils.getNewMarkerReportActionID(this.props.report, this.sortedAndFilteredReportActions)});
-        }
+        this.setState({newMarkerReportActionID: ReportUtils.getNewMarkerReportActionID(this.props.report, this.sortedAndFilteredReportActions)});
 
         // Ensures subscription event succeeds when the report/workspace room is created optimistically.
         // Check if the optimistic `OpenReport` or `AddWorkspaceRoom` has succeeded by confirming
