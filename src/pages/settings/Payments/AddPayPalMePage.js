@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, InteractionManager} from 'react-native';
 import _ from 'underscore';
 import CONST from '../../../CONST';
 import ROUTES from '../../../ROUTES';
@@ -28,6 +28,12 @@ class AddPayPalMePage extends React.Component {
         this.focusPayPalMeInput = this.focusPayPalMeInput.bind(this);
     }
 
+    componentDidMount() {
+        InteractionManager.runAfterInteractions(() => {
+            this.focusPayPalMeInput();
+        });
+    }
+
     /**
      * Sets the payPalMeUsername for the current user
      */
@@ -54,7 +60,7 @@ class AddPayPalMePage extends React.Component {
 
     render() {
         return (
-            <ScreenWrapper onTransitionEnd={this.focusPayPalMeInput}>
+            <ScreenWrapper>
                 <HeaderWithCloseButton
                     title={this.props.translate('common.payPalMe')}
                     shouldShowBackButton
