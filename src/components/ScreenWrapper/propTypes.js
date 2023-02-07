@@ -28,6 +28,9 @@ const propTypes = {
         /** Indicates when an Alert modal is about to be visible */
         willAlertModalBecomeVisible: PropTypes.bool,
     }),
+
+    /** The enabled flag to pass to the KeyboardAvoidingView */
+    keyboardAvoidingViewEnabled: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -37,6 +40,7 @@ const defaultProps = {
     onTransitionEnd: () => {},
     modal: {},
     keyboardAvoidingViewBehavior: 'padding',
+    keyboardAvoidingViewEnabled: true,
 };
 
 export {propTypes, defaultProps};

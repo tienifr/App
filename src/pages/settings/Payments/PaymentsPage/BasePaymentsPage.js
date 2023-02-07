@@ -342,7 +342,7 @@ class BasePaymentsPage extends React.Component {
         // Determines whether or not the modal popup is mounted from the bottom of the screen instead of the side mount on Web or Desktop screens
         const isPopoverBottomMount = this.state.anchorPositionTop === 0 || this.props.isSmallScreenWidth;
         return (
-            <ScreenWrapper>
+            <ScreenWrapper keyboardAvoidingViewEnabled={true}>
                 <HeaderWithCloseButton
                     title={this.props.translate('common.payments')}
                     shouldShowBackButton
