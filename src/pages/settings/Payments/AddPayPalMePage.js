@@ -23,6 +23,7 @@ class AddPayPalMePage extends React.Component {
         this.state = {
             payPalMeUsername: '',
             payPalMeUsernameError: false,
+            didGoBack: false,
         };
         this.setPayPalMeUsername = this.setPayPalMeUsername.bind(this);
         this.focusPayPalMeInput = this.focusPayPalMeInput.bind(this);
@@ -54,11 +55,18 @@ class AddPayPalMePage extends React.Component {
 
     render() {
         return (
-            <ScreenWrapper onTransitionEnd={this.focusPayPalMeInput}>
+            <ScreenWrapper onTransitionEnd={() => {
+                if (!this.state.didGoBack) {
+                    this.focusPayPalMeInput();
+                }
+            }}>
                 <HeaderWithCloseButton
                     title={this.props.translate('common.payPalMe')}
                     shouldShowBackButton
-                    onBackButtonPress={() => Navigation.navigate(ROUTES.SETTINGS_PAYMENTS)}
+                    onBackButtonPress={() => {
+                        this.setState({didGoBack: true});
+                        Navigation.navigate(ROUTES.SETTINGS_PAYMENTS);
+                    }}
                     onCloseButtonPress={() => Navigation.dismissModal(true)}
                 />
                 <View style={[styles.flex1, styles.p5]}>
