@@ -25,7 +25,6 @@ class AddPayPalMePage extends React.Component {
             payPalMeUsernameError: false,
         };
         this.setPayPalMeUsername = this.setPayPalMeUsername.bind(this);
-        this.focusPayPalMeInput = this.focusPayPalMeInput.bind(this);
     }
 
     /**
@@ -44,17 +43,9 @@ class AddPayPalMePage extends React.Component {
         Navigation.navigate(ROUTES.SETTINGS_PAYMENTS);
     }
 
-    focusPayPalMeInput() {
-        if (!this.payPalMeInputRef) {
-            return;
-        }
-
-        this.payPalMeInputRef.focus();
-    }
-
     render() {
         return (
-            <ScreenWrapper onTransitionEnd={this.focusPayPalMeInput}>
+            <ScreenWrapper>
                 <HeaderWithCloseButton
                     title={this.props.translate('common.payPalMe')}
                     shouldShowBackButton
@@ -77,6 +68,7 @@ class AddPayPalMePage extends React.Component {
                             returnKeyType="done"
                             hasError={this.state.payPalMeUsernameError}
                             errorText={this.state.payPalMeUsernameError ? this.props.translate('addPayPalMePage.formatError') : ''}
+                            autoFocus
                         />
                     </View>
                 </View>

@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import React, {Component} from 'react';
 import {
-    Animated, View, TouchableWithoutFeedback, AppState, Keyboard,
+    Animated, View, TouchableWithoutFeedback, AppState, Keyboard, InteractionManager,
 } from 'react-native';
 import Str from 'expensify-common/lib/str';
 import RNTextInput from '../RNTextInput';
@@ -66,10 +66,16 @@ class BaseTextInput extends Component {
         }
 
         if (this.props.shouldDelayFocus) {
-            this.focusTimeout = setTimeout(() => this.input.focus(), CONST.ANIMATED_TRANSITION);
+            this.focusTimeout = setTimeout(() => this.focusInput(), CONST.ANIMATED_TRANSITION);
             return;
         }
-        this.input.focus();
+        this.focusInput();
+    }
+
+    focusInput() {
+        InteractionManager.runAfterInteractions(() => {
+            this.input.focus();
+        });
     }
 
     componentDidUpdate(prevProps) {
