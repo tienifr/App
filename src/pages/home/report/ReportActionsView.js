@@ -65,6 +65,15 @@ class ReportActionsView extends React.Component {
         // We need this.sortedAndFilteredReportActions to be set before this.state is initialized because the function to calculate the newMarkerReportActionID uses the sorted report actions
         this.sortedAndFilteredReportActions = this.getSortedReportActionsForDisplay(props.reportActions);
 
+        if (this.props.report.reportID === '8323804525830935') {
+            console.log('this.props.report lastReadTime', this.props.report.lastReadTime);
+            if (this.sortedAndFilteredReportActions[0]) {
+                console.log('this.sortedAndFilteredReportActions', this.sortedAndFilteredReportActions[0].created);
+            } else {
+            }
+        }
+       
+
         this.state = {
             isFloatingMessageCounterVisible: false,
             newMarkerReportActionID: ReportUtils.getNewMarkerReportActionID(this.props.report, this.sortedAndFilteredReportActions),
@@ -78,6 +87,8 @@ class ReportActionsView extends React.Component {
         this.recordTimeToMeasureItemLayout = this.recordTimeToMeasureItemLayout.bind(this);
         this.scrollToBottomAndMarkReportAsRead = this.scrollToBottomAndMarkReportAsRead.bind(this);
         this.openReportIfNecessary = this.openReportIfNecessary.bind(this);
+
+        console.log('newMarkerReportActionID initial state', this.state.newMarkerReportActionID);
     }
 
     componentDidMount() {
@@ -86,8 +97,8 @@ class ReportActionsView extends React.Component {
                 return;
             }
 
-            // If the app user becomes active and they have no unread actions we clear the new marker to sync their device
-            // e.g. they could have read these messages on another device and only just become active here
+            //If the app user becomes active and they have no unread actions we clear the new marker to sync their device
+            //e.g. they could have read these messages on another device and only just become active here
             this.openReportIfNecessary();
             this.setState({newMarkerReportActionID: ''});
         });
@@ -108,6 +119,7 @@ class ReportActionsView extends React.Component {
 
                 // If the current user sends a new message in the chat we clear the new marker since they have "read" the report
                 this.setState({newMarkerReportActionID: ''});
+                console.log("")
             } else if (this.getIsReportFullyVisible()) {
                 // We use the scroll position to determine whether the report should be marked as read and the new line indicator reset.
                 // If the user is scrolled up and no new line marker is set we will set it otherwise we will do nothing so the new marker
@@ -115,13 +127,17 @@ class ReportActionsView extends React.Component {
                 if (this.currentScrollOffset === 0) {
                     Report.readNewestAction(this.props.report.reportID);
                     this.setState({newMarkerReportActionID: ''});
+
+                    console.log(" newMarkerReportActionID currentScrollOffset", 'empty')
                 } else if (!isNewMarkerReportActionIDSet) {
                     this.setState({newMarkerReportActionID: newActionID});
+                    console.log(" newMarkerReportActionID newActionID", newActionID)
                 }
             } else if (!isNewMarkerReportActionIDSet) {
                 // The report is not in view and we received a comment from another user while the new marker is not set
                 // so we will set the new marker now.
                 this.setState({newMarkerReportActionID: newActionID});
+                console.log(" newMarkerReportActionID isNewMarkerReportActionIDSet", newActionID)
             }
         });
     }
@@ -197,6 +213,7 @@ class ReportActionsView extends React.Component {
         const didScreenSizeIncrease = prevProps.isSmallScreenWidth && !this.props.isSmallScreenWidth;
         const didReportBecomeVisible = isReportFullyVisible && (didSidebarClose || didScreenSizeIncrease);
         if (didReportBecomeVisible) {
+            console.log('newMarkerReportActionID didReportBecomeVisible')
             this.setState({
                 newMarkerReportActionID: ReportUtils.isUnread(this.props.report)
                     ? ReportUtils.getNewMarkerReportActionID(this.props.report, this.sortedAndFilteredReportActions)
@@ -208,6 +225,7 @@ class ReportActionsView extends React.Component {
         // If the report is unread, we want to check if the number of actions has decreased. If so, then it seems that one of them was deleted. In this case, if the deleted action was the
         // one marking the unread point, we need to recalculate which action should be the unread marker.
         if (ReportUtils.isUnread(this.props.report) && ReportActionsUtils.filterReportActionsForDisplay(prevProps.reportActions).length > this.sortedAndFilteredReportActions.length) {
+            console.log('newMarkerReportActionID deleted')
             this.setState({newMarkerReportActionID: ReportUtils.getNewMarkerReportActionID(this.props.report, this.sortedAndFilteredReportActions)});
         }
 
@@ -224,6 +242,7 @@ class ReportActionsView extends React.Component {
         const didManuallyMarkReportAsUnread = (prevProps.report.lastReadTime !== this.props.report.lastReadTime)
             && ReportUtils.isUnread(this.props.report);
         if (didManuallyMarkReportAsUnread) {
+            console.log('newMarkerReportActionID didManuallyMarkReportAsUnread')
             this.setState({newMarkerReportActionID: ReportUtils.getNewMarkerReportActionID(this.props.report, this.sortedAndFilteredReportActions)});
         }
 
@@ -287,6 +306,7 @@ class ReportActionsView extends React.Component {
         if (this.props.report.isOptimisticReport) {
             return;
         }
+        console.log('Report.openReport', this.props.report.reportID);
 
         Report.openReport(this.props.report.reportID);
     }
@@ -380,7 +400,7 @@ class ReportActionsView extends React.Component {
                             onLayout={this.recordTimeToMeasureItemLayout}
                             sortedReportActions={this.sortedAndFilteredReportActions}
                             mostRecentIOUReportActionID={this.mostRecentIOUReportActionID}
-                            isLoadingMoreReportActions={this.props.report.isLoadingMoreReportActions}
+                            isLoadingMoreReportActions={this.props.report.isLoadingMoreReportActions && false}
                             loadMoreChats={this.loadMoreChats}
                             newMarkerReportActionID={this.state.newMarkerReportActionID}
                         />
