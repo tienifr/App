@@ -255,7 +255,12 @@ class Form extends React.Component {
                 .value() || '';
 
             return React.cloneElement(child, {
-                ref: node => this.inputRefs[inputID] = node,
+                ref: (node) => {
+                    if (child.ref) {
+                        child.ref(node);
+                    }
+                    this.inputRefs[inputID] = node;
+                },
                 value: this.state.inputValues[inputID],
                 errorText: this.state.errors[inputID] || fieldErrorMessage,
                 onBlur: () => {

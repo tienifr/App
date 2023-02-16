@@ -53,6 +53,7 @@ class WorkspaceNewRoomPage extends React.Component {
         this.validate = this.validate.bind(this);
         this.submit = this.submit.bind(this);
         this.updateVisibilityDescription = this.updateVisibilityDescription.bind(this);
+        this.focusRoomNameInput = this.focusRoomNameInput.bind(this);
     }
 
     /**
@@ -103,6 +104,14 @@ class WorkspaceNewRoomPage extends React.Component {
         return errors;
     }
 
+    focusRoomNameInput() {
+        if (!this.roomNameInputRef) {
+            return;
+        }
+
+        this.roomNameInputRef.focus();
+    }
+
     render() {
         if (!Permissions.canUsePolicyRooms(this.props.betas)) {
             Log.info('Not showing create Policy Room page since user is not on policy rooms beta');
@@ -123,7 +132,7 @@ class WorkspaceNewRoomPage extends React.Component {
         }));
 
         return (
-            <ScreenWrapper includeSafeAreaPaddingBottom={false}>
+            <ScreenWrapper includeSafeAreaPaddingBottom={false} onTransitionEnd={this.focusRoomNameInput}>
                 <HeaderWithCloseButton
                     title={this.props.translate('newRoomPage.newRoom')}
                     onCloseButtonPress={() => Navigation.dismissModal()}
@@ -139,8 +148,8 @@ class WorkspaceNewRoomPage extends React.Component {
                 >
                     <View style={styles.mb5}>
                         <RoomNameInput
+                            ref={el => this.roomNameInputRef = el}
                             inputID="roomName"
-                            autoFocus
                         />
                     </View>
                     <View style={styles.mb5}>
