@@ -197,6 +197,7 @@ class ReportActionItem extends Component {
     }
 
     render() {
+        console.log('this.state.isContextMenuActive', this.state.isContextMenuActive, this.props.action?.originalMessage?.html);
         if (this.props.action.actionName === CONST.REPORT.ACTIONS.TYPE.CREATED) {
             return <ReportActionItemCreated reportID={this.props.report.reportID} />;
         }
@@ -213,7 +214,9 @@ class ReportActionItem extends Component {
                 preventDefaultContentMenu={!this.props.draftMessage}
             >
                 <Hoverable>
-                    {hovered => (
+                    {hovered => {
+                        console.log('hovered', hovered, this.props.action?.originalMessage?.html);
+                        return (
                         <View accessibilityLabel="Chat message">
                             {this.props.shouldDisplayNewMarker && (
                                 <UnreadActionIndicator reportActionID={this.props.action.reportActionID} />
@@ -258,14 +261,14 @@ class ReportActionItem extends Component {
                                 displayAsGroup={this.props.displayAsGroup}
                                 isVisible={
                                     hovered
-                                    && !this.state.isContextMenuActive
+                                    // && !this.state.isContextMenuActive
                                     && !this.props.draftMessage
                                 }
                                 draftMessage={this.props.draftMessage}
                                 isChronosReport={ReportUtils.chatIncludesChronos(this.props.report)}
                             />
                         </View>
-                    )}
+                    )}}
                 </Hoverable>
                 <View style={styles.reportActionSystemMessageContainer}>
                     <InlineSystemMessage message={this.props.action.error} />
