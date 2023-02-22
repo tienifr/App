@@ -170,6 +170,10 @@ class ReportActionsView extends React.Component {
             return true;
         }
 
+        if (this.props.isLastReadTimeOptimistic !== nextProps.isLastReadTimeOptimistic) {
+            return true;
+        }
+
         if (lodashGet(this.props.report, 'hasOutstandingIOU') !== lodashGet(nextProps.report, 'hasOutstandingIOU')) {
             return true;
         }
@@ -228,8 +232,12 @@ class ReportActionsView extends React.Component {
         // Checks to see if a report comment has been manually "marked as unread". All other times when the lastReadTime
         // changes it will be because we marked the entire report as read.
         const didManuallyMarkReportAsUnread = (prevProps.report.lastReadTime !== this.props.report.lastReadTime)
-            && (ReportUtils.isUnread(this.props.report) || ReportUtils.isUnread(prevProps.report));
+            && (ReportUtils.isUnread(this.props.report));
         if (didManuallyMarkReportAsUnread) {
+            this.setState({newMarkerReportActionID: ReportUtils.getNewMarkerReportActionID(this.props.report, this.sortedAndFilteredReportActions)});
+        }
+
+        if (!this.props.report.isLastReadTimeOptimistic && prevProps.report.isLastReadTimeOptimistic) {
             this.setState({newMarkerReportActionID: ReportUtils.getNewMarkerReportActionID(this.props.report, this.sortedAndFilteredReportActions)});
         }
 
