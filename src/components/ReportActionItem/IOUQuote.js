@@ -13,6 +13,8 @@ import withLocalize, {withLocalizePropTypes} from '../withLocalize';
 import ControlSelection from '../../libs/ControlSelection';
 import * as DeviceCapabilities from '../../libs/DeviceCapabilities';
 import {showContextMenuForReport} from '../ShowContextMenuContext';
+import getButtonState from '../../libs/getButtonState';
+import * as StyleUtils from '../../styles/StyleUtils';
 
 const propTypes = {
     /** All the data of the action */
@@ -80,7 +82,7 @@ const IOUQuote = props => (
                         {Str.htmlDecode(fragment.text.substring(fragment.text.indexOf(' ')))}
                     </Text>
                 </Text>
-                <Icon src={Expensicons.ArrowRight} fill={props.shouldAllowViewDetails ? themeColors.icon : themeColors.transparent} />
+                <Icon src={Expensicons.ArrowRight} fill={props.shouldAllowViewDetails ? StyleUtils.getIconFillColor(getButtonState(props.isHovered)) : themeColors.transparent} />
             </Pressable>
         ))}
     </View>
