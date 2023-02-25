@@ -1347,6 +1347,7 @@ const styles = {
         fontSize: variables.fontSizeNormal,
         fontWeight: fontWeightBold,
         lineHeight: variables.lineHeightXLarge,
+        whiteSpace: whiteSpace.preWrap,
         ...wordBreak.breakWord,
     },
 
