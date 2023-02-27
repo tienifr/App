@@ -54,8 +54,14 @@ class Hoverable extends Component {
         }
     }
 
+    componentDidUpdate(prevProps) {
+        if (!prevProps.isBehindModal && this.props.isBehindModal) {
+            this.setIsHovered(false);
+        }
+    }
+
     render() {
-        /*if (this.props.absolute && React.isValidElement(this.props.children)) {
+        if (this.props.absolute && React.isValidElement(this.props.children)) {
             return React.cloneElement(React.Children.only(this.props.children), {
                 ref: (el) => {
                     this.wrapperView = el;
@@ -96,14 +102,14 @@ class Hoverable extends Component {
                     }
                 },
             });
-        }*/
+        }
         return (
             <View
                 style={this.props.containerStyles}
                 ref={el => this.wrapperView = el}
                 onMouseEnter={() => {
                     console.log('onMouseEnter');
-                    this.setIsHovered(true)
+                    this.setIsHovered(true);
                 }}
                 onMouseLeave={() => {
                     console.log('onMouseLeave');
@@ -111,9 +117,9 @@ class Hoverable extends Component {
                 }}
                 onBlur={(el) => {
                     console.log('onBlur Hoverable');
-                    /*if (this.wrapperView.contains(el.relatedTarget)) {
+                    if (this.wrapperView.contains(el.relatedTarget)) {
                         return;
-                    }*/
+                    }
                     this.setIsHovered(false);
                 }}
             >

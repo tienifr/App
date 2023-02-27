@@ -214,7 +214,7 @@ class ReportActionItem extends Component {
                 preventDefaultContentMenu={!this.props.draftMessage}
                 withoutFocusOnSecondaryInteraction
             >
-                <Hoverable>
+                <Hoverable isBehindModal={this.state.isContextMenuActive}>
                     {hovered => {
                         console.log('hovered', hovered, this.props.action?.originalMessage?.html);
                         return (

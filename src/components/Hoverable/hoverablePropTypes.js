@@ -19,6 +19,7 @@ const propTypes = {
 
     /** Function that executes when the mouse leaves the children. */
     onHoverOut: PropTypes.func,
+    isBehindModal: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -26,6 +27,7 @@ const defaultProps = {
     containerStyles: [],
     onHoverIn: () => {},
     onHoverOut: () => {},
+    isBehindModal: false,
 };
 
 export {
