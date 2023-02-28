@@ -78,6 +78,22 @@ const defaultProps = {
     style: [],
 };
 
+const excludeEmojisFromItalicAndBoldTags = (text) => {
+    return text.replace(/<(em|i|b|strong)(?:"[^"]*"|'[^']*'|[^'">])*>([\s\S]*?)<\/\1>(?![^<]*(<\/pre>|<\/code>))/gi, (match, g1) => {
+        const textWithEmojiExcluded = match.replace(/(([\p{Extended_Pictographic}](\u200D[\p{Extended_Pictographic}]|[\u{1F3FB}-\u{1F3FF}]|[\u{E0020}-\u{E007F}]|\uFE0F|\u20E3)*|[\u{1F1E6}-\u{1F1FF}]{2}|[#*0-9]\uFE0F?\u20E3)+)/gu, `</${g1}>$1<${g1}>`);
+        const textWithEmptyTagRemoved = textWithEmojiExcluded.replace(new RegExp(`<${g1}></${g1}>`, 'g'), '');
+        return textWithEmptyTagRemoved;
+    });
+}
+
+/*
+const excludeEmojisFromItalicAndBoldTags = (text) => {
+    return text.replace(/<(em|i|b|strong)(?:"[^"]*"|'[^']*'|[^'">])*>([\s\S]*?)<\/\1>(?![^<]*(<\/pre>|<\/code>))/gi, (match, g1, g2) => {
+        console.log('g2', g2);
+        return g2.replace(/(((?!([\p{Extended_Pictographic}](\u200D[\p{Extended_Pictographic}]|[\u{1F3FB}-\u{1F3FF}]|[\u{E0020}-\u{E007F}]|\uFE0F|\u20E3)*|[\u{1F1E6}-\u{1F1FF}]{2}|[#*0-9]\uFE0F?\u20E3)+)[^\u200D])+)/gu, `<${g1}>$1</${g1}>`);
+    });
+}
+*/
 const ReportActionItemFragment = (props) => {
     switch (props.fragment.type) {
         case 'COMMENT': {
@@ -108,7 +124,9 @@ const ReportActionItemFragment = (props) => {
             // Only render HTML if we have html in the fragment
             if (!differByLineBreaksOnly) {
                 const editedTag = props.fragment.isEdited ? '<edited></edited>' : '';
-                const htmlContent = html + editedTag;
+                console.log('htmlContent before', html + editedTag);
+                const htmlContent = excludeEmojisFromItalicAndBoldTags(html + editedTag);
+                console.log('htmlContent after', htmlContent);
                 return (
                     <RenderHTML
                         html={props.source === 'email'
