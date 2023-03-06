@@ -107,7 +107,7 @@ class BaseOptionsSelector extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (_.isEqual(this.props.sections, prevProps.sections)) {
+        if (_.isEqual(this.props.sections, prevProps.sections) && _.isEqual(this.props.didTransitionEnd, prevProps.didTransitionEnd)) {
             return;
         }
 
@@ -130,6 +130,10 @@ class BaseOptionsSelector extends Component {
             }
             this.scrollToIndex(this.state.focusedIndex);
         });
+
+        if (this.props.didTransitionEnd && !prevProps.didTransitionEnd && this.props.autoFocus) {
+            this.textInput.focus();
+        }
     }
 
     componentWillUnmount() {
@@ -283,6 +287,7 @@ class BaseOptionsSelector extends Component {
                 }}
                 selectTextOnFocus
                 blurOnSubmit={Boolean(this.state.allOptions.length)}
+                inputStyle={(!this.props.didTransitionEnd) ? [styles.userSelectNone] : []}
             />
         );
         const optionsList = this.props.shouldShowOptions ? (

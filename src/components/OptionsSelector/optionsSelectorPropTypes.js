@@ -92,6 +92,8 @@ const propTypes = {
 
     /** Key of the option that we should focus on when first opening the options list */
     initiallyFocusedOptionKey: PropTypes.string,
+
+    didTransitionEnd: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -117,6 +119,7 @@ const defaultProps = {
     isDisabled: false,
     shouldHaveOptionSeparator: false,
     initiallyFocusedOptionKey: undefined,
+    didTransitionEnd: true,
 };
 
 export {propTypes, defaultProps};
