@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {withOnyx} from 'react-native-onyx';
 import Str from 'expensify-common/lib/str';
 import lodashGet from 'lodash/get';
+import FocusTrap from 'focus-trap-react';
 import styles from '../styles/styles';
 import Text from '../components/Text';
 import ONYXKEYS from '../ONYXKEYS';
@@ -26,7 +27,6 @@ import * as Report from '../libs/actions/Report';
 import OfflineWithFeedback from '../components/OfflineWithFeedback';
 import AutoUpdateTime from '../components/AutoUpdateTime';
 import FullPageNotFoundView from '../components/BlockingViews/FullPageNotFoundView';
-import FocusTrap from 'focus-trap-react';
 
 const matchType = PropTypes.shape({
     params: PropTypes.shape({
@@ -111,7 +111,7 @@ class DetailsPage extends React.PureComponent {
 
         return (
             <ScreenWrapper>
-                <FocusTrap>
+                <FocusTrap focusTrapOptions={{clickOutsideDeactivates: true}}>
                     <div>
                         <FullPageNotFoundView shouldShow={!login}>
                             <HeaderWithCloseButton
