@@ -135,6 +135,7 @@ class BaseModal extends PureComponent {
             >
                 <SafeAreaInsetsContext.Consumer>
                     {(insets) => {
+                        console.log('insets', insets);
                         const {
                             paddingTop: safeAreaPaddingTop,
                             paddingBottom: safeAreaPaddingBottom,
@@ -143,7 +144,7 @@ class BaseModal extends PureComponent {
                         } = StyleUtils.getSafeAreaPadding(insets);
 
                         const modalPaddingStyles = StyleUtils.getModalPaddingStyles({
-                            safeAreaPaddingTop,
+                            safeAreaPaddingTop: safeAreaPaddingTop + statusBarHeight,
                             safeAreaPaddingBottom,
                             safeAreaPaddingLeft,
                             safeAreaPaddingRight,

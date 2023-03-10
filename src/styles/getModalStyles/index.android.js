@@ -4,5 +4,5 @@ import getBaseModalStyles from './getBaseModalStyles';
 export default (type, windowDimensions, popoverAnchorPosition = {}, innerContainerStyle = {}) => ({
     ...getBaseModalStyles(type, windowDimensions, popoverAnchorPosition, innerContainerStyle),
     shouldAddTopSafeAreaMargin: false,
-    shouldAddTopSafeAreaPadding: false,
+    //shouldAddTopSafeAreaPadding: false,
 });

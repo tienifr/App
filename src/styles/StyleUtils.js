@@ -424,9 +424,10 @@ function getModalPaddingStyles({
     let paddingTop = shouldAddTopSafeAreaPadding
         ? (modalContainerStylePaddingTop || 0) + safeAreaPaddingTop
         : modalContainerStylePaddingTop || 0;
-    if (statusBarTranslucent) {
+    console.log('statusBarHeight', statusBarHeight);
+    /*if (statusBarTranslucent) {
         paddingTop += statusBarHeight;
-    }
+    }*/
     return {
         marginTop: (modalContainerStyleMarginTop || 0) + (shouldAddTopSafeAreaMargin ? safeAreaPaddingTop : 0),
         marginBottom: (modalContainerStyleMarginBottom || 0) + (shouldAddBottomSafeAreaMargin ? safeAreaPaddingBottom : 0),
