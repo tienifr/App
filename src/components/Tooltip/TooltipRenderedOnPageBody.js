@@ -45,6 +45,9 @@ const propTypes = {
 
     /** Render custom content inside the tooltip. Note: This cannot be used together with the text props. */
     renderTooltipContent: PropTypes.func,
+
+    /** The vertical padding to spare */
+    yPadding: PropTypes.number,
 };
 
 const defaultProps = {
@@ -52,6 +55,7 @@ const defaultProps = {
     shiftVertical: 0,
     renderTooltipContent: undefined,
     maxWidth: 0,
+    yPadding: 0,
 };
 
 // Props will change frequently.
@@ -137,6 +141,7 @@ class TooltipRenderedOnPageBody extends React.PureComponent {
             this.state.tooltipContentWidth,
             this.props.shiftHorizontal,
             this.props.shiftVertical,
+            this.props.yPadding,
         );
 
         const contentRef = (ref) => {

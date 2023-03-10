@@ -1,9 +1,10 @@
 /* eslint-disable react/jsx-props-no-multi-spaces */
 import _ from 'underscore';
-import React, {forwardRef, Component} from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {FlatList, View} from 'react-native';
 import * as CollectionUtils from '../../libs/CollectionUtils';
+import withInvertedListBoundingRect, {invertedListBoundingRectPropTypes} from '../withInvertedListBoundingRect';
 
 const propTypes = {
     /** Same as FlatList can be any array of anything */
@@ -24,6 +25,8 @@ const propTypes = {
 
     /** Should we measure these items and call getItemLayout? */
     shouldMeasureItems: PropTypes.bool,
+
+    ...invertedListBoundingRectPropTypes,
 };
 
 const defaultProps = {
@@ -141,6 +144,9 @@ class BaseInvertedFlatList extends Component {
                 {...this.props}
                 ref={this.props.innerRef}
                 renderItem={this.renderItem}
+                onLayout={({nativeEvent}) => {
+                    this.props.setBoundingClientRect(nativeEvent.layout);
+                }}
 
                 // Native platforms do not need to measure items and work fine without this.
                 // Web requires that items be measured or else crazy things happen when scrolling.
@@ -158,7 +164,4 @@ class BaseInvertedFlatList extends Component {
 BaseInvertedFlatList.propTypes = propTypes;
 BaseInvertedFlatList.defaultProps = defaultProps;
 
-export default forwardRef((props, ref) => (
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    <BaseInvertedFlatList {...props} innerRef={ref} />
-));
+export default withInvertedListBoundingRect(BaseInvertedFlatList);

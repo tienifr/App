@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import {windowDimensionsPropTypes} from '../withWindowDimensions';
 import variables from '../../styles/variables';
 import CONST from '../../CONST';
+import {invertedListBoundingRectPropTypes} from '../withInvertedListBoundingRect';
 
 const propTypes = {
     /** Enable support for the absolute positioned native(View|Text) children. It will only work for single native child  */
@@ -38,6 +39,8 @@ const propTypes = {
 
     /** Render custom content inside the tooltip. Note: This cannot be used together with the text props. */
     renderTooltipContent: PropTypes.func,
+
+    ...invertedListBoundingRectPropTypes,
 };
 
 const defaultProps = {

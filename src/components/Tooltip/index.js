@@ -4,10 +4,12 @@ import {Animated, View} from 'react-native';
 import TooltipRenderedOnPageBody from './TooltipRenderedOnPageBody';
 import Hoverable from '../Hoverable';
 import withWindowDimensions from '../withWindowDimensions';
+import compose from '../../libs/compose';
 import {propTypes, defaultProps} from './tooltipPropTypes';
 import TooltipSense from './TooltipSense';
 import makeCancellablePromise from '../../libs/MakeCancellablePromise';
 import * as DeviceCapabilities from '../../libs/DeviceCapabilities';
+import withInvertedListBoundingRect from '../withInvertedListBoundingRect';
 
 class Tooltip extends PureComponent {
     constructor(props) {
@@ -190,6 +192,7 @@ class Tooltip extends PureComponent {
                         windowWidth={this.props.windowWidth}
                         xOffset={this.state.xOffset}
                         yOffset={this.state.yOffset}
+                        yPadding={this.props.boundingClientRect.top}
                         wrapperWidth={this.state.wrapperWidth}
                         wrapperHeight={this.state.wrapperHeight}
                         shiftHorizontal={_.result(this.props, 'shiftHorizontal')}
@@ -215,4 +218,7 @@ class Tooltip extends PureComponent {
 
 Tooltip.propTypes = propTypes;
 Tooltip.defaultProps = defaultProps;
-export default withWindowDimensions(Tooltip);
+export default compose(
+    withWindowDimensions,
+    withInvertedListBoundingRect,
+)(Tooltip);
