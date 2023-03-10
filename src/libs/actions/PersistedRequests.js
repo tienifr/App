@@ -18,6 +18,11 @@ function clear() {
  */
 function save(requestsToPersist) {
     persistedRequests = persistedRequests.concat(requestsToPersist);
+    const reconnectRequest = _.find(persistedRequests, r => r.command === 'ReconnectApp');
+    if (reconnectRequest) {
+        persistedRequests = _.filter(persistedRequests, r => r.command !== 'ReconnectApp');
+        persistedRequests = persistedRequests.concat([reconnectRequest]);
+    }
     Onyx.set(ONYXKEYS.PERSISTED_REQUESTS, persistedRequests);
 }
 
