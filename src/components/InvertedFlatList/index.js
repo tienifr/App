@@ -25,6 +25,7 @@ class InvertedFlatList extends React.Component {
         super(props);
 
         this.list = undefined;
+        
     }
 
     componentDidMount() {
@@ -33,6 +34,14 @@ class InvertedFlatList extends React.Component {
             this.props.innerRef.current = this.list;
         } else {
             this.props.innerRef(this.list);
+        }
+
+        if (this.list) {
+            console.log('this.list', this.list);
+            console.log('this.list', document.getElementById("BaseInvertedFlatList").getBoundingClientRect());
+            setTimeout(() => {
+                console.log('this.list', document.getElementById("BaseInvertedFlatList").getBoundingClientRect());
+            }, 2000);
         }
     }
 
@@ -45,6 +54,7 @@ class InvertedFlatList extends React.Component {
                 ref={el => this.list = el}
                 shouldMeasureItems
                 contentContainerStyle={StyleSheet.compose(this.props.contentContainerStyle, styles.justifyContentEnd)}
+                nativeID={"BaseInvertedFlatList"}
             />
         );
     }
