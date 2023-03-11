@@ -95,7 +95,10 @@ const AddressSearch = (props) => {
         query.components = 'country:us';
     }
 
-    const saveLocationDetails = (details) => {
+    const saveLocationDetails = (details, autocompleteData) => {
+        console.log('details', details);
+        console.log('autocompleteData', autocompleteData);
+
         const addressComponents = details.address_components;
         if (!addressComponents) {
             return;
@@ -120,6 +123,10 @@ const AddressSearch = (props) => {
             country: 'short_name',
         });
 
+        const fallbackData = autocompleteData.terms;
+        const stateAutocompleteFallback = fallbackData.length >= 2 ? fallbackData[fallbackData.length - 2].value : '';
+        const cityAutocompleteFallback = fallbackData.length >= 3 ? fallbackData[fallbackData.length - 3].value : '';
+
         // The state's iso code (short_name) is needed for the StatePicker component but we also
         // need the state's full name (long_name) when we render the state in a TextInput.
         const {
@@ -130,9 +137,9 @@ const AddressSearch = (props) => {
 
         const values = {
             street: props.value ? props.value.trim() : '',
-            city: city || cityFallback,
+            city: city || cityFallback || cityAutocompleteFallback,
             zipCode,
-            state,
+            state: state || stateAutocompleteFallback,
             country: '',
         };
 
@@ -143,6 +150,7 @@ const AddressSearch = (props) => {
         }
 
         const street = `${streetNumber} ${streetName}`.trim();
+
         if (street && street.length >= values.street.length) {
             // We are only passing the street number and name if the combined length is longer than the value
             // that was initially passed to the autocomplete component. Google Places can truncate details
@@ -191,7 +199,7 @@ const AddressSearch = (props) => {
                     suppressDefaultStyles
                     enablePoweredByContainer={false}
                     onPress={(data, details) => {
-                        saveLocationDetails(details);
+                        saveLocationDetails(details, data);
 
                         // After we select an option, we set displayListViewBorder to false to prevent UI flickering
                         setDisplayListViewBorder(false);
