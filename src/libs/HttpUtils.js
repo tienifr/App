@@ -32,6 +32,8 @@ Onyx.connect({
 // We use the AbortController API to terminate pending request in `cancelPendingRequests`
 let cancellationController = new AbortController();
 
+let reconnectAppCancellationController = new AbortController();
+
 /**
  * Send an HTTP request, and attempt to resolve the json response.
  * If there is a network error, we'll set the application offline.
@@ -42,10 +44,16 @@ let cancellationController = new AbortController();
  * @param {Boolean} [canCancel]
  * @returns {Promise}
  */
-function processHTTPRequest(url, method = 'get', body = null, canCancel = true) {
+function processHTTPRequest(url, method = 'get', body = null, canCancel = true, command = '') {
+    let signal = canCancel ? cancellationController.signal : undefined;
+
+    if (command === 'ReconnectApp') {
+        signal = reconnectAppCancellationController.signal;
+    }
+
     return fetch(url, {
         // We hook requests to the same Controller signal, so we can cancel them all at once
-        signal: canCancel ? cancellationController.signal : undefined,
+        signal,
         method,
         body,
     })
@@ -125,7 +133,7 @@ function xhr(command, data, type = CONST.NETWORK.METHOD.POST, shouldUseSecure = 
         apiRoot = shouldUseSecure ? CONFIG.EXPENSIFY.STAGING_SECURE_EXPENSIFY_URL : CONFIG.EXPENSIFY.STAGING_EXPENSIFY_URL;
     }
 
-    return processHTTPRequest(`${apiRoot}api?command=${command}`, type, formData, data.canCancel);
+    return processHTTPRequest(`${apiRoot}api?command=${command}`, type, formData, data.canCancel, command);
 }
 
 function cancelPendingRequests() {
@@ -136,7 +144,16 @@ function cancelPendingRequests() {
     cancellationController = new AbortController();
 }
 
+function cancelPendingReconnectAppRequests() {
+    reconnectAppCancellationController.abort();
+
+    // We create a new instance because once `abort()` is called any future requests using the same controller would
+    // automatically get rejected: https://dom.spec.whatwg.org/#abortcontroller-api-integration
+    reconnectAppCancellationController = new AbortController();
+}
+
 export default {
     xhr,
     cancelPendingRequests,
+    cancelPendingReconnectAppRequests,
 };
