@@ -76,6 +76,9 @@
             -webkit-text-fill-color: #ffffff;
             caret-color: #ffffff;
         }
+        [data-text-copiable="false"]::before {
+            content: attr(data-text-content)
+        }
     </style>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, interactive-widget=resizes-content">
     <link rel="shortcut icon" id="favicon" href="/favicon.png">

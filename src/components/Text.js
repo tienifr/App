@@ -26,6 +26,8 @@ const propTypes = {
     /** Any additional styles to apply */
     // eslint-disable-next-line react/forbid-prop-types
     style: PropTypes.any,
+
+    copiable: PropTypes.bool,
 };
 const defaultProps = {
     color: themeColors.text,
@@ -34,6 +36,7 @@ const defaultProps = {
     textAlign: 'left',
     children: null,
     style: {},
+    copiable: true
 };
 
 const Text = React.forwardRef(({
@@ -43,6 +46,7 @@ const Text = React.forwardRef(({
     children,
     family,
     style,
+    copiable,
     ...props
 }, ref) => {
     // If the style prop is an array of styles, we need to mix them all together
@@ -60,6 +64,21 @@ const Text = React.forwardRef(({
 
     if (!componentStyle.lineHeight && componentStyle.fontSize === variables.fontSizeNormal) {
         componentStyle.lineHeight = variables.fontSizeNormalHeight;
+    }
+
+    if (!copiable && typeof children === 'string') {
+        return (
+            <RNText
+                allowFontScaling={false}
+                ref={ref}
+                style={[componentStyle]}
+                dataSet={{
+                    textContent: children,
+                    textCopiable: false,
+                }}
+                {...props}
+            />
+        );
     }
 
     return (

@@ -128,6 +128,7 @@ const ReportActionItemFragment = (props) => {
                     <Text
                         fontSize={variables.fontSizeSmall}
                         color={themeColors.textSupporting}
+                        copiable={false}
                     >
                         {` ${props.translate('reportActionCompose.edited')}`}
                     </Text>
