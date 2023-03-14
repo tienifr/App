@@ -65,14 +65,20 @@ const getHTMLOfSelection = () => {
             } else {
                 node = range.commonAncestorContainer.parentNode.closest(`[${tagAttribute}]`);
             }
-
+            
+            let newFragment;
             // This means "range.commonAncestorContainer" is a text node. We simply get its parent node.
             if (!node) {
                 node = range.commonAncestorContainer.parentNode;
+                newFragment = document.createRange().createContextualFragment(clonedSelection.textContent.replace(/\n/g, '<br/>'))
             }
 
             node = node.cloneNode();
-            node.appendChild(clonedSelection);
+            if (newFragment)
+                node.appendChild(newFragment);
+            else
+                node.appendChild(clonedSelection);
+
             div.appendChild(node);
         }
     }
