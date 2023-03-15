@@ -79,7 +79,7 @@ const EmojiSuggestions = (props) => {
      * @returns {JSX.Element}
      */
     const renderSuggestionMenuItem = ({item, index}) => {
-        const styledTextArray = getStyledTextArray(item.name, props.prefix);
+        const styledTextArray = getStyledTextArray(item.name, props.prefix.toLowerCase());
 
         return (
             <Pressable
