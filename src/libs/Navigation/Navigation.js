@@ -210,9 +210,18 @@ function dismissModal(shouldOpenDrawer = false) {
  * @returns {String}
  */
 function getActiveRoute() {
+    console.log('navigationRef.current.getCurrentRoute().name', navigationRef.current.getCurrentRoute().name);
     return navigationRef.current && navigationRef.current.getCurrentRoute().name
         ? getPathFromState(navigationRef.current.getState(), linkingConfig.config)
         : '';
+}
+
+/**
+ * Returns the current active route
+ * @returns {String}
+ */
+function getActiveRouteName() {
+    return navigationRef.current ? navigationRef.current.getCurrentRoute().name : '';
 }
 
 /**
@@ -312,6 +321,7 @@ export default {
     setIsNavigating,
     isReportScreenReady,
     setIsReportScreenIsReady,
+    getActiveRouteName
 };
 
 export {

@@ -17,6 +17,8 @@ import SidebarScreen from '../../../pages/home/sidebar/SidebarScreen';
 import BaseDrawerNavigator from './BaseDrawerNavigator';
 import * as ReportUtils from '../../ReportUtils';
 import reportPropTypes from '../../../pages/reportPropTypes';
+import FullPageNotFoundView from '../../../components/BlockingViews/FullPageNotFoundView';
+import Navigation from '../Navigation';
 
 const propTypes = {
     /** Available reports that would be displayed in this navigator */
@@ -95,6 +97,13 @@ class MainDrawerNavigator extends Component {
         return true;
     }
 
+    isModalRouteValid() {
+        if (Navigation.getActiveRouteName() === 'Details_Root' && !this.props.route.params.login) {
+            return false;
+        }
+        return true;
+    }
+
     trackAppStartTiming() {
         // We only want to report timing events when rendering from cached data
         if (!this.isFromCache) {
@@ -114,27 +123,29 @@ class MainDrawerNavigator extends Component {
         // This way routing information is updated (if needed) based on the initial report ID resolved.
         // This is usually needed after login/create account and re-launches
         return (
-            <BaseDrawerNavigator
-                drawerContent={({navigation, state}) => {
-                    // This state belongs to the drawer so it should always have the ReportScreen as it's initial (and only) route
-                    const reportIDFromRoute = lodashGet(state, ['routes', 0, 'params', 'reportID']);
-                    return (
-                        <SidebarScreen
-                            navigation={navigation}
-                            onLayout={this.trackAppStartTiming}
-                            reportIDFromRoute={reportIDFromRoute}
-                        />
-                    );
-                }}
-                screens={[
-                    {
-                        name: SCREENS.REPORT,
-                        component: ReportScreen,
-                        initialParams: this.initialParams,
-                    },
-                ]}
-                isMainScreen
-            />
+            /*{<FullPageNotFoundView shouldShow={!this.isModalRouteValid()}>*/
+                <BaseDrawerNavigator
+                    drawerContent={({navigation, state}) => {
+                        // This state belongs to the drawer so it should always have the ReportScreen as it's initial (and only) route
+                        const reportIDFromRoute = lodashGet(state, ['routes', 0, 'params', 'reportID']);
+                        return (
+                            <SidebarScreen
+                                navigation={navigation}
+                                onLayout={this.trackAppStartTiming}
+                                reportIDFromRoute={reportIDFromRoute}
+                            />
+                        );
+                    }}
+                    screens={[
+                        {
+                            name: SCREENS.REPORT,
+                            component: ReportScreen,
+                            initialParams: this.initialParams,
+                        },
+                    ]}
+                    isMainScreen
+                />
+            /*</FullPageNotFoundView>*/
         );
     }
 }
