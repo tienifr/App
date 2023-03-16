@@ -1,6 +1,12 @@
 import _ from 'underscore';
 import CONST from '../CONST';
 
+const currencyDigitsData = {"ADP":0,"AFN":0,"ALL":0,"AMD":2,"BHD":3,"BIF":0,"BYN":2,"BYR":0,"CAD":2,"CHF":2,"CLF":4,"CLP":0,"COP":2,"CRC":2,"CZK":2,"DEFAULT":2,"DJF":0,"DKK":2,"ESP":0,"GNF":0,"GYD":2,"HUF":2,"IDR":2,"IQD":0,"IRR":0,"ISK":0,"ITL":0,"JOD":3,"JPY":0,"KMF":0,"KPW":0,"KRW":0,"KWD":3,"LAK":0,"LBP":0,"LUF":0,"LYD":3,"MGA":0,"MGF":0,"MMK":0,"MNT":2,"MRO":0,"MUR":2,"NOK":2,"OMR":3,"PKR":2,"PYG":0,"RSD":0,"RWF":0,"SEK":2,"SLL":0,"SOS":0,"STD":0,"SYP":0,"TMM":0,"TND":3,"TRL":0,"TWD":2,"TZS":2,"UGX":0,"UYI":0,"UYW":4,"UZS":2,"VEF":2,"VND":0,"VUV":0,"XAF":0,"XOF":0,"XPF":0,"YER":0,"ZMK":0,"ZWD":0}
+
+function getCurrencyUnits(currency) {
+    return 10 ** currencyDigitsData[currency];
+}
+
 /**
  * Calculates the amount per user given a list of participants
  * @param {Array} participants - List of logins for the participants in the chat. It should not include the current user's login.
@@ -8,15 +14,21 @@ import CONST from '../CONST';
  * @param {Boolean} isDefaultUser - Whether we are calculating the amount for the current user
  * @returns {Number}
  */
-function calculateAmount(participants, total, isDefaultUser = false) {
+function calculateAmount(participants, total, currency, isDefaultUser = false) {
+    console.('currency', currency);
+
     // Convert to cents before working with iouAmount to avoid
     // javascript subtraction with decimal problem -- when dealing with decimals,
     // because they are encoded as IEEE 754 floating point numbers, some of the decimal
     // numbers cannot be represented with perfect accuracy.
     // Cents is temporary and there must be support for other currencies in the future
-    const iouAmount = Math.round(parseFloat(total * 100));
+    const iouAmount = Math.round(parseFloat(total * getCurrencyUnits(currency)));
+
+    console.log('iouAmount', iouAmount, 'total', total);
     const totalParticipants = participants.length + 1;
     const amountPerPerson = Math.round(iouAmount / totalParticipants);
+
+    console.log('amountPerPerson', amountPerPerson);
 
     if (!isDefaultUser) {
         return amountPerPerson;
@@ -24,6 +36,8 @@ function calculateAmount(participants, total, isDefaultUser = false) {
 
     const sumAmount = amountPerPerson * totalParticipants;
     const difference = iouAmount - sumAmount;
+
+    console.log('difference', difference);
 
     return iouAmount !== sumAmount ? (amountPerPerson + difference) : amountPerPerson;
 }
@@ -139,4 +153,5 @@ export {
     updateIOUOwnerAndTotal,
     getIOUReportActions,
     isIOUReportPendingCurrencyConversion,
+    getCurrencyUnits,
 };

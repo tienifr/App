@@ -311,8 +311,11 @@ function createSplitsAndOnyxData(participants, currentUserLogin, amount, comment
     ];
 
     // Loop through participants creating individual chats, iouReports and reportActionIDs as needed
-    const splitAmount = IOUUtils.calculateAmount(participants, amount);
-    const splits = [{email: currentUserEmail, amount: IOUUtils.calculateAmount(participants, amount, true)}];
+    const splitAmount = IOUUtils.calculateAmount(participants, amount, currency);
+    const splits = [{email: currentUserEmail, amount: IOUUtils.calculateAmount(participants, amount, currency, true)}];
+
+    console.log('splits', splits);
+    console.log('splitAmount', splitAmount);
 
     const hasMultipleParticipants = participants.length > 1;
     _.each(participants, (participant) => {
@@ -473,6 +476,8 @@ function createSplitsAndOnyxData(participants, currentUserLogin, amount, comment
         groupData.createdReportActionID = groupCreatedReportAction.reportActionID;
     }
 
+    console.log('splits', splits);
+
     return {
         groupData,
         splits,
@@ -517,6 +522,7 @@ function splitBill(participants, currentUserLogin, amount, comment, currency, lo
  */
 function splitBillAndOpenReport(participants, currentUserLogin, amount, comment, currency, locale) {
     const {groupData, splits, onyxData} = createSplitsAndOnyxData(participants, currentUserLogin, amount, comment, currency, locale);
+    console.log('splits', splits);
 
     API.write('SplitBillAndOpenReport', {
         reportID: groupData.chatReportID,
@@ -997,4 +1003,5 @@ export {
     setIOUSelectedCurrency,
     sendMoneyWithWallet,
     payMoneyRequestWithWallet,
+    //getCurrencyUnits,
 };
