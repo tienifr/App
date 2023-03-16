@@ -174,16 +174,22 @@ class ReportScreen extends React.Component {
         Navigation.navigate(ROUTES.getReportRoute(this.props.accountManagerReportID));
     }
 
+    shouldShowNotFoundView() {
+        if (!this.props.report.reportID && !this.props.report.isLoadingReportActions) {
+            return true;
+        }
+
+        if (!Permissions.canUsePolicyRooms(this.props.betas) && ReportUtils.isUserCreatedPolicyRoom(this.props.report)) {
+            return true;
+        }
+    }
+
     render() {
         if (!this.props.isSidebarLoaded || _.isEmpty(this.props.personalDetails)) {
             return null;
         }
 
         if (ReportUtils.isDefaultRoom(this.props.report) && !ReportUtils.canSeeDefaultRoom(this.props.report, this.props.policies, this.props.betas)) {
-            return null;
-        }
-
-        if (!Permissions.canUsePolicyRooms(this.props.betas) && ReportUtils.isUserCreatedPolicyRoom(this.props.report)) {
             return null;
         }
 
@@ -221,7 +227,7 @@ class ReportScreen extends React.Component {
                     )}
                 >
                     <FullPageNotFoundView
-                        shouldShow={!this.props.report.reportID && !this.props.report.isLoadingReportActions}
+                        shouldShow={this.shouldShowNotFoundView()}
                         subtitleKey="notFound.noAccess"
                         shouldShowCloseButton={false}
                         shouldShowBackButton={this.props.isSmallScreenWidth}
