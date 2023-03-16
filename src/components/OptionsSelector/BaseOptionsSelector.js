@@ -272,6 +272,7 @@ class BaseOptionsSelector extends Component {
             <TextInput
                 ref={el => this.textInput = el}
                 value={this.props.value}
+                inputStyle={[styles.userSelectNone]}
                 label={this.props.textInputLabel}
                 onChangeText={this.props.onChangeText}
                 placeholder={this.props.placeholderText}
