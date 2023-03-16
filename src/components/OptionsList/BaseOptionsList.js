@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import React, {forwardRef, Component} from 'react';
+import React, {Component} from 'react';
 import {View} from 'react-native';
 import PropTypes from 'prop-types';
 import styles from '../../styles/styles';
@@ -8,6 +8,7 @@ import OptionRow from '../OptionRow';
 import SectionList from '../SectionList';
 import Text from '../Text';
 import {propTypes as optionsListPropTypes, defaultProps as optionsListDefaultProps} from './optionsListPropTypes';
+import withInvertedListBoundingRect, {invertedListBoundingRectPropTypes} from '../withInvertedListBoundingRect';
 
 const propTypes = {
     /** Determines whether the keyboard gets dismissed in response to a drag */
@@ -20,6 +21,7 @@ const propTypes = {
     onScroll: PropTypes.func,
 
     ...optionsListPropTypes,
+    ...invertedListBoundingRectPropTypes,
 };
 
 const defaultProps = {
@@ -235,6 +237,9 @@ class BaseOptionsList extends Component {
                     initialNumToRender={12}
                     maxToRenderPerBatch={5}
                     windowSize={5}
+                    onLayout={({nativeEvent}) => {
+                        this.props.setBoundingClientRect(nativeEvent.layout);
+                    }}
                     viewabilityConfig={{viewAreaCoveragePercentThreshold: 95}}
                     onViewableItemsChanged={this.onViewableItemsChanged}
                 />
@@ -246,7 +251,4 @@ class BaseOptionsList extends Component {
 BaseOptionsList.propTypes = propTypes;
 BaseOptionsList.defaultProps = defaultProps;
 
-export default forwardRef((props, ref) => (
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    <BaseOptionsList {...props} innerRef={ref} />
-));
+export default withInvertedListBoundingRect(BaseOptionsList);
