@@ -162,6 +162,8 @@ export default function getTooltipStyles(
             fontFamily: fontFamily.EXP_NEUE,
             fontSize: tooltipFontSize,
             overflow: 'hidden',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
         },
         pointerWrapperStyle: {
             position: 'fixed',
