@@ -8,6 +8,8 @@ import themeColors from '../../styles/themes/default';
 import styles from '../../styles/styles';
 import variables from '../../styles/variables';
 import CONST from '../../CONST';
+import Hoverable from '../../components/Hoverable';
+import TextLink from '../../components/TextLink';
 
 const socialsList = [
     {
@@ -35,22 +37,18 @@ const socialsList = [
 const Socials = () => (
     <Text>
         {_.map(socialsList, social => (
-            <Pressable
-                onPress={() => {
-                    Linking.openURL(social.link);
-                }}
-                style={styles.pr1}
-                key={social.link}
-            >
-                {({hovered}) => (
-                    <Icon
-                        src={social.iconURL}
-                        height={variables.iconSizeLarge}
-                        width={variables.iconSizeLarge}
-                        fill={hovered ? themeColors.link : themeColors.textLight}
-                    />
-                )}
-            </Pressable>
+            <TextLink href={social.link}>
+                <Hoverable>
+                    {({hovered}) => (
+                        <Icon
+                            src={social.iconURL}
+                            height={variables.iconSizeLarge}
+                            width={variables.iconSizeLarge}
+                            fill={hovered ? themeColors.link : themeColors.textLight}
+                        />
+                    )}
+                </Hoverable>
+            </TextLink>
         ))}
     </Text>
 );
