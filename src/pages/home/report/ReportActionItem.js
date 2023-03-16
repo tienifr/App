@@ -38,6 +38,8 @@ import focusTextInputAfterAnimation from '../../../libs/focusTextInputAfterAnima
 import ChronosOOOListActions from '../../../components/ReportActionItem/ChronosOOOListActions';
 import ReportActionItemReactions from '../../../components/Reactions/ReportActionItemReactions';
 import * as Report from '../../../libs/actions/Report';
+import openReportActionComposeViewWhenClosingMessageEdit from '../../../libs/openReportActionComposeViewWhenClosingMessageEdit';
+
 
 const propTypes = {
     /** Report for this action */
@@ -183,6 +185,26 @@ class ReportActionItem extends Component {
                             <ReportActionItemMessage
                                 action={this.props.action}
                                 style={(!this.props.displayAsGroup && isAttachment) ? [styles.mt2] : undefined}
+                                onBlur={() => {
+                                    console.log('(this.props.parentRef', this.messageEditView);
+                                    if (this.props.parentRef) {
+                                        console.log('contains', this.props.parentRef.contains(lodashGet(event, 'nativeEvent.relatedTarget')));
+                                        console.log('this.messageEditView', this.props.parentRef);
+                                        console.log('this.eventTarget', lodashGet(event, 'nativeEvent.relatedTarget'));
+                                    }
+                                    //this.setState({isFocused: false});
+                                    const relatedTargetId = lodashGet(event, 'nativeEvent.relatedTarget.id');
+
+                                    // Return to prevent re-render when save/cancel button is pressed which cancels the onPress event by re-rendering
+                                    if (_.contains([this.saveButtonID, this.cancelButtonID, this.emojiButtonID], relatedTargetId)) {
+                                        return;
+                                    }
+
+                                    if (this.messageEditInput === relatedTargetId) {
+                                        return;
+                                    }
+                                    openReportActionComposeViewWhenClosingMessageEdit(this.props.isSmallScreenWidth);
+                                }}
                             />
                         ) : (
                             <ReportActionItemMessageEdit
@@ -206,7 +228,7 @@ class ReportActionItem extends Component {
         const hasReactions = reactions.length > 0;
 
         return (
-            <>
+            <View ref={el => this.messageEditView = el}>
                 {children}
                 {hasReactions && (
                     <ReportActionItemReactions
@@ -214,7 +236,7 @@ class ReportActionItem extends Component {
                         toggleReaction={this.toggleReaction}
                     />
                 )}
-            </>
+            </View>
         );
     }
 

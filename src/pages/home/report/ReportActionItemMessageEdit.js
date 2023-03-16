@@ -48,6 +48,8 @@ const propTypes = {
     /** Whether or not the emoji picker is disabled */
     shouldDisableEmojiPicker: PropTypes.bool,
 
+    onBlur: PropTypes.func,
+
     ...withLocalizePropTypes,
     ...windowDimensionsPropTypes,
     ...keyboardStatePropTypes,
@@ -57,6 +59,7 @@ const defaultProps = {
     forwardedRef: () => {},
     report: {},
     shouldDisableEmojiPicker: false,
+    onBlur: () => {}
 };
 
 class ReportActionItemMessageEdit extends React.Component {
@@ -231,7 +234,7 @@ class ReportActionItemMessageEdit extends React.Component {
     render() {
         const hasExceededMaxCommentLength = this.state.hasExceededMaxCommentLength;
         return (
-            <View style={styles.chatItemMessage}>
+            <View style={styles.chatItemMessage} ref={el => this.messageEditView = el}>
                 <View
                     style={[
                         styles.chatItemComposeBox,
@@ -257,7 +260,14 @@ class ReportActionItemMessageEdit extends React.Component {
                             ReportScrollManager.scrollToIndex({animated: true, index: this.props.index}, true);
                             toggleReportActionComposeView(false, this.props.isSmallScreenWidth);
                         }}
-                        onBlur={(event) => {
+                        onBlur={this.props.onBlur
+                            /*(event) => {
+                            console.log('(this.props.parentRef', (this.props.parentRef));
+                            if (this.props.parentRef) {
+                                console.log('contains', this.props.parentRef.contains(lodashGet(event, 'nativeEvent.relatedTarget')));
+                                console.log('this.messageEditView', this.props.parentRef);
+                                console.log('this.eventTarget', lodashGet(event, 'nativeEvent.relatedTarget'));
+                            }
                             this.setState({isFocused: false});
                             const relatedTargetId = lodashGet(event, 'nativeEvent.relatedTarget.id');
 
@@ -270,7 +280,7 @@ class ReportActionItemMessageEdit extends React.Component {
                                 return;
                             }
                             openReportActionComposeViewWhenClosingMessageEdit(this.props.isSmallScreenWidth);
-                        }}
+                        }*/}
                         selection={this.state.selection}
                         onSelectionChange={this.onSelectionChange}
                     />
