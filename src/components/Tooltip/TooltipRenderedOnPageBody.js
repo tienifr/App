@@ -47,7 +47,7 @@ const propTypes = {
     renderTooltipContent: PropTypes.func,
 
     /** The vertical padding to spare */
-    yPadding: PropTypes.number,
+    paddingTop: PropTypes.number,
 };
 
 const defaultProps = {
@@ -55,7 +55,7 @@ const defaultProps = {
     shiftVertical: 0,
     renderTooltipContent: undefined,
     maxWidth: 0,
-    yPadding: 0,
+    paddingTop: 0,
 };
 
 // Props will change frequently.
@@ -141,7 +141,7 @@ class TooltipRenderedOnPageBody extends React.PureComponent {
             this.state.tooltipContentWidth,
             this.props.shiftHorizontal,
             this.props.shiftVertical,
-            this.props.yPadding,
+            this.props.paddingTop,
         );
 
         const contentRef = (ref) => {

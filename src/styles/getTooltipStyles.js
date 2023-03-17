@@ -69,7 +69,7 @@ function computeHorizontalShift(windowWidth, xOffset, componentWidth, tooltipWid
  *                                         and a negative value shifts it to the left.
  * @param {Number} [manualShiftVertical] - Any additional amount to manually shift the tooltip up or down.
  *                                       A positive value shifts it down, and a negative value shifts it up.
- * @param {Number} [yPadding] - The vertical padding to spare
+ * @param {Number} [paddingTop] - The top padding to spare
  * @returns {Object}
  */
 export default function getTooltipStyles(
@@ -85,12 +85,12 @@ export default function getTooltipStyles(
     tooltipContentWidth,
     manualShiftHorizontal = 0,
     manualShiftVertical = 0,
-    yPadding = 0,
+    paddingTop = 0,
 ) {
     // Determine if the tooltip should display below the wrapped component.
     // If a tooltip will try to render within GUTTER_WIDTH logical pixels of the top of the screen,
     // we'll display it beneath its wrapped component rather than above it as usual.
-    const shouldShowBelow = yPadding ? yOffset < yPadding : (yOffset - tooltipHeight) < GUTTER_WIDTH;
+    const shouldShowBelow = paddingTop ? yOffset < paddingTop : (yOffset - tooltipHeight) < GUTTER_WIDTH;
 
     // Determine if we need to shift the tooltip horizontally to prevent it
     // from displaying too near to the edge of the screen.

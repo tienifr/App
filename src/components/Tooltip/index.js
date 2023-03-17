@@ -192,7 +192,7 @@ class Tooltip extends PureComponent {
                         windowWidth={this.props.windowWidth}
                         xOffset={this.state.xOffset}
                         yOffset={this.state.yOffset}
-                        yPadding={this.props.boundingClientRect.top}
+                        paddingTop={this.props.boundingClientRect.top}
                         wrapperWidth={this.state.wrapperWidth}
                         wrapperHeight={this.state.wrapperHeight}
                         shiftHorizontal={_.result(this.props, 'shiftHorizontal')}
