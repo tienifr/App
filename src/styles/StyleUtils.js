@@ -824,14 +824,22 @@ function getEmojiSuggestionItemStyle(
     hovered,
     currentEmojiIndex,
 ) {
+    let backgroundColor;
+
+    if (currentEmojiIndex === highlightedEmojiIndex && !hovered) {
+        backgroundColor = themeColors.border;
+    } else if (hovered) {
+        backgroundColor = themeColors.highlightBG;
+    }
+    console.log('backgroundColor', backgroundColor);
     return [
         {
             height: rowHeight,
             justifyContent: 'center',
         },
-        (currentEmojiIndex === highlightedEmojiIndex && !hovered) || hovered
+        backgroundColor
             ? {
-                backgroundColor: themeColors.highlightBG,
+                backgroundColor,
             }
             : {},
     ];
