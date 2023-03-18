@@ -32,6 +32,7 @@ Onyx.connect({
 // We use the AbortController API to terminate pending request in `cancelPendingRequests`
 let cancellationController = new AbortController();
 
+// To terminate pending ReconnectApp requests https://github.com/Expensify/App/issues/15627
 let reconnectAppCancellationController = new AbortController();
 
 /**
@@ -42,18 +43,18 @@ let reconnectAppCancellationController = new AbortController();
  * @param {String} [method]
  * @param {Object} [body]
  * @param {Boolean} [canCancel]
+ * @param {String} [command]
  * @returns {Promise}
  */
 function processHTTPRequest(url, method = 'get', body = null, canCancel = true, command = '') {
-    let signal = canCancel ? cancellationController.signal : undefined;
-
-    if (command === 'ReconnectApp') {
-        signal = reconnectAppCancellationController.signal;
-    }
-
     return fetch(url, {
         // We hook requests to the same Controller signal, so we can cancel them all at once
-        signal,
+        signal: (() => {
+            if (canCancel) {
+                return command === 'ReconnectApp' ? reconnectAppCancellationController.signal : cancellationController.signal;
+            }
+            return undefined;
+        })(),
         method,
         body,
     })
@@ -136,20 +137,18 @@ function xhr(command, data, type = CONST.NETWORK.METHOD.POST, shouldUseSecure = 
     return processHTTPRequest(`${apiRoot}api?command=${command}`, type, formData, data.canCancel, command);
 }
 
+function cancelPendingReconnectAppRequests() {
+    reconnectAppCancellationController.abort();
+    reconnectAppCancellationController = new AbortController();
+}
+
 function cancelPendingRequests() {
     cancellationController.abort();
 
     // We create a new instance because once `abort()` is called any future requests using the same controller would
     // automatically get rejected: https://dom.spec.whatwg.org/#abortcontroller-api-integration
     cancellationController = new AbortController();
-}
-
-function cancelPendingReconnectAppRequests() {
-    reconnectAppCancellationController.abort();
-
-    // We create a new instance because once `abort()` is called any future requests using the same controller would
-    // automatically get rejected: https://dom.spec.whatwg.org/#abortcontroller-api-integration
-    reconnectAppCancellationController = new AbortController();
+    cancelPendingReconnectAppRequests();
 }
 
 export default {

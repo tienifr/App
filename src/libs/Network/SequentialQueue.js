@@ -41,7 +41,6 @@ function process() {
         RequestThrottle.clear();
         return process();
     }).catch((error) => {
-        console.log('requestToProcess', requestToProcess, error.name);
         // On sign out we cancel any in flight requests from the user. Since that user is no longer signed in their requests should not be retried.
         if (error.name === CONST.ERROR.REQUEST_CANCELLED) {
             PersistedRequests.remove(requestToProcess);
