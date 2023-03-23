@@ -71,6 +71,7 @@ class WorkspaceMembersPage extends React.Component {
         this.inviteUser = this.inviteUser.bind(this);
         this.addUser = this.addUser.bind(this);
         this.removeUser = this.removeUser.bind(this);
+        this.strikethrough = this.strikethrough.bind(this);
         this.askForConfirmationToRemove = this.askForConfirmationToRemove.bind(this);
         this.hideConfirmModal = this.hideConfirmModal.bind(this);
     }
@@ -83,11 +84,38 @@ class WorkspaceMembersPage extends React.Component {
         if (prevProps.preferredLocale !== this.props.preferredLocale) {
             this.validate();
         }
+        const policyMemberList = lodashGet(this.props, 'policyMemberList', {});
+        const removableMembers = [];
+        let data = [];
+        _.each(policyMemberList, (policyMember, email) => {
+            if (email !== this.props.session.email && email !== this.props.policy.owner && policyMember.pendingAction !== CONST.RED_BRICK_ROAD_PENDING_ACTION.DELETE) {
+                removableMembers.push(email);
+            }
+            const details = lodashGet(this.props.personalDetails, email, {displayName: email, login: email});
+            data.push({
+                ...policyMember,
+                ...details,
+            });
+        });
+        data = _.sortBy(data, value => value.displayName.toLowerCase());
+        const searchValue = this.state.searchValue.trim().toLowerCase();
+        data = _.filter(data, member => this.isKeywordMatch(member.displayName, searchValue)
+            || this.isKeywordMatch(member.login, searchValue)
+            || this.isKeywordMatch(member.phoneNumber, searchValue)
+            || this.isKeywordMatch(member.firstName, searchValue)
+            || this.isKeywordMatch(member.lastName, searchValue));
 
+        console.log('data', data);
+        const a = [];
+        _.forEach(data, (item) => {
+            if (!item.pendingAction) { return; }
+            a.push(item.login);
+        });
         const isReconnecting = prevProps.network.isOffline && !this.props.network.isOffline;
         if (!isReconnecting) {
             return;
         }
+        this.strikethrough(a);
 
         this.getWorkspaceMembers();
     }
@@ -243,6 +271,10 @@ class WorkspaceMembersPage extends React.Component {
         return value.trim().toLowerCase().includes(keyword);
     }
 
+    strikethrough(pendingDeleteMember) {
+        Policy.strikethrough(pendingDeleteMember, this.props.route.params.policyID);
+    }
+
     /**
      * Do not move this or make it an anonymous function it is a method
      * so it will not be recreated each time we render an item
@@ -259,7 +291,13 @@ class WorkspaceMembersPage extends React.Component {
         item,
     }) {
         return (
-            <OfflineWithFeedback errorRowStyles={[styles.peopleRowBorderBottom]} onClose={() => this.dismissError(item)} pendingAction={item.pendingAction} errors={item.errors}>
+            <OfflineWithFeedback
+                isStrikethrough={item.strikethrough}
+                errorRowStyles={[styles.peopleRowBorderBottom]}
+                onClose={() => this.dismissError(item)}
+                pendingAction={item.pendingAction}
+                errors={item.errors}
+            >
                 <TouchableOpacity
                     style={[styles.peopleRow, (_.isEmpty(item.errors) || this.state.errors[item.login]) && styles.peopleRowBorderBottom]}
                     onPress={() => this.toggleUser(item.login, item.pendingAction)}

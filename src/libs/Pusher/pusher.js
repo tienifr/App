@@ -125,56 +125,56 @@ function bindEventToChannel(channel, eventName, eventCallback = () => {}) {
 
     const chunkedDataEvents = {};
     const callback = (eventData) => {
-        if (shouldForceOffline) {
-            Log.info('[Pusher] Ignoring a Push event because shouldForceOffline = true');
-            return;
-        }
+        // if (shouldForceOffline) {
+        //     Log.info('[Pusher] Ignoring a Push event because shouldForceOffline = true');
+        //     return;
+        // }
 
-        let data;
-        try {
-            data = _.isObject(eventData) ? eventData : JSON.parse(eventData);
-        } catch (err) {
-            Log.alert('[Pusher] Unable to parse JSON response from Pusher', {error: err, eventData});
-            return;
-        }
-        if (data.id === undefined || data.chunk === undefined || data.final === undefined) {
-            eventCallback(data);
-            return;
-        }
+        // let data;
+        // try {
+        //     data = _.isObject(eventData) ? eventData : JSON.parse(eventData);
+        // } catch (err) {
+        //     Log.alert('[Pusher] Unable to parse JSON response from Pusher', {error: err, eventData});
+        //     return;
+        // }
+        // if (data.id === undefined || data.chunk === undefined || data.final === undefined) {
+        //     eventCallback(data);
+        //     return;
+        // }
 
-        // If we are chunking the requests, we need to construct a rolling list of all packets that have come through
-        // Pusher. If we've completed one of these full packets, we'll combine the data and act on the event that it's
-        // assigned to.
+        // // If we are chunking the requests, we need to construct a rolling list of all packets that have come through
+        // // Pusher. If we've completed one of these full packets, we'll combine the data and act on the event that it's
+        // // assigned to.
 
-        // If we haven't seen this eventID yet, initialize it into our rolling list of packets.
-        if (!chunkedDataEvents[data.id]) {
-            chunkedDataEvents[data.id] = {chunks: [], receivedFinal: false};
-        }
+        // // If we haven't seen this eventID yet, initialize it into our rolling list of packets.
+        // if (!chunkedDataEvents[data.id]) {
+        //     chunkedDataEvents[data.id] = {chunks: [], receivedFinal: false};
+        // }
 
-        // Add it to the rolling list.
-        const chunkedEvent = chunkedDataEvents[data.id];
-        chunkedEvent.chunks[data.index] = data.chunk;
+        // // Add it to the rolling list.
+        // const chunkedEvent = chunkedDataEvents[data.id];
+        // chunkedEvent.chunks[data.index] = data.chunk;
 
-        // If this is the last packet, mark that we've hit the end.
-        if (data.final) {
-            chunkedEvent.receivedFinal = true;
-        }
+        // // If this is the last packet, mark that we've hit the end.
+        // if (data.final) {
+        //     chunkedEvent.receivedFinal = true;
+        // }
 
-        // Only call the event callback if we've received the last packet and we don't have any holes in the complete
-        // packet.
-        if (chunkedEvent.receivedFinal && chunkedEvent.chunks.length === _.keys(chunkedEvent.chunks).length) {
-            eventCallback(JSON.parse(chunkedEvent.chunks.join('')));
-            try {
-                eventCallback(JSON.parse(chunkedEvent.chunks.join('')));
-            } catch (err) {
-                Log.alert('[Pusher] Unable to parse chunked JSON response from Pusher', {
-                    error: err,
-                    eventData: chunkedEvent.chunks.join(''),
-                });
-            }
+        // // Only call the event callback if we've received the last packet and we don't have any holes in the complete
+        // // packet.
+        // if (chunkedEvent.receivedFinal && chunkedEvent.chunks.length === _.keys(chunkedEvent.chunks).length) {
+        //     eventCallback(JSON.parse(chunkedEvent.chunks.join('')));
+        //     try {
+        //         eventCallback(JSON.parse(chunkedEvent.chunks.join('')));
+        //     } catch (err) {
+        //         Log.alert('[Pusher] Unable to parse chunked JSON response from Pusher', {
+        //             error: err,
+        //             eventData: chunkedEvent.chunks.join(''),
+        //         });
+        //     }
 
-            delete chunkedDataEvents[data.id];
-        }
+        //     delete chunkedDataEvents[data.id];
+        // }
     };
 
     channel.bind(eventName, callback);

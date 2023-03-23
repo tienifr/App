@@ -222,6 +222,14 @@ function removeMembers(members, policyID) {
     }, {optimisticData, failureData});
 }
 
+function strikethrough(members, policyID) {
+    Onyx.merge(`${ONYXKEYS.COLLECTION.POLICY_MEMBER_LIST}${policyID}`, {
+        [members[0]]: {
+            strikethrough: true,
+        },
+    });
+}
+
 /**
  * Adds members to the specified workspace/policyID
  *
@@ -1072,4 +1080,5 @@ export {
     removeWorkspace,
     isPolicyOwner,
     leaveRoom,
+    strikethrough,
 };

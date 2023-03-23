@@ -50,6 +50,9 @@ const propTypes = {
     /** Additional style object for the error row */
     errorRowStyles: stylePropTypes,
 
+    // strikethrough: PropTypes.func,
+    isStrikethrough: PropTypes.bool,
+
     ...withLocalizePropTypes,
 };
 
@@ -57,7 +60,12 @@ const defaultProps = {
     pendingAction: null,
     errors: null,
     shouldShowErrorMessages: true,
+    isStrikethrough: false,
+
     onClose: () => {},
+
+    // strikethrough: () => {},
+
     style: [],
     contentContainerStyle: [],
     errorRowStyles: [],
@@ -87,28 +95,30 @@ const OfflineWithFeedback = (props) => {
     const isUpdateOrDeleteError = hasErrors && (props.pendingAction === 'delete' || props.pendingAction === 'update');
     const isAddError = hasErrors && props.pendingAction === 'add';
     const needsOpacity = (isOfflinePendingAction && !isUpdateOrDeleteError) || isAddError;
-    const needsStrikeThrough = props.network.isOffline && props.pendingAction === 'delete';
-    const hideChildren = !props.network.isOffline && props.pendingAction === 'delete' && !hasErrors;
+    const needsStrikeThrough = (props.network.isOffline || props.isStrikethrough) && props.pendingAction === 'delete';
+
+    // const hideChildren = !props.network.isOffline && props.pendingAction === 'delete' && !hasErrors;
     let children = props.children;
 
     // Apply strikethrough to children if needed, but skip it if we are not going to render them
-    if (needsStrikeThrough && !hideChildren) {
+    if (needsStrikeThrough) {
+        // props.strikethrough();
         children = applyStrikeThrough(children);
     }
     return (
         <View style={props.style}>
-            {!hideChildren && (
-                <View
-                    style={[needsOpacity ? styles.offlineFeedback.pending : {}, props.contentContainerStyle]}
-                    needsOffscreenAlphaCompositing={
+            {/* {!hideChildren && ( */}
+            <View
+                style={[needsOpacity ? styles.offlineFeedback.pending : {}, props.contentContainerStyle]}
+                needsOffscreenAlphaCompositing={
                         shouldRenderOffscreen
                             ? (needsOpacity && props.needsOffscreenAlphaCompositing)
                             : undefined
                     }
-                >
-                    {children}
-                </View>
-            )}
+            >
+                {children}
+            </View>
+            {/* )} */}
             {(props.shouldShowErrorMessages && hasErrors) && (
                 <View style={StyleUtils.combineStyles(styles.offlineFeedback.error, props.errorRowStyles)}>
                     <DotIndicatorMessage style={[styles.flex1]} messages={props.errors} type="error" />
