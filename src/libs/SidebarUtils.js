@@ -29,7 +29,8 @@ Onyx.connect({
         } else if (ReportUtils.isIOUReport(report)) {
             iouReports[key] = report;
         } else {
-            chatReports[key] = report;
+            if (!chatReports[key] || chatReports[key].lastVisibleActionCreated < report.lastVisibleActionCreated)
+                chatReports[key] = report;
         }
     },
 });
