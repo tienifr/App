@@ -47,6 +47,7 @@ const propTypes = {
 
     /** Props to detect online status */
     network: networkPropTypes.isRequired,
+    shouldLog: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -58,6 +59,7 @@ const defaultProps = {
     fallbackIcon: Expensicons.FallbackAvatar,
     type: CONST.ICON_TYPE_AVATAR,
     name: '',
+    shouldLog: false,
 };
 
 class Avatar extends PureComponent {
@@ -99,6 +101,10 @@ class Avatar extends PureComponent {
         const iconFillColor = isWorkspace ? StyleUtils.getDefaultWorspaceAvatarColor(this.props.name).fill : this.props.fill;
         const fallbackAvatar = isWorkspace ? ReportUtils.getDefaultWorkspaceAvatar(this.props.name) : this.props.fallbackIcon;
 
+        if (this.props.shouldLog) {
+            console.log('_.isFunction(this.props.source) || this.state.imageError', _.isFunction(this.props.source) || this.state.imageError);
+        }
+
         return (
             <View pointerEvents="none" style={this.props.containerStyles}>
                 {_.isFunction(this.props.source) || this.state.imageError
@@ -118,7 +124,12 @@ class Avatar extends PureComponent {
                         </View>
                     )
                     : (
-                        <Image source={{uri: this.props.source}} style={imageStyle} onError={() => this.setState({imageError: true})} />
+                        <Image
+                            source={{uri: this.props.source}}
+                            defaultSource={getAvatarDefaultSource(this.props.source)}
+                            style={imageStyle}
+                            onError={() => this.setState({imageError: true})}
+                        />
                     )}
             </View>
         );

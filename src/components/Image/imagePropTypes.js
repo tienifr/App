@@ -41,6 +41,8 @@ const imagePropTypes = {
         /** Currently logged in user authToken */
         authToken: PropTypes.string,
     }),
+
+    shouldLog: PropTypes.bool
 };
 
 const defaultProps = {
@@ -53,6 +55,7 @@ const defaultProps = {
     onLoadStart: () => {},
     onLoadEnd: () => {},
     onLoad: () => {},
+    shouldLog: false
 };
 
 export {imagePropTypes, defaultProps};

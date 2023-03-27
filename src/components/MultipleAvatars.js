@@ -77,6 +77,7 @@ const MultipleAvatars = (props) => {
                         fill={themeColors.iconSuccessFill}
                         name={props.icons[0].name}
                         type={props.icons[0].type}
+                        shouldLog
                     />
                 </Tooltip>
             </View>
@@ -138,6 +139,7 @@ const MultipleAvatars = (props) => {
                                 imageStyles={[singleAvatarStyles]}
                                 name={props.icons[0].name}
                                 type={props.icons[0].type}
+                                shouldLog
                             />
                         </View>
                     </Tooltip>
