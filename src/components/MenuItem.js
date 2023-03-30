@@ -1,7 +1,7 @@
 import _ from 'underscore';
-import React from 'react';
+import React, {useState} from 'react';
 import {
-    View, Pressable,
+    View, Pressable, InteractionManager,
 } from 'react-native';
 import Text from './Text';
 import styles from '../styles/styles';
@@ -67,6 +67,8 @@ const MenuItem = (props) => {
         styles.lineHeightNormal,
     ], props.style);
 
+    const [isDisabled, setIsDisabled] = useState(false);
+
     return (
         <Pressable
             onPress={(e) => {
@@ -74,18 +76,28 @@ const MenuItem = (props) => {
                     return;
                 }
 
+                setIsDisabled(true);
+
                 if (e && e.type === 'click') {
                     e.currentTarget.blur();
                 }
 
-                props.onPress(e);
+                let result = props.onPress(e);
+
+                if (!(result instanceof Promise)) {
+                    result = Promise.resolve();
+                }
+
+                InteractionManager.runAfterInteractions(() => {
+                    result.then(() => setIsDisabled(false));
+                });
             }}
             style={({hovered, pressed}) => ([
                 styles.popoverMenuItem,
                 StyleUtils.getButtonBackgroundColorStyle(getButtonState(props.focused || hovered, pressed, props.success, props.disabled, props.interactive), true),
                 ..._.isArray(props.wrapperStyle) ? props.wrapperStyle : [props.wrapperStyle],
             ])}
-            disabled={props.disabled}
+            disabled={props.disabled || isDisabled}
         >
             {({hovered, pressed}) => (
                 <>
