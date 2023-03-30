@@ -342,6 +342,7 @@ function addComment(reportID, text) {
  * @param {Object} newReportObject The optimistic report object created when making a new chat, saved as optimistic data
  */
 function openReport(reportID, participantList = [], newReportObject = {}) {
+    console.log('openReport', reportID);
     const optimisticReportData = {
         onyxMethod: CONST.ONYX.METHOD.MERGE,
         key: `${ONYXKEYS.COLLECTION.REPORT}${reportID}`,
@@ -423,6 +424,7 @@ function navigateToAndOpenReport(userLogins) {
         newChat = ReportUtils.buildOptimisticChatReport(formattedUserLogins);
     }
     const reportID = chat ? chat.reportID : newChat.reportID;
+    console.log('openingReport', reportID);
 
     // We want to pass newChat here because if anything is passed in that param (even an existing chat), we will try to create a chat on the server
     openReport(reportID, newChat.participants, newChat);

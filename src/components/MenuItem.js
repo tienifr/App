@@ -74,9 +74,10 @@ const MenuItem = (props) => {
                     return;
                 }
 
-                if (e && e.type === 'click') {
+                /*if (e && e.type === 'click') {
+                    console.log('e.currentTarget', e.currentTarget);
                     e.currentTarget.blur();
-                }
+                }*/
 
                 props.onPress(e);
             }}

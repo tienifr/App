@@ -22,6 +22,7 @@ function getActiveState() {
  */
 function navigateBackToRootDrawer() {
     const activeState = getActiveState();
+    // console.log('activeState', activeState);
 
     // To navigate to the main drawer Route, pop to the first route on the Root Stack Navigator as the main drawer is always the first route that is activated.
     // It will pop all fullscreen and RHN modals that are over the main drawer.
@@ -71,14 +72,19 @@ function getScreenNameFromState(state) {
  * @returns {Function}
  */
 function pushDrawerRoute(route) {
+    // console.log('route', route);
     return (currentState) => {
         // Parse the state, name, and params from the new route we want to navigate to.
         const newStateFromRoute = getStateFromPath(route, linkingConfig.config);
         const newScreenName = getScreenNameFromState(newStateFromRoute);
         const newScreenParams = getParamsFromState(newStateFromRoute);
 
+        // console.log('currentState.type', currentState.type);
+        // console.log('currentState', currentState);
+
         // When we are navigating away from a non-drawer navigator we need to first dismiss any screens pushed onto the main stack.
         if (currentState.type !== 'drawer') {
+            // console.log('navigateBackToRootDrawer')
             navigateBackToRootDrawer();
         }
 
@@ -88,6 +94,8 @@ function pushDrawerRoute(route) {
         const activeScreenName = getScreenNameFromState(activeState);
         const activeScreenParams = getParamsFromState(activeState);
         if (newScreenName === activeScreenName && _.isEqual(activeScreenParams, newScreenParams)) {
+            // console.log('closing drawer');
+            //return;
             return DrawerActions.closeDrawer();
         }
 

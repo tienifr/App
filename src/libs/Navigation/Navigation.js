@@ -136,6 +136,7 @@ function isDrawerRoute(route) {
  * @param {String} route
  */
 function navigate(route = ROUTES.HOME) {
+    console.log('navigating to', route);
     if (!canNavigate('navigate', {route})) {
         // Store intended route if the navigator is not yet available,
         // we will try again after the NavigationContainer is ready
@@ -189,6 +190,7 @@ function setParams(params, routeKey) {
  * @param {Boolean} [shouldOpenDrawer]
  */
 function dismissModal(shouldOpenDrawer = false) {
+    console.log('dismissModal');
     if (!canNavigate('dismissModal')) {
         return;
     }
