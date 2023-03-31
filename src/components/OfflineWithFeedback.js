@@ -14,6 +14,7 @@ import * as Expensicons from './Icon/Expensicons';
 import * as StyleUtils from '../styles/StyleUtils';
 import DotIndicatorMessage from './DotIndicatorMessage';
 import shouldRenderOffscreen from '../libs/shouldRenderOffscreen';
+import CONST from '../CONST';
 
 /**
  * This component should be used when we are using the offline pattern B (offline with feedback).
@@ -24,6 +25,9 @@ import shouldRenderOffscreen from '../libs/shouldRenderOffscreen';
 const propTypes = {
     /** The type of action that's pending  */
     pendingAction: PropTypes.oneOf(['add', 'update', 'delete']),
+
+    /** All the data of the action item */
+    actionName: PropTypes.string,
 
     /** The errors to display  */
     // eslint-disable-next-line react/forbid-prop-types
@@ -55,6 +59,7 @@ const propTypes = {
 
 const defaultProps = {
     pendingAction: null,
+    actionName: null,
     errors: null,
     shouldShowErrorMessages: true,
     onClose: () => {},
@@ -86,7 +91,8 @@ const OfflineWithFeedback = (props) => {
     const isOfflinePendingAction = props.network.isOffline && props.pendingAction;
     const isUpdateOrDeleteError = hasErrors && (props.pendingAction === 'delete' || props.pendingAction === 'update');
     const isAddError = hasErrors && props.pendingAction === 'add';
-    const needsOpacity = (isOfflinePendingAction && !isUpdateOrDeleteError) || isAddError;
+    const isIOUError = hasErrors && props.actionName === CONST.REPORT.ACTIONS.TYPE.IOU;
+    const needsOpacity = (isOfflinePendingAction && !isUpdateOrDeleteError) || isAddError || isIOUError;
     const needsStrikeThrough = props.network.isOffline && props.pendingAction === 'delete';
     const hideChildren = !props.network.isOffline && props.pendingAction === 'delete' && !hasErrors;
     let children = props.children;

@@ -60,7 +60,7 @@ class ReportTransaction extends Component {
                     if (this.props.action.actionName === CONST.REPORT.ACTIONS.TYPE.IOU) {
                         ReportActions.clearSendMoneyErrors(this.props.chatReportID, this.props.action.reportActionID);
                     }
-                    if (this.props.action.pendingAction === CONST.RED_BRICK_ROAD_PENDING_ACTION.ADD) {
+                    if (this.props.action.pendingAction === CONST.RED_BRICK_ROAD_PENDING_ACTION.ADD || this.props.action.actionName === CONST.REPORT.ACTIONS.TYPE.IOU) {
                         ReportActions.deleteOptimisticReportAction(this.props.chatReportID, this.props.action.reportActionID);
                     } else {
                         ReportActions.clearReportActionErrors(this.props.chatReportID, this.props.action.reportActionID);
@@ -69,6 +69,7 @@ class ReportTransaction extends Component {
                 pendingAction={this.props.action.pendingAction}
                 errors={this.props.action.errors}
                 errorRowStyles={[styles.ml10, styles.mr2]}
+                actionName={this.props.action.actionName}
             >
                 <View styles={[styles.mb5]}>
                     <ReportActionItemSingle

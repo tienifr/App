@@ -14,6 +14,8 @@ import * as DeviceCapabilities from '../../libs/DeviceCapabilities';
 import {showContextMenuForReport} from '../ShowContextMenuContext';
 import * as StyleUtils from '../../styles/StyleUtils';
 import getButtonState from '../../libs/getButtonState';
+import colors from '../../styles/colors';
+import variables from '../../styles/variables';
 
 const propTypes = {
     /** All the data of the action */
@@ -85,6 +87,16 @@ const IOUQuote = props => (
                         {fragment.text.substring(fragment.text.indexOf(' '))}
                     </Text>
                 </Text>
+                {!_.isEmpty(props.action.errors) && (
+                    <View style={[styles.alignItemsCenter, styles.justifyContentCenter, styles.mr2, styles.opacity1]}>
+                        <Icon
+                            src={Expensicons.DotIndicator}
+                            fill={colors.red}
+                            height={variables.iconSizeSmall}
+                            width={variables.iconSizeSmall}
+                        />
+                    </View>
+                )}
                 <Icon src={Expensicons.ArrowRight} fill={props.shouldAllowViewDetails ? StyleUtils.getIconFillColor(getButtonState(props.isHovered)) : themeColors.transparent} />
             </Pressable>
         ))}
