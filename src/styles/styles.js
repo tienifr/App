@@ -2602,6 +2602,11 @@ const styles = {
             paddingLeft: 44,
             paddingRight: 20,
         },
+        iouError: {
+            position: 'absolute',
+            right: 40,
+            top: 30,
+        },
     },
 
     dotIndicatorMessage: {

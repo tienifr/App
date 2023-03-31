@@ -268,6 +268,9 @@ class ReportActionItem extends Component {
                                     errors={this.props.action.errors}
                                     errorRowStyles={[styles.ml10, styles.mr2]}
                                     needsOffscreenAlphaCompositing={this.props.action.actionName === CONST.REPORT.ACTIONS.TYPE.IOU}
+                                    actionName={this.props.action.actionName}
+                                    shouldShowErrorMessages={this.props.action.actionName !== CONST.REPORT.ACTIONS.TYPE.IOU}
+                                    shouldShowIOUDotIndicator
                                 >
                                     {!this.props.displayAsGroup
                                         ? (
