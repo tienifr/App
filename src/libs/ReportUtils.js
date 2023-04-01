@@ -900,7 +900,7 @@ function hasReportNameError(report) {
  */
 function getParsedComment(text) {
     const parser = new ExpensiMark();
-    return text.length < CONST.MAX_MARKUP_LENGTH ? parser.replace(text) : _.escape(text);
+    return text.length < CONST.MAX_MARKUP_LENGTH ? parser.replace(text, {}, true) : _.escape(text);
 }
 
 /**
@@ -918,6 +918,9 @@ function buildOptimisticAddCommentReportAction(text, file) {
     // Remove HTML from text when applying optimistic offline comment
     const textForNewComment = isAttachment ? CONST.ATTACHMENT_MESSAGE_TEXT
         : parser.htmlToText(htmlForNewComment);
+
+
+    console.log('htmlForNewComment', htmlForNewComment);
 
     return {
         commentText,

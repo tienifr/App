@@ -816,6 +816,15 @@ const removeLinks = (comment, links) => {
     return commentCopy;
 };
 
+const removeLinksFromHtml = (html, links) => {
+    let htmlCopy = html.slice();
+    _.forEach(links, (link) => {
+        const regex = new RegExp(`<(a)[^><]*href\\s*=\\s*(['"])${link}\\2(?:".*?"|'.*?'|[^'"><])*>([\\s\\S]*?)<\\/\\1>(?![^<]*(<\\/pre>|<\\/code>))`, 'gi');
+        htmlCopy = htmlCopy.replace(regex, '$3');
+    });
+    return htmlCopy;
+};
+
 /**
  * This function will handle removing only links that were purposely removed by the user while editing.
  * @param {String} newCommentText text of the comment after editing.
@@ -832,6 +841,13 @@ const handleUserDeletedLinks = (newCommentText, originalHtml) => {
     const markdownOriginalComment = parser.htmlToMarkdown(originalHtml).trim();
     const removedLinks = getRemovedMarkdownLinks(markdownOriginalComment, newCommentText);
     return removeLinks(markdownWithAutoLinks, removedLinks);
+};
+
+const handleUserDeletedLinksInHtml = (newCommentText, html, originalHtml) => {
+    const parser = new ExpensiMark();
+    const markdownOriginalComment = parser.htmlToMarkdown(originalHtml).trim();
+    const removedLinks = getRemovedMarkdownLinks(markdownOriginalComment, newCommentText);
+    return removeLinksFromHtml(html, removedLinks);
 };
 
 /**
@@ -857,7 +873,8 @@ function editReportComment(reportID, originalReportAction, textForNewComment) {
     let htmlForNewComment = markdownForNewComment;
     let parsedOriginalCommentHTML = originalCommentHTML;
     if (markdownForNewComment.length < CONST.MAX_MARKUP_LENGTH) {
-        htmlForNewComment = parser.replace(markdownForNewComment, autolinkFilter);
+        htmlForNewComment = parser.replace(textForNewComment, {}, true);
+        htmlForNewComment = handleUserDeletedLinksInHtml(textForNewComment, htmlForNewComment, originalCommentHTML);
         parsedOriginalCommentHTML = parser.replace(parser.htmlToMarkdown(originalCommentHTML).trim(), autolinkFilter);
     }
 
