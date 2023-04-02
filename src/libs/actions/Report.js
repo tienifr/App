@@ -821,6 +821,7 @@ const removeLinksFromHtml = (html, links) => {
     _.forEach(links, (link) => {
         const regex = new RegExp(`<(a)[^><]*href\\s*=\\s*(['"])${link}\\2(?:".*?"|'.*?'|[^'"><])*>([\\s\\S]*?)<\\/\\1>(?![^<]*(<\\/pre>|<\\/code>))`, 'gi');
         htmlCopy = htmlCopy.replace(regex, '$3');
+        console.log('htmlCopy', htmlCopy);
     });
     return htmlCopy;
 };
@@ -880,12 +881,17 @@ function editReportComment(reportID, originalReportAction, textForNewComment) {
 
     //  Delete the comment if it's empty
     if (_.isEmpty(htmlForNewComment)) {
+        console.log('delete report comment')
         deleteReportComment(reportID, originalReportAction);
         return;
     }
 
+    console.log('htmlForNewComment', htmlForNewComment);
+    console.log('markdownForNewComment', markdownForNewComment);
+
     // Skip the Edit if message is not changed
     if (parsedOriginalCommentHTML === htmlForNewComment.trim()) {
+        console.log('skip edit message');
         return;
     }
 
