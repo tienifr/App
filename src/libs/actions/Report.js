@@ -816,10 +816,14 @@ const removeLinks = (comment, links) => {
     return commentCopy;
 };
 
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 const removeLinksFromHtml = (html, links) => {
     let htmlCopy = html.slice();
     _.forEach(links, (link) => {
-        const regex = new RegExp(`<(a)[^><]*href\\s*=\\s*(['"])${link}\\2(?:".*?"|'.*?'|[^'"><])*>([\\s\\S]*?)<\\/\\1>(?![^<]*(<\\/pre>|<\\/code>))`, 'gi');
+        const regex = new RegExp(`<(a)[^><]*href\\s*=\\s*(['"])${escapeRegExp(link)}\\2(?:".*?"|'.*?'|[^'"><])*>([\\s\\S]*?)<\\/\\1>(?![^<]*(<\\/pre>|<\\/code>))`, 'gi');
         htmlCopy = htmlCopy.replace(regex, '$3');
         console.log('htmlCopy', htmlCopy);
     });
@@ -888,6 +892,7 @@ function editReportComment(reportID, originalReportAction, textForNewComment) {
 
     console.log('htmlForNewComment', htmlForNewComment);
     console.log('markdownForNewComment', markdownForNewComment);
+    console.log('parsedOriginalCommentHTML', parsedOriginalCommentHTML);
 
     // Skip the Edit if message is not changed
     if (parsedOriginalCommentHTML === htmlForNewComment.trim()) {
