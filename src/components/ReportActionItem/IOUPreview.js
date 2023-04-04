@@ -127,9 +127,6 @@ const IOUPreview = (props) => {
     // until it is stored locally, we need to make this check within the Component after retrieving it. This allows us
     // to handle the loading UI from within this Component instead of needing to declare it within each parent, which
     // would duplicate and complicate the logic
-    if (props.iouReport.total === 0) {
-        return null;
-    }
 
     const sessionEmail = lodashGet(props.session, 'email', null);
     const managerEmail = props.iouReport.managerEmail || '';
