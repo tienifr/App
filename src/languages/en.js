@@ -128,6 +128,7 @@ export default {
         yesContinue: 'Yes, continue',
         zipCodeExample: 'e.g. 12345, 12345-1234, 12345 1234',
         websiteExample: 'e.g. https://www.expensify.com',
+        format: ({zipSampleFormat}) => (zipSampleFormat ? `Format: ${zipSampleFormat}` : ''),
     },
     attachmentPicker: {
         cameraPermissionRequired: 'Camera access',
@@ -649,6 +650,7 @@ export default {
             dateShouldBeBefore: ({dateString}) => `Date should be before ${dateString}.`,
             dateShouldBeAfter: ({dateString}) => `Date should be after ${dateString}.`,
             hasInvalidCharacter: 'Name can only include letters and numbers.',
+            incorrectZipFormat: ({zipFormat}) => `Incorrect zip code format.${zipFormat ? ` Acceptable format: ${zipFormat}` : ''}`,
         },
     },
     resendValidationForm: {
@@ -928,7 +930,7 @@ export default {
         },
     },
     reimbursementAccountLoadingAnimation: {
-        oneMoment: 'One Moment',
+        oneMoment: 'One moment',
         explanationLine: 'We’re taking a look at your information. You will be able to continue with next steps shortly.',
     },
     session: {
