@@ -29,6 +29,7 @@ Onyx.connect({
         } else if (ReportUtils.isIOUReport(report)) {
             iouReports[key] = report;
         } else {
+            console.log('setting chat report', key, report)
             chatReports[key] = report;
         }
     },
@@ -178,8 +179,10 @@ function getOrderedReportIDs(reportIDFromRoute) {
  * @param {String} reportID
  * @returns {Object}
  */
-function getOptionData(reportID) {
-    const report = chatReports[`${ONYXKEYS.COLLECTION.REPORT}${reportID}`];
+function getOptionData(/*reportID*/report) {
+    //const report = chatReports[`${ONYXKEYS.COLLECTION.REPORT}${reportID}`];
+
+    console.log('report content', report);
 
     // When a user signs out, Onyx is cleared. Due to the lazy rendering with a virtual list, it's possible for
     // this method to be called after the Onyx data has been cleared out. In that case, it's fine to do
@@ -295,6 +298,8 @@ function getOptionData(reportID) {
 
         result.alternateText = lastMessageText || Str.removeSMSDomain(personalDetail.login);
     }
+
+    console.log('result.alternateText', result.alternateText);
 
     result.isIOUReportOwner = ReportUtils.isIOUOwnedByCurrentUser(result, iouReports);
     result.iouReportAmount = ReportUtils.getIOUTotal(result, iouReports);
