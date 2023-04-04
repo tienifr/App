@@ -198,7 +198,11 @@ function getZoomCursorStyle(isZoomed, isDragging) {
  * @param {Number} containerWidth
  * @return {Object}
  */
-function getZoomSizingStyle(isZoomed, imgWidth, imgHeight, zoomScale, containerHeight, containerWidth) {
+function getZoomSizingStyle(isZoomed, imgWidth, imgHeight, zoomScale, containerHeight, containerWidth, isLoading) {
+    if (isLoading) {
+        return undefined;
+    }
+
     if (imgWidth === 0 || imgHeight === 0) {
         return {
             height: isZoomed ? '250%' : '100%',

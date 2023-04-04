@@ -262,6 +262,9 @@ class ImageView extends PureComponent {
                 </View>
             );
         }
+
+        console.log('zoom style', StyleUtils.getZoomSizingStyle(this.state.isZoomed, this.state.imgWidth, this.state.imgHeight, this.state.zoomScale,
+            this.state.containerHeight, this.state.containerWidth));
         return (
             <View
                 ref={el => this.scrollableRef = el}
@@ -275,7 +278,7 @@ class ImageView extends PureComponent {
                 <Pressable
                     style={{
                         ...StyleUtils.getZoomSizingStyle(this.state.isZoomed, this.state.imgWidth, this.state.imgHeight, this.state.zoomScale,
-                            this.state.containerHeight, this.state.containerWidth),
+                            this.state.containerHeight, this.state.containerWidth, this.state.isLoading),
                         ...StyleUtils.getZoomCursorStyle(this.state.isZoomed, this.state.isDragging),
                         ...this.state.isZoomed && this.state.zoomScale >= 1 ? styles.pRelative : styles.pAbsolute,
                         ...styles.flex1,
@@ -285,7 +288,7 @@ class ImageView extends PureComponent {
                 >
                     <Image
                         source={{uri: this.props.url}}
-                        style={this.state.isLoading ? undefined : [
+                        style={[
                             styles.h100,
                             styles.w100,
                         ]} // Hide image until finished loading to prevent showing preview with wrong dimensions.
