@@ -115,6 +115,7 @@ const IOUAction = (props) => {
                             : undefined,
                     ]}
                     isHovered={props.isHovered}
+                    shouldHidePayButton={!_.isEmpty(props.action.errors)}
                 />
             )}
         </>
