@@ -25,6 +25,9 @@ import themeColors from '../../styles/themes/default';
 import SidebarUtils from '../../libs/SidebarUtils';
 import TextPill from '../TextPill';
 import OfflineWithFeedback from '../OfflineWithFeedback';
+import compose from '../../libs/compose';
+import {withOnyx} from 'react-native-onyx';
+import ONYXKEYS from '../../ONYXKEYS';
 
 const propTypes = {
     /** Style for hovered state */
@@ -57,7 +60,7 @@ const defaultProps = {
 };
 
 const OptionRowLHN = (props) => {
-    const optionItem = SidebarUtils.getOptionData(props.reportID);
+    const optionItem = SidebarUtils.getOptionData(props.report);
     if (!optionItem) {
         return null;
     }
@@ -97,6 +100,8 @@ const OptionRowLHN = (props) => {
     const focusedBackgroundColor = styles.sidebarLinkActive.backgroundColor;
 
     const avatarTooltips = !optionItem.isChatRoom && !optionItem.isArchivedRoom ? _.pluck(optionItem.displayNamesWithTooltips, 'tooltip') : undefined;
+
+    console.log('optionItem', optionItem);
 
     return (
         <OfflineWithFeedback
@@ -246,4 +251,11 @@ OptionRowLHN.propTypes = propTypes;
 OptionRowLHN.defaultProps = defaultProps;
 OptionRowLHN.displayName = 'OptionRowLHN';
 
-export default withLocalize(OptionRowLHN);
+export default compose(
+    withLocalize,
+    withOnyx({
+        report: {
+            key: ({reportID}) => `${ONYXKEYS.COLLECTION.REPORT}${reportID}`,
+        },
+    }),
+)(OptionRowLHN);
