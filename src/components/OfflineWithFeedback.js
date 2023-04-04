@@ -15,6 +15,8 @@ import * as StyleUtils from '../styles/StyleUtils';
 import DotIndicatorMessage from './DotIndicatorMessage';
 import shouldRenderOffscreen from '../libs/shouldRenderOffscreen';
 import CONST from '../CONST';
+import variables from '../styles/variables';
+import colors from '../styles/colors';
 
 /**
  * This component should be used when we are using the offline pattern B (offline with feedback).
@@ -114,6 +116,16 @@ const OfflineWithFeedback = (props) => {
                 >
                     {children}
                 </View>
+            )}
+            {props.shouldShowIOUDotIndicator && hasErrors && (
+            <View style={styles.offlineFeedback.iouError}>
+                <Icon
+                    src={Expensicons.DotIndicator}
+                    fill={colors.red}
+                    height={variables.iconSizeSmall}
+                    width={variables.iconSizeSmall}
+                />
+            </View>
             )}
             {(props.shouldShowErrorMessages && hasErrors) && (
                 <View style={StyleUtils.combineStyles(styles.offlineFeedback.error, props.errorRowStyles)}>

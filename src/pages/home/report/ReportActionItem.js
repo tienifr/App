@@ -275,6 +275,7 @@ class ReportActionItem extends Component {
                                     needsOffscreenAlphaCompositing={this.props.action.actionName === CONST.REPORT.ACTIONS.TYPE.IOU}
                                     actionName={this.props.action.actionName}
                                     shouldShowErrorMessages={this.props.action.actionName !== CONST.REPORT.ACTIONS.TYPE.IOU}
+                                    shouldShowIOUDotIndicator
                                 >
                                     {!this.props.displayAsGroup
                                         ? (
