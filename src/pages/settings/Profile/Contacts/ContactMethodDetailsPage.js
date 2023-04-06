@@ -194,7 +194,7 @@ class ContactMethodDetailsPage extends Component {
                                 onClose={() => User.clearContactMethodErrors(contactMethod, 'validateCodeSent')}
                             >
                                 <View
-                                    style={[styles.mt2, styles.dFlex, styles.flexRow]}
+                                    style={[styles.mt2, styles.dFlex, styles.flexRow, styles.alignItemsCenter]}
                                 >
                                     <Text style={[styles.link, styles.mr1]} onPress={this.resendValidateCode}>
                                         {this.props.translate('contacts.resendMagicCode')}
