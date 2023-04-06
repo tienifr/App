@@ -90,7 +90,7 @@ const propTypes = {
 
 const defaultProps = {
     isSidebarLoaded: false,
-    reportActions: {},
+    reportActions: [],
     report: {
         hasOutstandingIOU: false,
         isLoadingReportActions: false,
@@ -366,7 +366,9 @@ export default compose(
             key: ONYXKEYS.IS_SIDEBAR_LOADED,
         },
         reportActions: {
-            key: ({route}) => `${ONYXKEYS.COLLECTION.REPORT_ACTIONS}${getReportID(route)}`,
+            key: ({route}) => {
+                return `${ONYXKEYS.COLLECTION.REPORT_ACTIONS}${getReportID(route) || '1'}`
+            },
             canEvict: false,
             selector: ReportActionsUtils.getSortedReportActionsForDisplay,
         },

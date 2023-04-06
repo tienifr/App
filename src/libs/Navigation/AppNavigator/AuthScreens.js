@@ -115,6 +115,7 @@ class AuthScreens extends React.Component {
         });
 
         App.openApp();
+        PersonalDetails.openPersonalDetailsPage();
         App.setUpPoliciesAndNavigate(this.props.session);
         Download.clearDownloads();
         Timing.end(CONST.TIMING.HOMEPAGE_INITIAL_RENDER);
@@ -199,7 +200,7 @@ class AuthScreens extends React.Component {
                         const MainDrawerNavigator = require('./MainDrawerNavigator').default;
                         return MainDrawerNavigator;
                     }}
-                    initialParams={{openOnAdminRoom: openOnAdminRoom === 'true'}}
+                    initialParams={{openOnAdminRoom: (openOnAdminRoom==='true').toString()}}
                 />
                 <RootStack.Screen
                     name="ValidateLogin"

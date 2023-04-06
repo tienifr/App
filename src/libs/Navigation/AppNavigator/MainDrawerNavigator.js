@@ -37,7 +37,7 @@ const propTypes = {
 
     route: PropTypes.shape({
         params: PropTypes.shape({
-            openOnAdminRoom: PropTypes.bool,
+            openOnAdminRoom: PropTypes.string,
         }),
     }).isRequired,
 
@@ -75,7 +75,7 @@ class MainDrawerNavigator extends Component {
             props.reports,
             !Permissions.canUseDefaultRooms(props.betas),
             props.policies,
-            lodashGet(props, 'route.params.openOnAdminRoom', false),
+            lodashGet(props, 'route.params.openOnAdminRoom', 'false')==='true',
         );
 
         // When we have chat reports the moment this component got created
@@ -88,7 +88,7 @@ class MainDrawerNavigator extends Component {
             nextProps.reports,
             !Permissions.canUseDefaultRooms(nextProps.betas),
             nextProps.policies,
-            lodashGet(nextProps, 'route.params.openOnAdminRoom', false),
+            lodashGet(nextProps, 'route.params.openOnAdminRoom', 'false')==='true',
         );
         if (this.initialParams.reportID === initialNextParams.reportID) {
             return false;

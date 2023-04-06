@@ -11,7 +11,6 @@ import styles from '../../../../styles/styles';
 import Navigation from '../../../../libs/Navigation/Navigation';
 import compose from '../../../../libs/compose';
 import MenuItemWithTopDescription from '../../../../components/MenuItemWithTopDescription';
-import * as PersonalDetails from '../../../../libs/actions/PersonalDetails';
 import ONYXKEYS from '../../../../ONYXKEYS';
 
 const propTypes = {
@@ -53,7 +52,6 @@ const defaultProps = {
 };
 
 const PersonalDetailsInitialPage = (props) => {
-    PersonalDetails.openPersonalDetailsPage();
 
     const privateDetails = props.privatePersonalDetails || {};
     const address = privateDetails.address || {};
