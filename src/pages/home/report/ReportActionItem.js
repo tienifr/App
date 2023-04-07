@@ -238,74 +238,79 @@ class ReportActionItem extends Component {
             return <ChronosOOOListActions action={this.props.action} reportID={this.props.report.reportID} />;
         }
         return (
-            <PressableWithSecondaryInteraction
-                pointerEvents={this.props.action.pendingAction === CONST.RED_BRICK_ROAD_PENDING_ACTION.DELETE ? 'none' : 'auto'}
-                ref={el => this.popoverAnchor = el}
-                onPressIn={() => this.props.isSmallScreenWidth && DeviceCapabilities.canUseTouchScreen() && ControlSelection.block()}
-                onPressOut={() => ControlSelection.unblock()}
-                onSecondaryInteraction={this.showPopover}
-                preventDefaultContentMenu={!this.props.draftMessage}
-                withoutFocusOnSecondaryInteraction
-            >
+            <View>
                 <Hoverable>
-                    {hovered => (
-                        <View accessibilityLabel={this.props.translate('accessibilityHints.chatMessage')}>
-                            {this.props.shouldDisplayNewMarker && (
-                                <UnreadActionIndicator reportActionID={this.props.action.reportActionID} />
-                            )}
-                            <View
-                                style={StyleUtils.getReportActionItemStyle(
-                                    hovered
-                                    || this.state.isContextMenuActive
-                                    || this.props.draftMessage,
-                                    (this.props.network.isOffline && this.props.action.isLoading) || this.props.action.error,
-                                )}
-                            >
-                                <OfflineWithFeedback
-                                    onClose={() => {
-                                        if (this.props.action.pendingAction === CONST.RED_BRICK_ROAD_PENDING_ACTION.ADD) {
-                                            ReportActions.deleteOptimisticReportAction(this.props.report.reportID, this.props.action.reportActionID);
-                                        } else {
-                                            ReportActions.clearReportActionErrors(this.props.report.reportID, this.props.action.reportActionID);
-                                        }
-                                    }}
-                                    pendingAction={this.props.draftMessage ? null : this.props.action.pendingAction}
-                                    errors={this.props.action.errors}
-                                    errorRowStyles={[styles.ml10, styles.mr2]}
-                                    needsOffscreenAlphaCompositing={this.props.action.actionName === CONST.REPORT.ACTIONS.TYPE.IOU}
-                                >
-                                    {!this.props.displayAsGroup
-                                        ? (
-                                            <ReportActionItemSingle action={this.props.action} showHeader={!this.props.draftMessage}>
-                                                {this.renderItemContent(hovered || this.state.isContextMenuActive)}
-                                            </ReportActionItemSingle>
-                                        )
-                                        : (
-                                            <ReportActionItemGrouped>
-                                                {this.renderItemContent(hovered || this.state.isContextMenuActive)}
-                                            </ReportActionItemGrouped>
+                    {hovered => 
+                    <PressableWithSecondaryInteraction
+                        pointerEvents={this.props.action.pendingAction === CONST.RED_BRICK_ROAD_PENDING_ACTION.DELETE ? 'none' : 'auto'}
+                        ref={el => this.popoverAnchor = el}
+                        onPressIn={() => this.props.isSmallScreenWidth && DeviceCapabilities.canUseTouchScreen() && ControlSelection.block()}
+                        onPressOut={() => ControlSelection.unblock()}
+                        onSecondaryInteraction={this.showPopover}
+                        preventDefaultContentMenu={!this.props.draftMessage}
+                        withoutFocusOnSecondaryInteraction
+                    >
+                        
+                                <View accessibilityLabel={this.props.translate('accessibilityHints.chatMessage')}>
+                                    {this.props.shouldDisplayNewMarker && (
+                                        <UnreadActionIndicator reportActionID={this.props.action.reportActionID} />
+                                    )}
+                                    <View
+                                        style={StyleUtils.getReportActionItemStyle(
+                                            hovered
+                                            || this.state.isContextMenuActive
+                                            || this.props.draftMessage,
+                                            (this.props.network.isOffline && this.props.action.isLoading) || this.props.action.error,
                                         )}
-                                </OfflineWithFeedback>
-                            </View>
-                            <MiniReportActionContextMenu
-                                reportID={this.props.report.reportID}
-                                reportAction={this.props.action}
-                                isArchivedRoom={ReportUtils.isArchivedRoom(this.props.report)}
-                                displayAsGroup={this.props.displayAsGroup}
-                                isVisible={
-                                    hovered
-                                    && !this.props.draftMessage
-                                }
-                                draftMessage={this.props.draftMessage}
-                                isChronosReport={ReportUtils.chatIncludesChronos(this.props.report)}
-                            />
-                        </View>
-                    )}
-                </Hoverable>
-                <View style={styles.reportActionSystemMessageContainer}>
-                    <InlineSystemMessage message={this.props.action.error} />
+                                    >
+                                        <OfflineWithFeedback
+                                            onClose={() => {
+                                                if (this.props.action.pendingAction === CONST.RED_BRICK_ROAD_PENDING_ACTION.ADD) {
+                                                    ReportActions.deleteOptimisticReportAction(this.props.report.reportID, this.props.action.reportActionID);
+                                                } else {
+                                                    ReportActions.clearReportActionErrors(this.props.report.reportID, this.props.action.reportActionID);
+                                                }
+                                            }}
+                                            pendingAction={this.props.draftMessage ? null : this.props.action.pendingAction}
+                                            errors={this.props.action.errors}
+                                            errorRowStyles={[styles.ml10, styles.mr2]}
+                                            needsOffscreenAlphaCompositing={this.props.action.actionName === CONST.REPORT.ACTIONS.TYPE.IOU}
+                                        >
+                                            {!this.props.displayAsGroup
+                                                ? (
+                                                    <ReportActionItemSingle action={this.props.action} showHeader={!this.props.draftMessage}>
+                                                        {this.renderItemContent(hovered || this.state.isContextMenuActive)}
+                                                    </ReportActionItemSingle>
+                                                )
+                                                : (
+                                                    <ReportActionItemGrouped>
+                                                        {this.renderItemContent(hovered || this.state.isContextMenuActive)}
+                                                    </ReportActionItemGrouped>
+                                                )}
+                                        </OfflineWithFeedback>
+                                    </View>
+                                    <MiniReportActionContextMenu
+                                        reportID={this.props.report.reportID}
+                                        reportAction={this.props.action}
+                                        isArchivedRoom={ReportUtils.isArchivedRoom(this.props.report)}
+                                        displayAsGroup={this.props.displayAsGroup}
+                                        isVisible={
+                                            hovered
+                                            && !this.props.draftMessage
+                                        }
+                                        draftMessage={this.props.draftMessage}
+                                        isChronosReport={ReportUtils.chatIncludesChronos(this.props.report)}
+                                    />
+                                </View>
+                                <View style={styles.reportActionSystemMessageContainer}>
+                    {<InlineSystemMessage message={"Hello"} />}
                 </View>
-            </PressableWithSecondaryInteraction>
+                    </PressableWithSecondaryInteraction>
+                    }
+                </Hoverable>
+                
+            </View>
+            
         );
     }
 }
