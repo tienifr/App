@@ -333,6 +333,11 @@ class ReportActionsView extends React.Component {
         if (!_.size(this.props.reportActions)) {
             return null;
         }
+
+        if (this.props.report.reportID === '5228542287573654') {
+            console.log('this.props.reportActions', this.props.reportActions)
+        }
+        
         return (
             <>
                 <FloatingMessageCounter

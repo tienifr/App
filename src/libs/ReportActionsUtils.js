@@ -206,7 +206,7 @@ function getSortedReportActionsForDisplay(reportActions) {
         // All other actions are displayed except deleted, non-pending actions
         const isDeleted = isDeletedAction(reportAction);
         const isPending = !_.isEmpty(reportAction.pendingAction);
-        return !isDeleted || isPending;
+        return !isDeleted || (isPending && reportAction.pendingAction === 'delete');
     });
 }
 

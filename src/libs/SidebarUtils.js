@@ -62,6 +62,10 @@ Onyx.connect({
         }
         const reportID = CollectionUtils.extractCollectionItemID(key);
         lastReportActions[reportID] = _.last(_.toArray(actions));
+
+        if (reportID === '5228542287573654') {
+            console.log('actionssssss', actions);
+        }
         reportActions[key] = actions;
     },
 });

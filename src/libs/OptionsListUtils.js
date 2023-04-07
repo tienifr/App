@@ -11,6 +11,7 @@ import Permissions from './Permissions';
 import * as CollectionUtils from './CollectionUtils';
 import Navigation from './Navigation/Navigation';
 import * as LoginUtils from './LoginUtils';
+import { isDeletedAction } from './ReportActionsUtils';
 
 /**
  * OptionsListUtils is used to build a list options passed to the OptionsList component. Several different UI views can
@@ -228,8 +229,12 @@ function getAllReportErrors(report, reportActions) {
     const reportErrorFields = report.errorFields || {};
     const reportID = report.reportID;
     const reportsActions = reportActions[`${ONYXKEYS.COLLECTION.REPORT_ACTIONS}${reportID}`] || {};
+    //const notDeletedReportActions = _.filter(reportsActions, reportAction => !isDeletedAction(reportAction) && reportAction.pendingAction !== CONST.RED_BRICK_ROAD_PENDING_ACTION.DELETE);
+
+    const notDeletedReportActions = reportsActions;
+
     const reportActionErrors = _.reduce(
-        reportsActions,
+        notDeletedReportActions,
         (prevReportActionErrors, action) => (_.isEmpty(action.errors) ? prevReportActionErrors : _.extend(prevReportActionErrors, action.errors)),
         {},
     );
@@ -247,6 +252,11 @@ function getAllReportErrors(report, reportActions) {
         (prevReportErrors, errors) => (_.isEmpty(errors) ? prevReportErrors : _.extend(prevReportErrors, errors)),
         {},
     );
+
+    if (!_.isEmpty(allReportErrors)) {
+        console.log('report', report)
+        console.log('reportsActions', reportsActions);
+    }
 
     return allReportErrors;
 }

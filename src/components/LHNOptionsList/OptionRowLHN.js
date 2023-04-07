@@ -97,6 +97,9 @@ const OptionRowLHN = (props) => {
 
     const avatarTooltips = !optionItem.isChatRoom && !optionItem.isArchivedRoom ? _.pluck(optionItem.displayNamesWithTooltips, 'tooltip') : undefined;
 
+    //console.log('optionItem', optionItem);
+    //console.log(optionItem.brickRoadIndicator);
+
     return (
         <OfflineWithFeedback
             pendingAction={optionItem.pendingAction}
