@@ -15,6 +15,7 @@ import Navigation from '../../libs/Navigation/Navigation';
 import ROUTES from '../../ROUTES';
 import styles from '../../styles/styles';
 import * as IOUUtils from '../../libs/IOUUtils';
+import {View} from "react-native";
 
 const propTypes = {
     /** All the data of the action */
@@ -87,13 +88,15 @@ const IOUAction = (props) => {
         shouldShowPendingConversionMessage = IOUUtils.isIOUReportPendingCurrencyConversion(props.reportActions, props.iouReport);
     }
 
+    const shouldAllowViewDetails = Boolean(props.action.originalMessage.IOUReportID);
+
     return (
-        <>
+        <View style={[shouldAllowViewDetails ? styles.cursorPointer : styles.cursorDefault]}>
             <IOUQuote
                 action={props.action}
                 chatReportID={props.chatReportID}
                 contextMenuAnchor={props.contextMenuAnchor}
-                shouldAllowViewDetails={Boolean(props.action.originalMessage.IOUReportID)}
+                shouldAllowViewDetails={shouldAllowViewDetails}
                 onViewDetailsPressed={launchDetailsModal}
                 checkIfContextMenuActive={props.checkIfContextMenuActive}
                 isHovered={props.isHovered}
@@ -117,7 +120,7 @@ const IOUAction = (props) => {
                     isHovered={props.isHovered}
                 />
             )}
-        </>
+        </View>
     );
 };
 
