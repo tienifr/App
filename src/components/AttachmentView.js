@@ -40,6 +40,8 @@ const propTypes = {
     /** Notify parent that the UI should be modified to accommodate keyboard */
     onToggleKeyboard: PropTypes.func,
 
+    isImage: PropTypes.bool,
+
     ...withLocalizePropTypes,
 };
 
@@ -78,6 +80,9 @@ const AttachmentView = (props) => {
             />
         );
     }
+    
+    console.log('props.source', props.source);
+    console.log('props.file', props.file);
 
     // For this check we use both source and file.name since temporary file source is a blob
     // both PDFs and images will appear as images when pasted into the the text field

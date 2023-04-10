@@ -275,6 +275,8 @@ function openPersonalDetailsPage() {
  * @param {File|Object} file
  */
 function updateAvatar(file) {
+    console.log('file', file);
+
     const optimisticData = [{
         onyxMethod: CONST.ONYX.METHOD.MERGE,
         key: ONYXKEYS.PERSONAL_DETAILS,
@@ -282,6 +284,7 @@ function updateAvatar(file) {
             [currentUserEmail]: {
                 avatar: file.uri,
                 avatarThumbnail: file.uri,
+                avatarFileName: file.name,
                 errorFields: {
                     avatar: null,
                 },
@@ -299,6 +302,7 @@ function updateAvatar(file) {
                 pendingFields: {
                     avatar: null,
                 },
+                avatarFileName: null,
             },
         },
     }];

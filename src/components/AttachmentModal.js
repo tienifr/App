@@ -56,6 +56,10 @@ const propTypes = {
     /** The ID of the report that has this attachment */
     reportID: PropTypes.string,
 
+    isImage: PropTypes.bool,
+
+    fileName: PropTypes.string,
+
     ...withLocalizePropTypes,
 
     ...windowDimensionsPropTypes,
@@ -86,6 +90,9 @@ class AttachmentModal extends PureComponent {
             modalType: CONST.MODAL.MODAL_TYPE.CENTERED_UNSWIPEABLE,
             isConfirmButtonDisabled: false,
             confirmButtonFadeAnimation: new Animated.Value(1),
+            file: props.fileName ? {
+                name: props.fileName,
+            } : undefined,
         };
 
         this.submitAndClose = this.submitAndClose.bind(this);
@@ -282,6 +289,7 @@ class AttachmentModal extends PureComponent {
                                 isAuthTokenRequired={this.props.isAuthTokenRequired}
                                 file={this.state.file}
                                 onToggleKeyboard={this.updateConfirmButtonVisibility}
+                                isImage={this.props.isImage}
                             />
                         )}
                     </View>
