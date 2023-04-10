@@ -41,6 +41,9 @@ const getHTMLOfSelection = () => {
 
         const clonedSelection = range.cloneContents();
 
+        console.log('range', range);
+        console.log('clonedSelection', clonedSelection, clonedSelection.children);
+
         // If clonedSelection has no text content this data has no meaning to us.
         if (clonedSelection.textContent) {
             let node = null;
@@ -72,10 +75,16 @@ const getHTMLOfSelection = () => {
             }
 
             node = node.cloneNode();
+            console.log('node before append', node.cloneNode());
+            console.log('clonedSelection', clonedSelection);
             node.appendChild(clonedSelection);
+
+            console.log('node', node.cloneNode());
             div.appendChild(node);
         }
     }
+
+    console.log('div.innerHTML', div.innerHTML);
 
     return div.innerHTML;
 };
@@ -102,7 +111,7 @@ const replaceNodes = (dom) => {
         if (!elementsWillBeSkipped.includes(dom.attribs[tagAttribute])) {
             domName = dom.attribs[tagAttribute];
         }
-    } else if (dom.name === 'div' && dom.children.length === 1 && dom.children[0].type !== 'text') {
+    } else if (dom.name === 'div' && dom.children.length === 1) {
         // We are excluding divs that have only one child and no text nodes and don't have a tagAttribute to prevent
         // additional newlines from being added in the HTML to Markdown conversion process.
         return replaceNodes(dom.children[0]);
@@ -131,13 +140,17 @@ const replaceNodes = (dom) => {
  * @returns {String} resolved selection in the HTML format
  */
 const getCurrentSelection = () => {
+    console.log('html', getHTMLOfSelection());
     const domRepresentation = parseDocument(getHTMLOfSelection());
+    console.log('domRepresentation', domRepresentation);
     domRepresentation.children = _.map(domRepresentation.children, replaceNodes);
 
     // Newline characters need to be removed here because the HTML could contain both newlines and <br> tags, and when
     // <br> tags are converted later to markdown, it creates duplicate newline characters. This means that when the content
     // is pasted, there are extra newlines in the content that we want to avoid.
     const newHtml = render(domRepresentation).replace(/<br>\n/g, '<br>');
+
+    console.log('newHtml', newHtml);
     return newHtml || '';
 };
 
