@@ -123,7 +123,7 @@ class ReportActionItem extends Component {
      */
     showPopover(event) {
         // Block menu on the message being Edited
-        if (this.props.draftMessage) {
+        if (this.props.draftMessage || !_.isEmpty(this.props.action.errors)) {
             return;
         }
 
@@ -237,6 +237,7 @@ class ReportActionItem extends Component {
         if (this.props.action.actionName === CONST.REPORT.ACTIONS.TYPE.CHRONOSOOOLIST) {
             return <ChronosOOOListActions action={this.props.action} reportID={this.props.report.reportID} />;
         }
+        console.log('this.props.action', this.props.action);
         return (
             <PressableWithSecondaryInteraction
                 pointerEvents={this.props.action.pendingAction === CONST.RED_BRICK_ROAD_PENDING_ACTION.DELETE ? 'none' : 'auto'}
@@ -295,6 +296,7 @@ class ReportActionItem extends Component {
                                 isVisible={
                                     hovered
                                     && !this.props.draftMessage
+                                    && _.isEmpty(this.props.action.errors)
                                 }
                                 draftMessage={this.props.draftMessage}
                                 isChronosReport={ReportUtils.chatIncludesChronos(this.props.report)}
