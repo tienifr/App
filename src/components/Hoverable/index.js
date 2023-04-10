@@ -91,16 +91,22 @@ class Hoverable extends Component {
                 },
             });
         }
+        //console.log('this.state.isHovered', this.state.isHovered);
         return (
+            
             <View
                 style={this.props.containerStyles}
                 ref={el => this.wrapperView = el}
-                onMouseEnter={() => this.setIsHovered(true)}
+                onMouseEnter={() => {
+                    //console.log('setIsHovered', true)
+                    this.setIsHovered(true);
+                }}
                 onMouseLeave={() => this.setIsHovered(false)}
                 onBlur={(el) => {
                     if (this.wrapperView.contains(el.relatedTarget)) {
                         return;
                     }
+                    //console.log('setting is hovered', false);
                     this.setIsHovered(false);
                 }}
             >
