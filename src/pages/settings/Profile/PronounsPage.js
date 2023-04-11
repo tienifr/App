@@ -1,7 +1,10 @@
 import _ from 'underscore';
 import lodashGet from 'lodash/get';
 import React, {Component} from 'react';
-import withCurrentUserPersonalDetails, {withCurrentUserPersonalDetailsPropTypes, withCurrentUserPersonalDetailsDefaultProps} from '../../../components/withCurrentUserPersonalDetails';
+import withCurrentUserPersonalDetails, {
+    withCurrentUserPersonalDetailsPropTypes,
+    withCurrentUserPersonalDetailsDefaultProps
+} from '../../../components/withCurrentUserPersonalDetails';
 import ScreenWrapper from '../../../components/ScreenWrapper';
 import HeaderWithCloseButton from '../../../components/HeaderWithCloseButton';
 import withLocalize, {withLocalizePropTypes} from '../../../components/withLocalize';
@@ -33,7 +36,7 @@ class PronounsPage extends Component {
 
         this.loadPronouns = this.loadPronouns.bind(this);
         this.onChangeText = this.onChangeText.bind(this);
-        this.getFilteredPronouns = this.getFilteredPronouns.bind(this);
+        this.getFilteredSortedPronouns = this.getFilteredSortedPronouns.bind(this);
         this.updatePronouns = this.updatePronouns.bind(this);
         this.initiallyFocusedOption = {};
 
@@ -60,17 +63,20 @@ class PronounsPage extends Component {
 
     /**
      * Returns the pronouns list filtered by searchValue needed for the OptionsSelector.
+     * The pronouns list is sorted in alphabetic order.
      * Empty array is returned if the searchValue is empty.
      *
      * @returns {Array}
      */
-    getFilteredPronouns() {
+    getFilteredSortedPronouns() {
         const searchedValue = this.state.searchValue.trim();
         if (searchedValue.length === 0) {
             return [];
         }
-        return _.filter(this.pronounsList,
-            pronous => pronous.text.toLowerCase().indexOf(searchedValue.toLowerCase()) >= 0);
+        return _.chain(this.pronounsList)
+            .filter(pronous => pronous.text.toLowerCase().indexOf(searchedValue.toLowerCase()) >= 0)
+            .sortBy(pronous => pronous.text.toLocaleLowerCase())
+            .value();
     }
 
     /**
@@ -114,7 +120,7 @@ class PronounsPage extends Component {
     }
 
     render() {
-        const filteredPronounsList = this.getFilteredPronouns();
+        const filteredPronounsList = this.getFilteredSortedPronouns();
         const headerMessage = this.state.searchValue.trim() && !filteredPronounsList.length ? this.props.translate('common.noResultsFound') : '';
 
         return (
