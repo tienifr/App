@@ -105,6 +105,21 @@ class WorkspaceInvitePage extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
+        if (!_.isEqual(prevProps.policyMemberList, this.props.policyMemberList)) {
+            const {
+                personalDetails,
+                userToInvite,
+            } = OptionsListUtils.getMemberInviteOptions(
+                this.props.personalDetails,
+                this.props.betas,
+                '',
+                this.getExcludedUsers(),
+            );
+            this.setState({
+                personalDetails,
+                userToInvite,
+            });
+        }
         if (
             prevProps.preferredLocale !== this.props.preferredLocale
             && this.state.welcomeNote === Localize.translate(prevProps.preferredLocale, 'workspace.invite.welcomeNote', {workspaceName: this.props.policy.name})
