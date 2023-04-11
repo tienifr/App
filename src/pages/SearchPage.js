@@ -20,6 +20,8 @@ import compose from '../libs/compose';
 import personalDetailsPropType from './personalDetailsPropType';
 import reportPropTypes from './reportPropTypes';
 import Performance from '../libs/Performance';
+import Str from 'expensify-common/lib/str';
+import * as LoginUtils from '../libs/LoginUtils';
 
 const propTypes = {
     /* Onyx Props */
@@ -77,6 +79,12 @@ class SearchPage extends Component {
     }
 
     onChangeText(searchValue = '') {
+        const login = LoginUtils.appendCountryCode(searchValue);
+        if (!((Str.isValidEmail(login) && !Str.isDomainEmail(login)) || Str.isValidPhone(login))) {
+            this.setState({
+                userToInvite: null,
+            });
+        }
         this.setState({searchValue}, this.debouncedUpdateOptions);
     }
 
