@@ -145,6 +145,8 @@ function getLastVisibleAction(reportID, actionsToMerge = {}) {
 function getLastVisibleMessageText(reportID, actionsToMerge = {}) {
     const lastVisibleAction = getLastVisibleAction(reportID, actionsToMerge);
     const message = lodashGet(lastVisibleAction, ['message', 0]);
+    if (!message)
+        return ""
     if (isReportMessageAttachment(message)) {
         return CONST.ATTACHMENT_MESSAGE_TEXT;
     }
