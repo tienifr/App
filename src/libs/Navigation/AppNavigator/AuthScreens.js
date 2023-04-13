@@ -95,6 +95,16 @@ const defaultProps = {
     },
 };
 
+const stringToBoolean = (str) => {
+    if (str === 'true') {
+        return true;
+    }
+    if (str === 'false') {
+        return false;
+    }
+    return undefined;
+};
+
 class AuthScreens extends React.Component {
     constructor(props) {
         super(props);
@@ -172,6 +182,8 @@ class AuthScreens extends React.Component {
         const url = getCurrentUrl();
         const openOnAdminRoom = url ? new URL(url).searchParams.get('openOnAdminRoom') : '';
 
+        console.log('stringToBoolean(openOnAdminRoom)', stringToBoolean(openOnAdminRoom));
+
         return (
             <RootStack.Navigator
                 mode="modal"
@@ -199,7 +211,7 @@ class AuthScreens extends React.Component {
                         const MainDrawerNavigator = require('./MainDrawerNavigator').default;
                         return MainDrawerNavigator;
                     }}
-                    initialParams={{openOnAdminRoom: openOnAdminRoom === 'true'}}
+                    initialParams={{openOnAdminRoom: stringToBoolean(openOnAdminRoom)}}
                 />
                 <RootStack.Screen
                     name="ValidateLogin"
