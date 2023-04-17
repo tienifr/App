@@ -273,7 +273,7 @@ function openMoneyRequestModalPage() {
  * Fetches additional personal data like legal name, date of birth, address
  */
 function openPersonalDetailsPage() {
-    API.read('OpenPersonalDetailsPage');
+    API.write('OpenPersonalDetailsPage');
 }
 
 /**

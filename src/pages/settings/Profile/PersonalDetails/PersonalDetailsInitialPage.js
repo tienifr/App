@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {ScrollView, View} from 'react-native';
 import {withOnyx} from 'react-native-onyx';
@@ -53,12 +53,14 @@ const defaultProps = {
 };
 
 const PersonalDetailsInitialPage = (props) => {
-    PersonalDetails.openPersonalDetailsPage();
 
     const privateDetails = props.privatePersonalDetails || {};
     const address = privateDetails.address || {};
     const legalName = `${privateDetails.legalFirstName || ''} ${privateDetails.legalLastName || ''}`.trim();
 
+    useEffect(()=>{
+        PersonalDetails.openPersonalDetailsPage();
+    },[])
     /**
      * Applies common formatting to each piece of an address
      *
