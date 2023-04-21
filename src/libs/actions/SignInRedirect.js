@@ -1,4 +1,7 @@
 import Onyx from 'react-native-onyx';
+import lodashFind from 'lodash/find';
+import lodashGet from 'lodash/get';
+import _ from 'underscore';
 import ONYXKEYS from '../../ONYXKEYS';
 import * as MainQueue from '../Network/MainQueue';
 import DateUtils from '../DateUtils';
@@ -6,6 +9,9 @@ import * as Localize from '../Localize';
 import * as PersistedRequests from './PersistedRequests';
 import NetworkConnection from '../NetworkConnection';
 import HttpUtils from '../HttpUtils';
+import navigationRef from '../Navigation/navigationRef';
+import SCREENS from '../../SCREENS';
+import Navigation from '../Navigation/Navigation';
 
 let currentIsOffline;
 let currentShouldForceOffline;
@@ -64,6 +70,23 @@ function redirectToSignIn(errorMessage) {
     PersistedRequests.clear();
     NetworkConnection.clearReconnectionCallbacks();
     clearStorageAndRedirect(errorMessage);
+    console.log('state', navigationRef.current.getState());
+
+    const routes = lodashGet(navigationRef.current.getState(), ['routes']);
+
+    const homeRoute = lodashFind(routes, route => route.name === SCREENS.HOME);
+
+    const emptyParams = {};
+    _.keys(lodashGet(homeRoute, ['params'])).forEach((paramKey) => {
+        emptyParams[paramKey] = null;
+    });
+
+    Navigation.setParams(emptyParams, homeRoute.key);
+
+    // lodashGet(navigationRef.current.getState(), ['routes', 0, 'state']
+    // navigationRef.current.getState();
+    // console.log('currentRoute', currentRoute);
+    // navigationRef.current.dispatch(CommonActions.reset({index: 0, routes: [{name: SCREENS.HOME}]}));
 }
 
 export default redirectToSignIn;
