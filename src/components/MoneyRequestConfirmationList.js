@@ -91,6 +91,7 @@ class MoneyRequestConfirmationList extends Component {
 
         this.state = {
             participants: formattedParticipants,
+            didConfirm: false,
         };
 
         this.toggleOption = this.toggleOption.bind(this);
@@ -244,6 +245,7 @@ class MoneyRequestConfirmationList extends Component {
      * @param {String} paymentMethod
      */
     confirm(paymentMethod) {
+        this.setState({ didConfirm: true });
         const selectedParticipants = this.getSelectedParticipants();
         if (_.isEmpty(selectedParticipants)) {
             return;
@@ -311,17 +313,23 @@ class MoneyRequestConfirmationList extends Component {
                     title={formattedAmount}
                     description={this.props.translate('iou.amount')}
                     interactive={false} // This is so the menu item's background doesn't change color on hover
-                    onPress={() => this.props.navigateToStep(0)}
+                    onPress={() => {
+                        this.props.navigateToStep(0);
+                    }}
                     style={styles.moneyRequestMenuItem}
                     titleStyle={styles.moneyRequestConfirmationAmount}
+                    disabled={this.state.didConfirm}
                 />
                 <MenuItemWithTopDescription
                     shouldShowRightIcon
                     title={this.props.iou.comment}
                     description={this.props.translate('common.description')}
                     interactive={false} // This is so the menu item's background doesn't change color on hover
-                    onPress={() => Navigation.navigate(ROUTES.MONEY_REQUEST_DESCRIPTION)}
+                    onPress={() => {
+                        Navigation.navigate(ROUTES.MONEY_REQUEST_DESCRIPTION)
+                    }}
                     style={styles.moneyRequestMenuItem}
+                    disabled={this.state.didConfirm}
                 />
             </OptionsSelector>
         );
