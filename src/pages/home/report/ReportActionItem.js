@@ -239,6 +239,9 @@ class ReportActionItem extends Component {
 
         const reactions = _.get(this.props, ['action', 'message', 0, 'reactions'], []);
         const hasReactions = reactions.length > 0;
+        if(reactions.length>0){
+            console.log('reactions',reactions)
+        }
         return (
             <>
                 {children}

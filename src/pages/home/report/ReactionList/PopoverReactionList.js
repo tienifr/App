@@ -57,7 +57,9 @@ class PopoverReactionList extends React.Component {
         const nextLocale = lodashGet(nextProps, 'preferredLocale', 'en');
         return this.state.isPopoverVisible !== nextState.isPopoverVisible
             || this.state.popoverAnchorPosition !== nextState.popoverAnchorPosition
-            || previousLocale !== nextLocale;
+            || this.state.emojiCount !== nextState.emojiCount
+            || this.state.users !== nextState.users
+            || previousLocale !== nextLocale
     }
 
     componentWillUnmount() {
@@ -178,6 +180,7 @@ class PopoverReactionList extends React.Component {
     }
 
     render() {
+        console.log('this.state',this.state)
         return (
             <>
                 <PopoverWithMeasuredContent
