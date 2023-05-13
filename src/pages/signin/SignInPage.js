@@ -67,7 +67,7 @@ class SignInPage extends Component {
         // Show the login form if
         // - A login has not been entered yet
         // - AND a validateCode has not been cached with sign in link
-        const isLoadingLoginForm = this.props.account.loadingScreen === 'LoginForm';
+        const isLoadingLoginForm = this.props.account.loadingForm === 'LoginForm';
         const showLoginForm = (!this.props.credentials.login && !this.props.credentials.validateCode) || isLoadingLoginForm
         // Show the unlink form if
         // - A login has been entered
@@ -119,7 +119,7 @@ class SignInPage extends Component {
         let welcomeHeader = '';
         let welcomeText = '';
         if (showValidateCodeForm) {
-            if (this.props.account.requiresTwoFactorAuth) {
+            if (this.props.account.requiresTwoFactorAuth && !this.props.account.loadingForm) {
                 // We will only know this after a user signs in successfully, without their 2FA code
                 welcomeHeader = this.props.isSmallScreenWidth ? '' : this.props.translate('welcomeText.welcomeBack');
                 welcomeText = this.props.translate('validateCodeForm.enterAuthenticatorCode');

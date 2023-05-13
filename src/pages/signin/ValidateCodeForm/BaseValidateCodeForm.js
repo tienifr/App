@@ -198,7 +198,7 @@ class BaseValidateCodeForm extends React.Component {
         return (
             <>
                 {/* At this point, if we know the account requires 2FA we already successfully authenticated */}
-                {this.props.account.requiresTwoFactorAuth ? (
+                {(this.props.account.requiresTwoFactorAuth && this.props.account.loadingForm !== 'MagicCodeForm') ? (
                     <View style={[styles.mv3]}>
                         <TextInput
                             ref={(el) => (this.input2FA = el)}

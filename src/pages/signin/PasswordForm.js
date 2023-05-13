@@ -200,7 +200,7 @@ class PasswordForm extends React.Component {
                     </View>
                 </View>
 
-                {isTwoFactorAuthRequired && (
+                {(isTwoFactorAuthRequired  && this.props.account.loadingForm !== 'PasswordForm') && (
                     <View style={[styles.mv3]}>
                         <TextInput
                             ref={(el) => (this.input2FA = el)}

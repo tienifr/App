@@ -217,7 +217,7 @@ function beginSignIn(login) {
             value: {
                 ...CONST.DEFAULT_ACCOUNT_DATA,
                 isLoading: true,
-                loadingScreen: 'LoginForm',
+                loadingForm: 'LoginForm',
                 message: null,
             },
         },
@@ -229,7 +229,7 @@ function beginSignIn(login) {
             key: ONYXKEYS.ACCOUNT,
             value: {
                 isLoading: false,
-                loadingScreen:null
+                loadingForm:null
             },
         },
         {
@@ -247,7 +247,7 @@ function beginSignIn(login) {
             key: ONYXKEYS.ACCOUNT,
             value: {
                 isLoading: false,
-                loadingScreen: null,
+                loadingForm: null,
                 errors: {
                     [DateUtils.getMicroseconds()]: Localize.translateLocal('loginForm.cannotGetAccountDetails'),
                 },
@@ -331,6 +331,14 @@ function signInWithShortLivedAuthToken(email, authToken) {
  * @param {String} [preferredLocale] Indicates which language to use when the user lands in the app
  */
 function signIn(password, validateCode, twoFactorAuthCode, preferredLocale = CONST.LOCALES.DEFAULT) {
+    let loadingForm;
+    if(twoFactorAuthCode){
+        loadingForm = null;
+    }else if(password){
+        loadingForm = 'PasswordForm'
+    }else {
+        loadingForm = 'MagicCodeForm'
+    }
     const optimisticData = [
         {
             onyxMethod: Onyx.METHOD.MERGE,
@@ -338,6 +346,7 @@ function signIn(password, validateCode, twoFactorAuthCode, preferredLocale = CON
             value: {
                 ...CONST.DEFAULT_ACCOUNT_DATA,
                 isLoading: true,
+                loadingForm
             },
         },
     ];
@@ -348,6 +357,7 @@ function signIn(password, validateCode, twoFactorAuthCode, preferredLocale = CON
             key: ONYXKEYS.ACCOUNT,
             value: {
                 isLoading: false,
+                loadingForm: null
             },
         },
     ];
@@ -358,6 +368,7 @@ function signIn(password, validateCode, twoFactorAuthCode, preferredLocale = CON
             key: ONYXKEYS.ACCOUNT,
             value: {
                 isLoading: false,
+                loadingForm: null
             },
         },
     ];
