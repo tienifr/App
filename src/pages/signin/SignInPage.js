@@ -67,14 +67,17 @@ class SignInPage extends Component {
         // Show the login form if
         // - A login has not been entered yet
         // - AND a validateCode has not been cached with sign in link
-        const showLoginForm = !this.props.credentials.login && !this.props.credentials.validateCode;
-
+        const isLoadingLoginForm = this.props.account.loadingScreen === 'LoginForm';
+        const showLoginForm = (!this.props.credentials.login && !this.props.credentials.validateCode) || isLoadingLoginForm
         // Show the unlink form if
         // - A login has been entered
         // - AND the login is not the primary login
         // - AND the login is not validated
-        const showUnlinkLoginForm =
-            this.props.credentials.login && this.props.account.primaryLogin && this.props.account.primaryLogin !== this.props.credentials.login && !this.props.account.validated;
+        const showUnlinkLoginForm = this.props.credentials.login
+            && this.props.account.primaryLogin
+            && this.props.account.primaryLogin !== this.props.credentials.login
+            && !this.props.account.validated
+            && !isLoadingLoginForm
 
         // Show the old password form if
         // - A login has been entered
@@ -89,13 +92,18 @@ class SignInPage extends Component {
             !this.props.credentials.password &&
             !this.props.account.forgotPassword &&
             !showUnlinkLoginForm &&
-            !Permissions.canUsePasswordlessLogins(this.props.betas);
+            !Permissions.canUsePasswordlessLogins(this.props.betas) &&
+            !isLoadingLoginForm
 
         // Show the new magic code / validate code form if
         // - A login has been entered or a validateCode has been cached from sign in link
         // - AND the login isn't an unvalidated secondary login
         // - AND the user is on the 'passwordless' beta
-        const showValidateCodeForm = (this.props.credentials.login || this.props.credentials.validateCode) && !showUnlinkLoginForm && Permissions.canUsePasswordlessLogins(this.props.betas);
+        const showValidateCodeForm = (this.props.credentials.login
+            || this.props.credentials.validateCode)
+            && !showUnlinkLoginForm
+            && Permissions.canUsePasswordlessLogins(this.props.betas)
+            && !isLoadingLoginForm
 
         // Show the resend validation link form if
         // - A login has been entered

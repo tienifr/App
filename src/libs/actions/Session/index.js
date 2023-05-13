@@ -217,6 +217,7 @@ function beginSignIn(login) {
             value: {
                 ...CONST.DEFAULT_ACCOUNT_DATA,
                 isLoading: true,
+                loadingScreen: 'LoginForm',
                 message: null,
             },
         },
@@ -228,6 +229,7 @@ function beginSignIn(login) {
             key: ONYXKEYS.ACCOUNT,
             value: {
                 isLoading: false,
+                loadingScreen:null
             },
         },
         {
@@ -245,6 +247,7 @@ function beginSignIn(login) {
             key: ONYXKEYS.ACCOUNT,
             value: {
                 isLoading: false,
+                loadingScreen: null,
                 errors: {
                     [DateUtils.getMicroseconds()]: Localize.translateLocal('loginForm.cannotGetAccountDetails'),
                 },
