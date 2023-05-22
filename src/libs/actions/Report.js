@@ -814,7 +814,7 @@ Onyx.connect({
  * @param {String} reportID
  * @param {Object} reportAction
  */
-function deleteReportComment(reportID, reportAction) {
+function deleteReportComment(reportID, reportAction,parentReportId) {
     const reportActionID = reportAction.reportActionID;
     const deletedMessage = [
         {
@@ -831,6 +831,7 @@ function deleteReportComment(reportID, reportAction) {
             message: deletedMessage,
             errors: null,
         },
+        // TODO: add optimistic data if parentReportId is not empty
     };
 
     // If we are deleting the last visible message, let's find the previous visible one (or set an empty one if there are none) and update the lastMessageText in the LHN.
@@ -891,7 +892,7 @@ function deleteReportComment(reportID, reportAction) {
     ];
 
     const parameters = {
-        reportID,
+        reportID: parentReportId || reportID,
         reportActionID: reportAction.reportActionID,
     };
     API.write('DeleteComment', parameters, {optimisticData, successData, failureData});

@@ -391,6 +391,7 @@ class ReportActionItem extends Component {
                             <MiniReportActionContextMenu
                                 reportID={this.props.report.reportID}
                                 reportAction={this.props.action}
+                                parentReportID={this.props.report.parentReportID}
                                 isArchivedRoom={ReportUtils.isArchivedRoom(this.props.report)}
                                 displayAsGroup={this.props.displayAsGroup}
                                 isVisible={hovered && !this.props.draftMessage && !hasErrors}
