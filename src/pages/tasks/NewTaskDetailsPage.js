@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useEffect} from 'react';
 import {View} from 'react-native';
 import {withOnyx} from 'react-native-onyx';
 import PropTypes from 'prop-types';
@@ -25,10 +25,14 @@ const propTypes = {
 
 const defaultProps = {
     betas: [],
+    task: {
+        shouldSync:false
+    }
 };
 
 const NewTaskPage = (props) => {
     const inputRef = useRef();
+    const childRef = useRef();
 
     /**
      * @param {Object} values - form input values passed by the Form component
@@ -56,6 +60,19 @@ const NewTaskPage = (props) => {
         Navigation.dismissModal();
         return null;
     }
+
+    useEffect(()=>{
+        if(props.task.shouldSync){
+            childRef.current.setState({
+                inputValues:{
+                    taskTitle:props.task.title,
+                    taskDescription: props.task.description
+                }
+            })
+            TaskUtils.setShouldSync(false)
+        }
+    },[props.task.shouldSync])
+
     return (
         <ScreenWrapper
             onEntryTransitionEnd={() => inputRef.current && inputRef.current.focus()}
@@ -74,6 +91,7 @@ const NewTaskPage = (props) => {
                 validate={(values) => validate(values)}
                 onSubmit={(values) => onSubmit(values)}
                 enabledWhenOffline
+                ref={instance => { childRef.current = instance; }}
             >
                 <View style={styles.mb5}>
                     <TextInput
@@ -102,6 +120,9 @@ export default compose(
     withOnyx({
         betas: {
             key: ONYXKEYS.BETAS,
+        },
+        task: {
+            key: ONYXKEYS.TASK,
         },
     }),
     withLocalize,

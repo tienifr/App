@@ -398,7 +398,11 @@ function setDetailsValue(title, description) {
  * @param {string} title
  */
 function setTitleValue(title) {
-    Onyx.merge(ONYXKEYS.TASK, {title: title.trim()});
+    Onyx.merge(ONYXKEYS.TASK, {title: title.trim(), shouldSync:true});
+}
+
+function setShouldSync(shouldSync) {
+    Onyx.merge(ONYXKEYS.TASK, {shouldSync});
 }
 
 /**
@@ -406,7 +410,7 @@ function setTitleValue(title) {
  * @param {string} description
  */
 function setDescriptionValue(description) {
-    Onyx.merge(ONYXKEYS.TASK, {description: description.trim()});
+    Onyx.merge(ONYXKEYS.TASK, {description: description.trim(), shouldSync:true});
 }
 
 /**
@@ -584,4 +588,5 @@ export {
     getShareDestination,
     cancelTask,
     isTaskCanceled,
+    setShouldSync
 };
