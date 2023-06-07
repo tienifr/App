@@ -28,6 +28,7 @@ const propTypes = {
 
     /** The report currently being looked at */
     report: reportPropTypes,
+    parentReport: reportPropTypes,
 
     /** The actions from the parent report */
     // TO DO: Replace with HOC https://github.com/Expensify/App/issues/18769.
@@ -37,6 +38,7 @@ const propTypes = {
 };
 const defaultProps = {
     report: {},
+    parentReport: {},
     parentReportActions: {},
 };
 
@@ -58,7 +60,7 @@ const ReportActionItemParentAction = (props) => {
                 <View style={[styles.p5, StyleUtils.getReportWelcomeTopMarginStyle(props.isSmallScreenWidth)]} />
                 {parentReportAction && (
                     <ReportActionItem
-                        report={props.report}
+                        report={props.parentReport}
                         action={parentReportAction}
                         displayAsGroup={false}
                         isMostRecentIOUReportAction={false}
@@ -82,6 +84,9 @@ export default compose(
     withOnyx({
         report: {
             key: ({reportID}) => `${ONYXKEYS.COLLECTION.REPORT}${reportID}`,
+        },
+        parentReport: {
+            key: ({parentReportID}) => `${ONYXKEYS.COLLECTION.REPORT}${parentReportID}`,
         },
         parentReportActions: {
             key: ({parentReportID}) => `${ONYXKEYS.COLLECTION.REPORT_ACTIONS}${parentReportID}`,

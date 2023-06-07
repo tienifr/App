@@ -52,6 +52,7 @@ import ReportActionItemDraft from './ReportActionItemDraft';
 import TaskPreview from '../../../components/ReportActionItem/TaskPreview';
 import TaskAction from '../../../components/ReportActionItem/TaskAction';
 import Permissions from '../../../libs/Permissions';
+import Navigation from "../../../libs/Navigation/Navigation";
 
 const propTypes = {
     /** Report for this action */
@@ -293,7 +294,7 @@ class ReportActionItem extends Component {
             hasReplies &&
             this.props.action.childCommenterCount &&
             Permissions.canUseThreads(this.props.betas) &&
-            !ReportUtils.isThreadFirstChat(this.props.action, this.props.report.reportID);
+            !ReportUtils.isThreadFirstChat(this.props.action);
         const oldestFourEmails = lodashGet(this.props.action, 'childOldestFourEmails', '').split(',');
 
         return (
