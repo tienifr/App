@@ -30,13 +30,12 @@ function clearOutTaskInfo() {
  *
  */
 
-function createTaskAndNavigate(currentUserEmail, parentReportID, title, description, assignee = '') {
+function createTaskAndNavigate(currentUserEmail, parentReportID, title, description, assignee = '',assigneeChatReportID) {
     // Create the task report
     const optimisticTaskReport = ReportUtils.buildOptimisticTaskReport(currentUserEmail, assignee, parentReportID, title, description);
 
     // Grab the assigneeChatReportID if there is an assignee and if it's not the same as the parentReportID
     // then we create an optimistic add comment report action on the assignee's chat to notify them of the task
-    const assigneeChatReportID = lodashGet(ReportUtils.getChatByParticipants([assignee]), 'reportID');
     const taskReportID = optimisticTaskReport.reportID;
     let optimisticAssigneeAddComment;
     if (assigneeChatReportID && assigneeChatReportID !== parentReportID) {
@@ -444,7 +443,11 @@ function setAssigneeValue(assignee, shareDestination, isCurrentUser = false) {
             setShareDestinationValue(reportID);
         }
 
-        Report.openReport(reportID, [assignee], newChat);
+        if(!_.isEmpty(newChat)){
+            Onyx.merge(ONYXKEYS.TASK, {newReport:newChat});
+        }
+
+        // Report.openReport(reportID, [assignee], newChat);
     }
 
     // This is only needed for creation of a new task and so it should only be stored locally
@@ -500,8 +503,7 @@ function getAssignee(details) {
  * @param {Object} personalDetails
  * @returns {Object}
  * */
-function getShareDestination(reportID, reports, personalDetails) {
-    const report = lodashGet(reports, `report_${reportID}`, {});
+function getShareDestination(report, personalDetails) {
     return {
         icons: ReportUtils.getIcons(report, personalDetails),
         displayName: ReportUtils.getReportName(report),

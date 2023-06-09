@@ -18,6 +18,7 @@ import reportPropTypes from '../reportPropTypes';
 import * as TaskUtils from '../../libs/actions/Task';
 import * as OptionsListUtils from '../../libs/OptionsListUtils';
 import FormAlertWithSubmitButton from '../../components/FormAlertWithSubmitButton';
+import * as Report from '../../libs/actions/Report';
 
 const propTypes = {
     /** Task Creation Data */
@@ -94,9 +95,14 @@ const NewTaskPage = (props) => {
 
         // If we have a share destination, we want to set the parent report and
         // the share destination data
-        if (props.task.shareDestination) {
+        if(!_.isEmpty(props.task.newReport)){
+            setParentReport(props.task.newReport);
+            const displayDetails = TaskUtils.getShareDestination(props.task.newReport, props.personalDetails);
+            setShareDestination(displayDetails);
+        }else if (props.task.shareDestination) {
             setParentReport(lodashGet(props.reports, `report_${props.task.shareDestination}`, {}));
-            const displayDetails = TaskUtils.getShareDestination(props.task.shareDestination, props.reports, props.personalDetails);
+            const report = lodashGet(props.reports, `report_${props.task.shareDestination}`, {});
+            const displayDetails = TaskUtils.getShareDestination(report, props.personalDetails);
             setShareDestination(displayDetails);
         }
     }, [props]);
@@ -119,7 +125,10 @@ const NewTaskPage = (props) => {
             return;
         }
 
-        TaskUtils.createTaskAndNavigate(props.session.email, parentReport.reportID, props.task.title, props.task.description, props.task.assignee);
+        if(!_.isEmpty(props.task.newReport)){
+            Report.openReport(props.task.shareDestination, [props.task.assignee], props.task.newReport);
+        }
+        TaskUtils.createTaskAndNavigate(props.session.email, parentReport.reportID, props.task.title, props.task.description, props.task.assignee,props.task.shareDestination);
     }
 
     if (!Permissions.canUseTasks(props.betas)) {
