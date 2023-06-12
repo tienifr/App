@@ -34,7 +34,7 @@ import BlockingView from '../components/BlockingViews/BlockingView';
 import * as Illustrations from '../components/Icon/Illustrations';
 import variables from '../styles/variables';
 import ROUTES from '../ROUTES';
-
+import {withNetwork} from '../components/OnyxProvider'
 const matchType = PropTypes.shape({
     params: PropTypes.shape({
         /** accountID passed via route /a/:accountID */
@@ -94,10 +94,10 @@ function ProfilePage(props) {
 
     // eslint-disable-next-line rulesdir/prefer-early-return
     useEffect(() => {
-        if (accountID > 0) {
+        if (accountID > 0 && !props.network.isOffline) {
             PersonalDetails.openPublicProfilePage(accountID);
         }
-    }, [accountID]);
+    }, [accountID,props.network.isOffline]);
 
     const details = lodashGet(props.personalDetails, accountID, {});
     const displayName = details.displayName ? details.displayName : props.translate('common.hidden');
@@ -229,6 +229,7 @@ ProfilePage.displayName = 'ProfilePage';
 
 export default compose(
     withLocalize,
+    withNetwork(),
     withOnyx({
         personalDetails: {
             key: ONYXKEYS.PERSONAL_DETAILS_LIST,

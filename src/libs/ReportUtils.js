@@ -1084,6 +1084,10 @@ function generateReportID() {
     return (Math.floor(Math.random() * 2 ** 21) * 2 ** 32 + Math.floor(Math.random() * 2 ** 32)).toString();
 }
 
+function generateAccountID() {
+    return Math.floor(Math.random() * 100000000).toString()
+}
+
 /**
  * @param {Object} report
  * @returns {Boolean}
@@ -1458,6 +1462,28 @@ function buildOptimisticChatReport(
     parentReportID = '',
 ) {
     const currentTime = DateUtils.getDBTime();
+    const participantAccountIDs = participantList.map(p=>{
+        const accountID = lodashGet(allPersonalDetails,[p,'accountID']);
+        const generatedID= generateAccountID()
+        if(!accountID){
+            Onyx.update([
+                {
+                    key:ONYXKEYS.PERSONAL_DETAILS_LIST,
+                    onyxMethod: Onyx.METHOD.MERGE,
+                    value:{
+                        [generatedID]:{
+                            accountID:generatedID,
+                            displayName:p,
+                            login:p,
+                            avatar: UserUtils.getDefaultAvatarURL(p)
+                        }
+                    }
+                }
+            ]);
+        }
+        return accountID || generatedID
+    });
+
     return {
         type: CONST.REPORT.TYPE.CHAT,
         chatType,
@@ -1482,6 +1508,7 @@ function buildOptimisticChatReport(
         statusNum: 0,
         visibility,
         welcomeMessage: '',
+        participantAccountIDs 
     };
 }
 
