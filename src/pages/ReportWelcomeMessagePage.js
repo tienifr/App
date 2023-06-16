@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
 import {View} from 'react-native';
@@ -17,6 +17,7 @@ import ONYXKEYS from '../ONYXKEYS';
 import CONST from '../CONST';
 import FullPageNotFoundView from '../components/BlockingViews/FullPageNotFoundView';
 import Form from '../components/Form';
+import withNavigationFocus from '../components/withNavigationFocus';
 
 const propTypes = {
     ...withLocalizePropTypes,
@@ -38,6 +39,8 @@ function ReportWelcomeMessagePage(props) {
     const [welcomeMessage, setWelcomeMessage] = useState(parser.htmlToMarkdown(props.report.welcomeMessage));
     const welcomeMessageInputRef = useRef(null);
 
+    const focusTimeout = useRef();
+
     const handleWelcomeMessageChange = useCallback((value) => {
         setWelcomeMessage(value);
     }, []);
@@ -46,6 +49,32 @@ function ReportWelcomeMessagePage(props) {
         Report.updateWelcomeMessage(props.report.reportID, props.report.welcomeMessage, welcomeMessage.trim());
     }, [props.report.reportID, props.report.welcomeMessage, welcomeMessage]);
 
+    useEffect(() =>{
+        focusWelcomeMessageInput()
+        if (!focusTimeout.current) {
+            return;
+        }
+        clearTimeout(focusTimeout.current);
+    },[])
+
+    useEffect(()=>{
+        if(props.isFocused){
+            focusWelcomeMessageInput();
+        }
+    },[props.isFocused])
+
+    const focusWelcomeMessageInput=()=> {
+        focusTimeout.current = setTimeout(() => {
+            welcomeMessageInputRef.current.focus();
+            // Below condition is needed for web, desktop and mweb only, for native cursor is set at end by default.
+            if (welcomeMessageInputRef.current.value && welcomeMessageInputRef.current.setSelectionRange) {
+                welcomeMessageInputRef.current.scrollTop=welcomeMessageInputRef.current.scrollHeight
+                const length = welcomeMessageInputRef.current.value.length;
+                welcomeMessageInputRef.current.setSelectionRange(length, length);
+            }
+        }, CONST.ANIMATED_TRANSITION);
+    }
+    
     return (
         <ScreenWrapper
             onEntryTransitionEnd={() => {
@@ -86,4 +115,4 @@ function ReportWelcomeMessagePage(props) {
 }
 
 ReportWelcomeMessagePage.propTypes = propTypes;
-export default compose(withLocalize, withReportOrNotFound)(ReportWelcomeMessagePage);
+export default compose(withLocalize, withReportOrNotFound,withNavigationFocus)(ReportWelcomeMessagePage);
