@@ -68,6 +68,7 @@ function BaseQuickEmojiReactions(props) {
                 onPressOpenPicker={props.onPressOpenPicker}
                 onWillShowPicker={props.onWillShowPicker}
                 onSelectEmoji={props.onEmojiSelected}
+                reportActionID={props.reportActionID}
             />
         </View>
     );

@@ -43,6 +43,7 @@ class EmojiPicker extends React.Component {
             },
 
             emojiPopoverAnchorOrigin: DEFAULT_ANCHOR_ORIGIN,
+            reportActionID: '0'
         };
     }
 
@@ -97,7 +98,8 @@ class EmojiPicker extends React.Component {
             this.onModalHide = () => {};
         }
         this.emojiPopoverAnchor = null;
-        this.setState({isEmojiPickerVisible: false});
+        console.log('kkkkkkkkkk')
+        this.setState({isEmojiPickerVisible: false,reportActionID:'0'});
     }
 
     /**
@@ -109,7 +111,7 @@ class EmojiPicker extends React.Component {
      * @param {Object} [anchorOrigin=DEFAULT_ANCHOR_ORIGIN] - Anchor origin for Popover
      * @param {Function} [onWillShow=() => {}] - Run a callback when Popover will show
      */
-    showEmojiPicker(onModalHide, onEmojiSelected, emojiPopoverAnchor, anchorOrigin, onWillShow = () => {}) {
+    showEmojiPicker(onModalHide, onEmojiSelected, emojiPopoverAnchor, anchorOrigin, onWillShow = () => {},reportActionID) {
         this.onModalHide = onModalHide;
         this.onEmojiSelected = onEmojiSelected;
         this.emojiPopoverAnchor = emojiPopoverAnchor;
@@ -121,7 +123,7 @@ class EmojiPicker extends React.Component {
 
         this.measureEmojiPopoverAnchorPosition().then((emojiPopoverAnchorPosition) => {
             onWillShow();
-            this.setState({isEmojiPickerVisible: true, emojiPopoverAnchorPosition, emojiPopoverAnchorOrigin: anchorOrigin || DEFAULT_ANCHOR_ORIGIN});
+            this.setState({isEmojiPickerVisible: true, emojiPopoverAnchorPosition, emojiPopoverAnchorOrigin: anchorOrigin || DEFAULT_ANCHOR_ORIGIN,reportActionID});
         });
     }
 

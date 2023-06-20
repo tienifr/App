@@ -40,6 +40,7 @@ import * as ReportActions from '../../../libs/actions/ReportActions';
 import * as ReportActionsUtils from '../../../libs/ReportActionsUtils';
 import reportPropTypes from '../../reportPropTypes';
 import {ShowContextMenuContext} from '../../../components/ShowContextMenuContext';
+import * as EmojiPickerAction from '../../../libs/actions/EmojiPickerAction';
 import ChronosOOOListActions from '../../../components/ReportActionItem/ChronosOOOListActions';
 import ReportActionItemReactions from '../../../components/Reactions/ReportActionItemReactions';
 import * as Report from '../../../libs/actions/Report';
@@ -129,10 +130,25 @@ function ReportActionItem(props) {
         Report.expandURLPreview(props.report.reportID, props.action.reportActionID);
     }, [props.action, props.report.reportID]);
 
+    useEffect(() => {
+
+        return()=>{
+            if(ReportActionContextMenu.contextMenuRef.current.state.isPopoverVisible && ReportActionContextMenu.contextMenuRef.current.state.reportAction.reportActionID===props.action.reportActionID){
+                ReportActionContextMenu.hideContextMenu(false)
+            }
+            console.log('kokokokok',EmojiPickerAction.emojiPickerRef.current.state,props.action.reportActionID)
+            if(EmojiPickerAction.emojiPickerRef.current.state.isEmojiPickerVisible && EmojiPickerAction.emojiPickerRef.current.state.reportActionID===props.action.reportActionID){
+                console.log('kokokokok')
+                EmojiPickerAction.hideEmojiPicker()
+            }
+        }
+    }, []);
+
     // Hide the message if it is being moderated for a higher offense, or is hidden by a moderator
     // Removed messages should not be shown anyway and should not need this flow
 
     useEffect(() => {
+        console.log('unmounted',props.action)
         if (!props.action.actionName === CONST.REPORT.ACTIONS.TYPE.ADDCOMMENT || _.isEmpty(props.action.message[0].moderationDecisions)) {
             return;
         }
@@ -421,6 +437,7 @@ function ReportActionItem(props) {
     const isWhisperOnlyVisibleByUser = isWhisper && ReportUtils.isCurrentUserTheOnlyParticipant(whisperedTo);
     const whisperedToPersonalDetails = isWhisper ? _.filter(props.personalDetails, (details) => _.includes(whisperedTo, details.login)) : [];
     const displayNamesWithTooltips = isWhisper ? ReportUtils.getDisplayNamesWithTooltips(whisperedToPersonalDetails, isMultipleParticipant) : [];
+    console.log('props.action.reportActionID',props.action.reportActionID)
     return (
         <PressableWithSecondaryInteraction
             pointerEvents={props.action.pendingAction === CONST.RED_BRICK_ROAD_PENDING_ACTION.DELETE ? 'none' : 'auto'}

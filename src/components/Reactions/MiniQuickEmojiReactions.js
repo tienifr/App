@@ -56,6 +56,9 @@ function MiniQuickEmojiReactions(props) {
                 props.onEmojiSelected(emojiObject);
             },
             ref.current,
+            undefined,
+            undefined,
+            props.reportActionID
         );
     };
 
