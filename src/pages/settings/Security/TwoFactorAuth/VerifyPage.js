@@ -55,6 +55,9 @@ const defaultProps = {
 };
 
 function VerifyPage(props) {
+
+    const ref = React.useRef(null);
+
     useEffect(() => {
         Session.clearAccountMessages();
     }, []);
@@ -139,14 +142,19 @@ function VerifyPage(props) {
                         <Text style={styles.mt11}>{props.translate('twoFactorAuth.enterCode')}</Text>
                     </View>
                     <View style={[styles.mt3, styles.mh5]}>
-                        <TwoFactorAuthForm />
+                        <TwoFactorAuthForm 
+                        innerRef = {ref}
+                        />
                     </View>
                 </ScrollView>
                 <FixedFooter style={[styles.mtAuto, styles.pt2]}>
                     <Button
                         success
                         text={props.translate('common.next')}
-                        isDisabled
+                        // isDisabled
+                        onPress={()=>{
+                            ref.current.validateAndSubmitForm()
+                        }}
                         isLoading={props.account.isLoading}
                     />
                 </FixedFooter>

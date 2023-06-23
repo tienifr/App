@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useState, forwardRef,useImperativeHandle} from 'react';
 import PropTypes from 'prop-types';
 import {withOnyx} from 'react-native-onyx';
 import MagicCodeInput from '../../../../../components/MagicCodeInput';
@@ -67,6 +67,12 @@ function BaseTwoFactorAuthForm(props) {
         Session.validateTwoFactorAuth(twoFactorAuthCode);
     }, [twoFactorAuthCode]);
 
+    useImperativeHandle(props.innerRef, () => ({
+        validateAndSubmitForm() {
+            validateAndSubmitForm();
+        }
+    }));
+
     return (
         <MagicCodeInput
             autoComplete={props.autoComplete}
@@ -90,4 +96,12 @@ export default compose(
     withOnyx({
         account: {key: ONYXKEYS.ACCOUNT},
     }),
-)(BaseTwoFactorAuthForm);
+)(
+    forwardRef((props, ref) => (
+        <BaseTwoFactorAuthForm
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...props}
+            innerRef={ref}
+        />
+    )),
+);
