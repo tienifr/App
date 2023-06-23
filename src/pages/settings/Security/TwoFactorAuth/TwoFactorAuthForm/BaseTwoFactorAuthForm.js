@@ -53,6 +53,7 @@ function BaseTwoFactorAuthForm(props) {
      * Check that all the form fields are valid, then trigger the submit callback
      */
     const validateAndSubmitForm = useCallback(() => {
+        ref.current.blur()
         if (!twoFactorAuthCode.trim()) {
             setFormError({twoFactorAuthCode: 'twoFactorAuthForm.error.pleaseFillTwoFactorAuth'});
             return;
@@ -73,6 +74,8 @@ function BaseTwoFactorAuthForm(props) {
         }
     }));
 
+    const ref = React.useRef(null);
+
     return (
         <MagicCodeInput
             autoComplete={props.autoComplete}
@@ -84,6 +87,7 @@ function BaseTwoFactorAuthForm(props) {
             onChangeText={onTextInput}
             onFulfill={validateAndSubmitForm}
             errorText={formError.twoFactorAuthCode ? props.translate(formError.twoFactorAuthCode) : ErrorUtils.getLatestErrorMessage(props.account)}
+            ref={ref}
         />
     );
 }
