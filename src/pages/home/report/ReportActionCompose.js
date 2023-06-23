@@ -4,6 +4,7 @@ import {View, InteractionManager, LayoutAnimation, NativeModules, findNodeHandle
 import _ from 'underscore';
 import lodashGet from 'lodash/get';
 import {withOnyx} from 'react-native-onyx';
+import Str from "expensify-common/lib/str";
 import styles from '../../../styles/styles';
 import themeColors from '../../../styles/themes/default';
 import Composer from '../../../components/Composer';
@@ -455,17 +456,14 @@ class ReportActionCompose extends React.Component {
             if (!detail.login) {
                 return false;
             }
-            if (searchValue && !`${detail.displayName} ${detail.login}`.toLowerCase().includes(searchValue.toLowerCase())) {
-                return false;
-            }
-            return true;
+            return !(searchValue && !`${detail.displayName} ${Str.removeSMSDomain(detail.login)}`.toLowerCase().includes(searchValue.toLowerCase()));
         });
 
         const sortedPersonalDetails = _.sortBy(filteredPersonalDetails, (detail) => detail.displayName || detail.login);
         _.each(_.first(sortedPersonalDetails, CONST.AUTO_COMPLETE_SUGGESTER.MAX_AMOUNT_OF_ITEMS - suggestions.length), (detail) => {
             suggestions.push({
                 text: detail.displayName,
-                alternateText: detail.login,
+                alternateText: Str.removeSMSDomain(detail.login),
                 icons: [
                     {
                         name: detail.login,

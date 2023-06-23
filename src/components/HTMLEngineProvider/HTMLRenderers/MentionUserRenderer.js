@@ -10,6 +10,7 @@ import withCurrentUserPersonalDetails from '../../withCurrentUserPersonalDetails
 import personalDetailsPropType from '../../../pages/personalDetailsPropType';
 import * as StyleUtils from '../../../styles/StyleUtils';
 import TextLink from '../../TextLink';
+import * as OptionsListUtils from '../../../libs/OptionsListUtils';
 
 const propTypes = {
     ...htmlRendererPropTypes,
@@ -31,7 +32,7 @@ function MentionUserRenderer(props) {
     const defaultRendererProps = _.omit(props, ['TDefaultRenderer', 'style']);
 
     // We need to remove the leading @ from data as it is not part of the login
-    const loginWithoutLeadingAt = props.tnode.data.slice(1);
+    const loginWithoutLeadingAt = OptionsListUtils.addSMSDomainIfPhoneNumber(props.tnode.data.slice(1));
 
     const isOurMention = loginWithoutLeadingAt === props.currentUserPersonalDetails.login;
 
