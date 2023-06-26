@@ -42,8 +42,8 @@
     "gh-actions-validate": "./.github/scripts/validateActionsAndWorkflows.sh",
     "analyze-packages": "ANALYZE_BUNDLE=true webpack --config config/webpack/webpack.common.js --env envFile=.env.production",
     "symbolicate:android": "npx metro-symbolicate android/app/build/generated/sourcemaps/react/release/index.android.bundle.map",
-    "symbolicate:ios": "npx metro-symbolicate main.jsbundle.map",
-    "test:e2e": "node tests/e2e/testRunner.js --development"
+    "test:e2e": "node tests/e2e/testRunner.js --development",
+    "symbolicate:ios": "npx metro-symbolicate main.jsbundle.map"
   },
   "dependencies": {
     "@expensify/react-native-web": "0.18.15",
