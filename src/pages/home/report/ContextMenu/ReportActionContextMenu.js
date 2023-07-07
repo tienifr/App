@@ -33,6 +33,7 @@ function showContextMenu(
     isChronosReport = false,
     isPinnedChat = false,
     isUnreadChat = false,
+    isWhisper
 ) {
     if (!contextMenuRef.current) {
         return;
@@ -51,6 +52,7 @@ function showContextMenu(
         isChronosReport,
         isPinnedChat,
         isUnreadChat,
+        isWhisper
     );
 }
 

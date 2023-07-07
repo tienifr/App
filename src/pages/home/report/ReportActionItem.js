@@ -171,7 +171,7 @@ function ReportActionItem(props) {
      * @param {Object} [event] - A press event.
      */
     const showPopover = useCallback(
-        (event) => {
+        (event,isWhisperOnlyVisibleByUser) => {
             // Block menu on the message being Edited or if the report action item has errors
             if (props.draftMessage || !_.isEmpty(props.action.errors)) {
                 return;
@@ -192,6 +192,9 @@ function ReportActionItem(props) {
                 toggleContextMenuFromActiveReportAction,
                 ReportUtils.isArchivedRoom(props.report),
                 ReportUtils.chatIncludesChronos(props.report),
+                false,
+                false,
+                isWhisperOnlyVisibleByUser
             );
         },
         [props.draftMessage, props.action, props.report, toggleContextMenuFromActiveReportAction],
@@ -441,7 +444,7 @@ function ReportActionItem(props) {
             ref={popoverAnchorRef}
             onPressIn={() => props.isSmallScreenWidth && DeviceCapabilities.canUseTouchScreen() && ControlSelection.block()}
             onPressOut={() => ControlSelection.unblock()}
-            onSecondaryInteraction={showPopover}
+            onSecondaryInteraction={(e)=>showPopover(e,isWhisperOnlyVisibleByUser)}
             preventDefaultContextMenu={!props.draftMessage && !hasErrors}
             withoutFocusOnSecondaryInteraction
             accessibilityLabel={props.translate('accessibilityHints.chatMessage')}
@@ -458,6 +461,7 @@ function ReportActionItem(props) {
                             isVisible={hovered && !props.draftMessage && !hasErrors}
                             draftMessage={props.draftMessage}
                             isChronosReport={ReportUtils.chatIncludesChronos(props.report)}
+                            isWhisperOnlyVisibleByUser={isWhisperOnlyVisibleByUser}
                         />
                         <View
                             style={StyleUtils.getReportActionItemStyle(

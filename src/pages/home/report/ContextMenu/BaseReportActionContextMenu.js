@@ -63,6 +63,7 @@ class BaseReportActionContextMenu extends React.Component {
                 this.props.reportID,
                 this.props.isPinnedChat,
                 this.props.isUnreadChat,
+                this.props.isWhisperOnlyVisibleByUser
             );
 
         /**

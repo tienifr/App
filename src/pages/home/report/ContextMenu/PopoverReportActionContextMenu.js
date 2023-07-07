@@ -41,6 +41,7 @@ class PopoverReportActionContextMenu extends React.Component {
             isChronosReport: false,
             isPinnedChat: false,
             isUnreadChat: false,
+            isWhisperOnlyVisibleByUser: false
         };
         this.onPopoverShow = () => {};
         this.onPopoverHide = () => {};
@@ -145,6 +146,7 @@ class PopoverReportActionContextMenu extends React.Component {
         isChronosReport = false,
         isPinnedChat = false,
         isUnreadChat = false,
+        isWhisperOnlyVisibleByUser = false
     ) {
         const nativeEvent = event.nativeEvent || {};
         this.contextMenuAnchor = contextMenuAnchor;
@@ -177,6 +179,7 @@ class PopoverReportActionContextMenu extends React.Component {
                 isChronosReport,
                 isPinnedChat,
                 isUnreadChat,
+                isWhisperOnlyVisibleByUser
             });
         });
     }
@@ -316,6 +319,7 @@ class PopoverReportActionContextMenu extends React.Component {
                         isUnreadChat={this.state.isUnreadChat}
                         anchor={this.contextMenuTargetNode}
                         contentRef={this.contentRef}
+                        isWhisperOnlyVisibleByUser={this.state.isWhisperOnlyVisibleByUser}
                     />
                 </PopoverWithMeasuredContent>
                 <ConfirmModal
