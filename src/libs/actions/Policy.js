@@ -356,9 +356,19 @@ function addMembersToWorkspace(invitedEmailsToAccountIDs, welcomeNote, policyID,
     const membersListKey = `${ONYXKEYS.COLLECTION.POLICY_MEMBERS}${policyID}`;
     const accountIDs = _.values(invitedEmailsToAccountIDs);
 
-    // create onyx data for policy expense chats for each new member
+    // // create onyx data for policy expense chats for each new member
     const membersChats = createPolicyExpenseChats(policyID, invitedEmailsToAccountIDs, betas);
 
+    const currentAccountIDs = Object.keys(personalDetails);
+
+    const newPersonalDetails = {}
+    Object.keys(invitedEmailsToAccountIDs).map(k=>({
+        login:OptionsListUtils.addSMSDomainIfPhoneNumber(k),
+        accountID:invitedEmailsToAccountIDs[k],
+        displayName: k
+    })).filter(a=>!currentAccountIDs.includes(a.accountID)).forEach(a=>{
+        newPersonalDetails[a.accountID]=a
+    })
     const optimisticData = [
         {
             onyxMethod: Onyx.METHOD.MERGE,
@@ -366,6 +376,11 @@ function addMembersToWorkspace(invitedEmailsToAccountIDs, welcomeNote, policyID,
 
             // Convert to object with each key containing {pendingAction: ‘add’}
             value: _.object(accountIDs, Array(accountIDs.length).fill({pendingAction: CONST.RED_BRICK_ROAD_PENDING_ACTION.ADD})),
+        },
+        {
+            onyxMethod: Onyx.METHOD.MERGE,
+            key: ONYXKEYS.PERSONAL_DETAILS_LIST,
+            value: newPersonalDetails
         },
         ...membersChats.onyxOptimisticData,
     ];
@@ -378,6 +393,15 @@ function addMembersToWorkspace(invitedEmailsToAccountIDs, welcomeNote, policyID,
             // Convert to object with each key clearing pendingAction. We don’t
             // need to remove the members since that will be handled by onClose of OfflineWithFeedback.
             value: _.object(accountIDs, Array(accountIDs.length).fill({pendingAction: null, errors: null})),
+        },
+        {
+            onyxMethod: Onyx.METHOD.MERGE,
+            key: ONYXKEYS.PERSONAL_DETAILS_LIST,
+            value: Object.keys(newPersonalDetails).reduce(
+                (p, current) => {
+                  p[current] = null; 
+                  return p
+                }, {})
         },
         ...membersChats.onyxSuccessData,
     ];
@@ -747,6 +771,11 @@ function clearAddMemberError(policyID, accountID) {
     Onyx.merge(`${ONYXKEYS.COLLECTION.POLICY_MEMBERS}${policyID}`, {
         [accountID]: null,
     });
+    if(accountID.length===16){ // draft accountID
+        Onyx.merge(`${ONYXKEYS.PERSONAL_DETAILS_LIST}`, {
+            [accountID]: null
+        });
+    }
 }
 
 /**
