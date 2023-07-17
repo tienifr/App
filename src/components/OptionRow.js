@@ -57,6 +57,9 @@ const propTypes = {
     /** Whether to remove the lateral padding and align the content with the margins */
     shouldDisableRowInnerPadding: PropTypes.bool,
 
+    /** Callback that is called when mousedown is triggered. */
+    onMouseDown: PropTypes.func,
+
     style: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.object), PropTypes.object]),
 
     ...withLocalizePropTypes,
@@ -186,6 +189,7 @@ class OptionRow extends Component {
                             accessibilityRole={CONST.ACCESSIBILITY_ROLE.BUTTON}
                             hoverDimmingValue={1}
                             hoverStyle={this.props.hoverStyle}
+                            onMouseDown={this.props.onMouseDown}
                         >
                             <View style={sidebarInnerRowStyle}>
                                 <View style={[styles.flexRow, styles.alignItemsCenter]}>

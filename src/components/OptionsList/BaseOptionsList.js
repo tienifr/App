@@ -20,6 +20,9 @@ const propTypes = {
     /** Callback executed on scroll. Only used for web/desktop component */
     onScroll: PropTypes.func,
 
+    /** Callback that is called when mousedown is triggered. */
+    onRowMouseDown: PropTypes.func,
+
     ...optionsListPropTypes,
 };
 
@@ -27,6 +30,7 @@ const defaultProps = {
     keyboardDismissMode: 'none',
     onScrollBeginDrag: () => {},
     onScroll: () => {},
+    onRowMouseDown: () => {},
     ...optionsListDefaultProps,
 };
 
@@ -174,6 +178,7 @@ class BaseOptionsList extends Component {
                 isDisabled={isDisabled}
                 shouldHaveOptionSeparator={index > 0 && this.props.shouldHaveOptionSeparator}
                 shouldDisableRowInnerPadding={this.props.shouldDisableRowInnerPadding}
+                onMouseDown={this.props.onRowMouseDown}
             />
         );
     }
