@@ -73,7 +73,10 @@ function NewTaskPage(props) {
     }
     return (
         <ScreenWrapper
-            onEntryTransitionEnd={() => inputRef.current && inputRef.current.focus()}
+            onEntryTransitionEnd={() => {
+                console.log('onEntryTransitionEndIsCalled');
+                inputRef.current && inputRef.current.focus();
+            }}
             includeSafeAreaPaddingBottom={false}
         >
             <HeaderWithBackButton
