@@ -10,6 +10,7 @@ import CONST from '../../CONST';
 import styles from '../../styles/styles';
 import withLocalize, {withLocalizePropTypes} from '../withLocalize';
 import withNavigationFocus, {withNavigationFocusPropTypes} from '../withNavigationFocus';
+import withWindowDimensions from '../withWindowDimensions';
 import TextInput from '../TextInput';
 import ArrowKeyFocusManager from '../ArrowKeyFocusManager';
 import KeyboardShortcut from '../../libs/KeyboardShortcut';
@@ -125,6 +126,11 @@ class BaseOptionsSelector extends Component {
     }
 
     componentDidUpdate(prevProps) {
+        if (!this.isKeyboardOpen && this.props.windowHeight < prevProps.windowHeight -100) {
+            this.isKeyboardOpen=true
+        } else if (this.isKeyboardOpen && this.props.windowHeight > prevProps.windowHeight + 100) {
+            this.isKeyboardOpen=false
+        }
         if (_.isEqual(this.props.sections, prevProps.sections)) {
             return;
         }
@@ -340,7 +346,7 @@ class BaseOptionsSelector extends Component {
                 listContainerStyles={this.props.listContainerStyles}
                 isLoading={!this.props.shouldShowOptions}
                 onRowMouseDown={(e) => {
-                    if (!e || !this.textInput.isFocused()) {
+                    if (!e || !this.textInput.isFocused() || !this.isKeyboardOpen) {
                         return;
                     }
                     
@@ -398,4 +404,4 @@ class BaseOptionsSelector extends Component {
 BaseOptionsSelector.defaultProps = defaultProps;
 BaseOptionsSelector.propTypes = propTypes;
 
-export default compose(withLocalize, withNavigationFocus)(BaseOptionsSelector);
+export default compose(withLocalize, withNavigationFocus, withWindowDimensions)(BaseOptionsSelector);
