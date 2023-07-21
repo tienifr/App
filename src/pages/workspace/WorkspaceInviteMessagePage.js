@@ -108,6 +108,7 @@ class WorkspaceInviteMessagePage extends React.Component {
     }
 
     componentWillUnmount() {
+        console.log('unmount')
         if (!this.focusTimeout) {
             return;
         }
@@ -124,7 +125,9 @@ class WorkspaceInviteMessagePage extends React.Component {
         Keyboard.dismiss();
         Policy.addMembersToWorkspace(this.props.invitedEmailsToAccountIDsDraft, this.state.welcomeNote, this.props.route.params.policyID, this.props.betas);
         Policy.setWorkspaceInviteMembersDraft(this.props.route.params.policyID, {});
-        Navigation.navigate(ROUTES.getWorkspaceMembersRoute(this.props.route.params.policyID));
+        const route = ROUTES.getWorkspaceMembersRoute(this.props.route.params.policyID);
+        console.log('adadadadadad',!Navigation.isRouteInHistory(route) ? 'UP':undefined)
+        Navigation.navigate(route, !Navigation.isRouteInHistory(route) ? 'UP':undefined );
     }
 
     /**
@@ -149,6 +152,7 @@ class WorkspaceInviteMessagePage extends React.Component {
 
     validate() {
         const errorFields = {};
+        console.log('adad',this.props.invitedEmailsToAccountIDsDraft)
         if (_.isEmpty(this.props.invitedEmailsToAccountIDsDraft)) {
             errorFields.welcomeMessage = 'workspace.inviteMessage.inviteNoMembersError';
         }

@@ -58,6 +58,7 @@ export default function linkTo(navigation, path, type) {
 
     const action = getActionFromState(state, linkingConfig.config);
 
+    console.log('action',action)
     // If action type is different than NAVIGATE we can't change it to the PUSH safely
     if (action.type === 'NAVIGATE') {
         // If this action is navigating to the report screen and the top most navigator is different from the one we want to navigate - PUSH

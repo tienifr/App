@@ -201,6 +201,29 @@ function isActiveRoute(routePath) {
     return getActiveRoute().substring(1) === routePath;
 }
 
+function isRouteInHistory(routePath){
+    console.log('mooooooo')
+    return isRouteInHistory2(routePath,navigationRef.current.getState());
+}
+
+function isRouteInHistory2(routePath,state) {
+
+    if(state.routes){
+        const a = state.routes.findIndex(r=>{
+            return isRouteInHistory2(routePath,r);
+        }) >= 0;
+        if(a) return true;
+    }
+    if (state.state) {
+        const a = isRouteInHistory2(routePath,state.state)
+        if(a) return a;
+    }
+
+    console.log(state.path,`/${routePath}`)
+    return state.path === `/${routePath}`
+
+}   
+
 /**
  * Navigate to the route that we originally intended to go to
  * but the NavigationContainer was not ready when navigate() was called
@@ -238,6 +261,7 @@ export default {
     isNavigationReady,
     setIsNavigationReady,
     getTopmostReportId,
+    isRouteInHistory
 };
 
 export {navigationRef};
