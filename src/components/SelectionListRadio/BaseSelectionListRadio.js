@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View} from 'react-native';
+import {View, InteractionManager} from 'react-native';
 import _ from 'underscore';
 import lodashGet from 'lodash/get';
 import SectionList from '../SectionList';
@@ -204,6 +204,8 @@ function BaseSelectionListRadio(props) {
         },
     );
 
+    const [isListReady, setIsListReady] = useState(false);
+
     return (
         <ArrowKeyFocusManager
             disabledIndexes={flattenedSections.disabledOptionsIndexes}
@@ -239,6 +241,7 @@ function BaseSelectionListRadio(props) {
                             </View>
                         )}
                         <SectionList
+                            style={!isListReady ? {opacity: 0} : {}}
                             ref={listRef}
                             sections={props.sections}
                             renderItem={renderItem}
@@ -261,6 +264,10 @@ function BaseSelectionListRadio(props) {
                                 }
                                 scrollToIndex(focusedIndex, false);
                                 firstLayoutRef.current = false;
+                                InteractionManager.runAfterInteractions(() => {
+                                    console.log('setting is list ready')
+                                    setIsListReady(true);
+                                });
                             }}
                         />
                     </View>
