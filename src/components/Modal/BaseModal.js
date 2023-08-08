@@ -46,7 +46,7 @@ class BaseModal extends PureComponent {
             return;
         }
 
-        Modal.willAlertModalBecomeVisible(this.props.isVisible);
+        //Modal.willAlertModalBecomeVisible(this.props.isVisible);
         Modal.setCloseModal(this.props.isVisible ? this.props.onClose : null);
     }
 
@@ -54,7 +54,7 @@ class BaseModal extends PureComponent {
         // Only trigger onClose and setModalVisibility if the modal is unmounting while visible.
         if (this.props.isVisible) {
             this.hideModal(true);
-            Modal.willAlertModalBecomeVisible(false);
+            //Modal.willAlertModalBecomeVisible(false);
         }
 
         // To prevent closing any modal already unmounted when this modal still remains as visible state

@@ -87,11 +87,11 @@ class SidebarLinks extends React.PureComponent {
         SidebarUtils.setIsSidebarLoadedReady();
         this.isSidebarLoaded = true;
 
-        let modal = {};
+        let willAlertModalBecomeVisible = false;
         this.unsubscribeOnyxModal = onyxSubscribe({
             key: ONYXKEYS.MODAL,
             callback: (modalArg) => {
-                modal = modalArg;
+                willAlertModalBecomeVisible = lodashGet(modalArg, 'willAlertModalBecomeVisible', false);
             },
         });
 
@@ -99,7 +99,7 @@ class SidebarLinks extends React.PureComponent {
         this.unsubscribeEscapeKey = KeyboardShortcut.subscribe(
             shortcutConfig.shortcutKey,
             () => {
-                if (modal.willAlertModalBecomeVisible) {
+                if (willAlertModalBecomeVisible) {
                     return;
                 }
 
