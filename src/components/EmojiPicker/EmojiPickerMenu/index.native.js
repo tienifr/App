@@ -1,5 +1,5 @@
-import React, {useState, useMemo, useEffect} from 'react';
-import {View} from 'react-native';
+import React, {useState, useMemo, useEffect,useCallback} from 'react';
+import {View, InteractionManager} from 'react-native';
 import {withOnyx} from 'react-native-onyx';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
@@ -19,6 +19,34 @@ import * as User from '../../../libs/actions/User';
 import TextInput from '../../TextInput';
 import CategoryShortcutBar from '../CategoryShortcutBar';
 import * as StyleUtils from '../../../styles/StyleUtils';
+
+function useSingleExecution() {
+    const [isExecuting, setIsExecuting] = useState(false);
+
+    const singleExecution = useCallback(
+        (action) => (...params) => {
+            if (isExecuting) {
+                return;
+            }
+
+            setIsExecuting(true);
+
+            const execution = action(params);
+            InteractionManager.runAfterInteractions(() => {
+                if (!(execution instanceof Promise)) {
+                    setIsExecuting(false);
+                    return;
+                }
+                execution.finally(() => {
+                    setIsExecuting(false);
+                });
+            });
+        },
+        [isExecuting],
+    );
+
+    return {isExecuting, singleExecution};
+}
 
 const propTypes = {
     /** Function to add the selected emoji to the main compose text input */
@@ -49,6 +77,7 @@ function EmojiPickerMenu({preferredLocale, onEmojiSelected, preferredSkinTone, t
     const [filteredEmojis, setFilteredEmojis] = useState(allEmojis);
     const [headerIndices, setHeaderIndices] = useState(headerRowIndices);
     const {windowWidth} = useWindowDimensions();
+    const {singleExecution} = useSingleExecution();
 
     useEffect(() => {
         setFilteredEmojis(allEmojis);
@@ -150,7 +179,7 @@ function EmojiPickerMenu({preferredLocale, onEmojiSelected, preferredSkinTone, t
 
         return (
             <EmojiPickerMenuItem
-                onPress={(emoji) => addToFrequentAndSelectEmoji(emoji, item)}
+                onPress={singleExecution((emoji) => addToFrequentAndSelectEmoji(emoji, item))}
                 emoji={emojiCode}
             />
         );
