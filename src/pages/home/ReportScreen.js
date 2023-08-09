@@ -175,7 +175,9 @@ class ReportScreen extends React.Component {
             (_.isEqual(this.props.report, defaultProps.report) ||
                 // optimistic case
                 (prevProps.report.statusNum === CONST.REPORT.STATUS.OPEN && this.props.report.statusNum === CONST.REPORT.STATUS.CLOSED))
+            && this.props.report.pendingAction !== 'delete'
         ) {
+            console.log('navigateToConciergeChat', this.props.report)
             Navigation.goBack();
             Report.navigateToConciergeChat();
             // isReportRemoved will prevent <FullPageNotFoundView> showing when navigating

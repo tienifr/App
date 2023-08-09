@@ -878,7 +878,9 @@ function deleteMoneyRequest(transactionID, reportAction, isSingleTransactionView
                   {
                       onyxMethod: Onyx.METHOD.SET,
                       key: `${ONYXKEYS.COLLECTION.REPORT}${transactionThreadID}`,
-                      value: null,
+                      value: {
+                        pendingAction: 'delete',
+                    },
                   },
                   {
                       onyxMethod: Onyx.METHOD.SET,
@@ -895,7 +897,9 @@ function deleteMoneyRequest(transactionID, reportAction, isSingleTransactionView
         {
             onyxMethod: shouldDeleteIOUReport ? Onyx.METHOD.SET : Onyx.METHOD.MERGE,
             key: `${ONYXKEYS.COLLECTION.REPORT}${iouReport.reportID}`,
-            value: updatedIOUReport,
+            value: {
+                pendingAction: 'delete',
+            },
         },
         {
             onyxMethod: Onyx.METHOD.MERGE,
@@ -928,6 +932,21 @@ function deleteMoneyRequest(transactionID, reportAction, isSingleTransactionView
                 [reportAction.reportActionID]: {pendingAction: null},
             },
         },
+        ...(shouldDeleteIOUReport ? [
+            {
+                onyxMethod: Onyx.METHOD.SET,
+                key: `${ONYXKEYS.COLLECTION.REPORT}${iouReport.reportID}`,
+                value: null,
+            },
+        ] : []),
+        ...(shouldDeleteTransactionThread
+            ? [
+                {
+                    onyxMethod: Onyx.METHOD.SET,
+                    key: `${ONYXKEYS.COLLECTION.REPORT}${transactionThreadID}`,
+                    value: null,
+                }
+            ] : []),
     ];
 
     const failureData = [
@@ -997,8 +1016,6 @@ function deleteMoneyRequest(transactionID, reportAction, isSingleTransactionView
     }
 
     if (shouldDeleteIOUReport) {
-        // Pop the deleted report screen before navigating. This prevents navigating to the Concierge chat due to the missing report.
-        Navigation.goBack();
         Navigation.navigate(ROUTES.getReportRoute(iouReport.chatReportID));
     }
 }
