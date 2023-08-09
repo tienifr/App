@@ -124,6 +124,7 @@ function ReportActionItem(props) {
     const textInputRef = useRef();
     const popoverAnchorRef = useRef();
     const downloadedPreviews = useRef([]);
+    const isFirstRender = useRef(true);
 
     useEffect(
         () => () => {
@@ -143,6 +144,11 @@ function ReportActionItem(props) {
 
     const isDraftEmpty = !props.draftMessage;
     useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+
         if (isDraftEmpty) {
             return;
         }
