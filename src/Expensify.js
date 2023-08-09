@@ -104,6 +104,7 @@ function Expensify(props) {
     const isAuthenticated = useMemo(() => Boolean(lodashGet(props.session, 'authToken', null)), [props.session]);
     const shouldInit = isNavigationReady && (!isAuthenticated || props.isSidebarLoaded) && hasAttemptedToOpenPublicRoom;
     const shouldHideSplash = shouldInit && !isSplashHidden;
+    const deferredDeepLink = useRef(undefined);
 
     const initializeClient = () => {
         if (!Visibility.isVisible()) {
@@ -131,6 +132,13 @@ function Expensify(props) {
         // Used for the offline indicator appearing when someone is offline
         NetworkConnection.subscribeToNetInfo();
     }, []);
+
+    useEffect(() => {
+        if (isAuthenticated && deferredDeepLink.current) {
+            console.log('deferredDeepLink', deferredDeepLink.current);
+            Linking.openURL(deferredDeepLink.current);
+        }
+    }, [isAuthenticated]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -163,10 +171,17 @@ function Expensify(props) {
         appStateChangeListener.current = AppState.addEventListener('change', initializeClient);
 
         // If the app is opened from a deep link, get the reportID (if exists) from the deep link and navigate to the chat report
-        Linking.getInitialURL().then((url) => Report.openReportFromDeepLink(url, isAuthenticated));
+        Linking.getInitialURL().then((url) => {
+            console.log('getInitialURL', url);
+            Report.openReportFromDeepLink(url, isAuthenticated)
+        });
 
         // Open chat report from a deep link (only mobile native)
-        Linking.addEventListener('url', (state) => Report.openReportFromDeepLink(state.url, isAuthenticated));
+        Linking.addEventListener('url', (state) => {
+            deferredDeepLink.current = state.url;
+            console.log('addEventListener url', state.url);
+            Report.openReportFromDeepLink(state.url, isAuthenticated)
+        });
 
         return () => {
             if (!appStateChangeListener.current) {
