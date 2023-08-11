@@ -28,6 +28,7 @@ const propTypes = {
 
     /** Unique key of renderTooltipContent to rerender the tooltip when one of the key changes */
     renderTooltipContentKey: PropTypes.arrayOf(PropTypes.string),
+    disabled: PropTypes.boolean,
 };
 
 const defaultProps = {
@@ -38,6 +39,7 @@ const defaultProps = {
     numberOfLines: CONST.TOOLTIP_MAX_LINES,
     renderTooltipContent: undefined,
     renderTooltipContentKey: [],
+    disabled: false,
 };
 
 export {propTypes, defaultProps};

@@ -1113,7 +1113,7 @@ class ReportActionCompose extends React.Component {
                                                                 </PressableWithFeedback>
                                                             </Tooltip>
                                                         )}
-                                                        <Tooltip text={this.props.translate('reportActionCompose.addAction')}>
+                                                        <Tooltip text={this.props.translate('reportActionCompose.addAction')} disabled={this.state.isMenuVisible}>
                                                             <PressableWithFeedback
                                                                 ref={this.actionButtonRef}
                                                                 onPress={(e) => {

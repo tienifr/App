@@ -20,7 +20,7 @@ const hasHoverSupport = DeviceCapabilities.hasHoverSupport();
  * @returns {ReactNodeLike}
  */
 function Tooltip(props) {
-    const {children, numberOfLines, maxWidth, text, renderTooltipContent, renderTooltipContentKey} = props;
+    const {children, numberOfLines, maxWidth, text, renderTooltipContent, renderTooltipContentKey, disabled} = props;
 
     const {preferredLocale} = useLocalize();
     const {windowWidth} = useWindowDimensions();
@@ -120,9 +120,16 @@ function Tooltip(props) {
         setIsVisible(false);
     };
 
+    useEffect(() => {
+        if (!disabled) {
+            return;
+        }
+        setIsRendered(false);
+    }, [disabled, setIsRendered]);
+
     // Skip the tooltip and return the children if the text is empty,
     // we don't have a render function or the device does not support hovering
-    if ((_.isEmpty(text) && renderTooltipContent == null) || !hasHoverSupport) {
+    if (disabled || (_.isEmpty(text) && renderTooltipContent == null) || !hasHoverSupport) {
         return children;
     }
 

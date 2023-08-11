@@ -63,6 +63,7 @@ class FloatingActionButton extends PureComponent {
     }
 
     render() {
+        console.log('this.props.isActive', this.props.isActive);
         const rotate = this.animatedValue.interpolate({
             inputRange: [0, 1],
             outputRange: ['0deg', '135deg'],
@@ -79,7 +80,7 @@ class FloatingActionButton extends PureComponent {
         });
 
         return (
-            <Tooltip text={this.props.translate('common.new')}>
+            <Tooltip text={this.props.translate('common.new')} disabled={this.props.isActive}>
                 <View style={styles.floatingActionButtonContainer}>
                     <AnimatedPressable
                         ref={(el) => {
