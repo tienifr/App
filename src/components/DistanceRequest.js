@@ -15,6 +15,7 @@ import Button from './Button';
 import styles from '../styles/styles';
 import variables from '../styles/variables';
 import LinearGradient from './LinearGradient';
+import { rgba } from 'polished';
 
 const MAX_WAYPOINTS = 25;
 const MAX_WAYPOINTS_TO_DISPLAY = 4;
@@ -123,7 +124,7 @@ function DistanceRequest({transactionID, transaction, translate}) {
                 {shouldShowGradient && (
                     <LinearGradient
                         style={[styles.pAbsolute, styles.b0, styles.l0, styles.r0, {height: halfMenuItemHeight}]}
-                        colors={[theme.transparent, theme.modalBackground]}
+                        colors={[rgba(theme.modalBackground, 0), theme.modalBackground]}
                     />
                 )}
             </View>
