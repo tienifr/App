@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useEffect,useCallback} from 'react';
+import React, {useState, useMemo, useEffect,useCallback, useRef} from 'react';
 import {View, InteractionManager} from 'react-native';
 import {withOnyx} from 'react-native-onyx';
 import PropTypes from 'prop-types';
@@ -22,10 +22,13 @@ import * as StyleUtils from '../../../styles/StyleUtils';
 
 function useSingleExecution() {
     const [isExecuting, setIsExecuting] = useState(false);
+    const isExecutingRef = useRef();
+
+    isExecutingRef.current = isExecuting;
 
     const singleExecution = useCallback(
         (action) => (...params) => {
-            if (isExecuting) {
+            if (isExecutingRef.current) {
                 return;
             }
 
@@ -42,7 +45,7 @@ function useSingleExecution() {
                 });
             });
         },
-        [isExecuting],
+        [],
     );
 
     return {isExecuting, singleExecution};
