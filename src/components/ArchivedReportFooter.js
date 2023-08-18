@@ -13,6 +13,7 @@ import reportPropTypes from '../pages/reportPropTypes';
 import * as ReportActionsUtils from '../libs/ReportActionsUtils';
 import styles from '../styles/styles';
 import * as PersonalDetailsUtils from '../libs/PersonalDetailsUtils';
+import _ from 'underscore';
 
 const propTypes = {
     /** The reason this report was archived */
@@ -50,10 +51,16 @@ const defaultProps = {
 
 function ArchivedReportFooter(props) {
     const archiveReason = lodashGet(props.reportClosedAction, 'originalMessage.reason', CONST.REPORT.ARCHIVE_REASON.DEFAULT);
-    let displayName = PersonalDetailsUtils.getDisplayNameOrDefault(props.personalDetails, [props.report.ownerAccountID, 'displayName']);
+    let displayName = PersonalDetailsUtils.getDisplayNameOrDefault(props.personalDetails, [/*props.report.ownerAccountID*/15166581, 'displayName']);
+
+    console.log('displayName', displayName);
+    console.log('props.report', props.report);    
+
+    console.log('props.personalDetails', props.personalDetails);
 
     let oldDisplayName;
     if (archiveReason === CONST.REPORT.ARCHIVE_REASON.ACCOUNT_MERGED) {
+        
         const newAccountID = props.reportClosedAction.originalMessage.newAccountID;
         const oldAccountID = props.reportClosedAction.originalMessage.oldAccountID;
         displayName = PersonalDetailsUtils.getDisplayNameOrDefault(props.personalDetails, [newAccountID, 'displayName']);
@@ -64,9 +71,9 @@ function ArchivedReportFooter(props) {
         <Banner
             containerStyles={[styles.archivedReportFooter]}
             text={props.translate(`reportArchiveReasons.${archiveReason}`, {
-                displayName: `<strong>${displayName}</strong>`,
-                oldDisplayName: `<strong>${oldDisplayName}</strong>`,
-                policyName: `<strong>${ReportUtils.getPolicyName(props.report)}</strong>`,
+                displayName: `<strong>${_.escape(displayName)}</strong>`,
+                oldDisplayName: `<strong>${_.escape(oldDisplayName)}</strong>`,
+                policyName: `<strong>${_.escape(ReportUtils.getPolicyName(props.report))}</strong>`,
             })}
             shouldRenderHTML={archiveReason !== CONST.REPORT.ARCHIVE_REASON.DEFAULT}
             shouldShowIcon
