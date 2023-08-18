@@ -174,9 +174,20 @@ function getCurrency(transaction) {
  * @returns {String}
  */
 function getCreated(transaction) {
-    const created = lodashGet(transaction, 'modifiedCreated', '') || lodashGet(transaction, 'created', '');
+    return lodashGet(transaction, 'modifiedCreated', '') || lodashGet(transaction, 'created', '');
+    /*const created = lodashGet(transaction, 'modifiedCreated', '') || lodashGet(transaction, 'created', '');
     if (created) {
         return format(new Date(created), CONST.DATE.FNS_FORMAT_STRING);
+    }
+    return '';*/
+}
+
+function getCreatedDate(transaction) {
+    const created = getCreated(transaction);
+    if (created) {
+        console.log('Date', new Date(created + 'Z'));
+        console.log('fomatted', format(new Date(created + 'Z'), CONST.DATE.FNS_FORMAT_STRING))
+        return format(new Date(created + 'Z'), CONST.DATE.FNS_FORMAT_STRING);
     }
     return '';
 }
@@ -196,4 +207,4 @@ function getAllReportTransactions(reportID) {
     return _.filter(allTransactions, (transaction) => transaction.reportID === reportID);
 }
 
-export {buildOptimisticTransaction, getUpdatedTransaction, getTransaction, getDescription, getAmount, getCurrency, getCreated, getLinkedTransaction, getAllReportTransactions};
+export {buildOptimisticTransaction, getUpdatedTransaction, getTransaction, getDescription, getAmount, getCurrency, getCreated, getLinkedTransaction, getAllReportTransactions, getCreatedDate};

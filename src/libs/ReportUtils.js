@@ -1238,7 +1238,7 @@ function getReport(reportID) {
 function getTransactionDetails(transaction) {
     const report = getReport(transaction.reportID);
     return {
-        created: TransactionUtils.getCreated(transaction),
+        created: TransactionUtils.getCreatedDate(transaction),
         amount: TransactionUtils.getAmount(transaction, isExpenseReport(report)),
         currency: TransactionUtils.getCurrency(transaction),
         comment: TransactionUtils.getDescription(transaction),
@@ -1344,9 +1344,11 @@ function getModifiedExpenseMessage(reportAction) {
     const hasModifiedCreated = _.has(reportActionOriginalMessage, 'oldCreated') && _.has(reportActionOriginalMessage, 'created');
     if (hasModifiedCreated) {
         // Take only the YYYY-MM-DD value as the original date includes timestamp
-        let formattedOldCreated = new Date(reportActionOriginalMessage.oldCreated);
+        let formattedOldCreated = new Date(reportActionOriginalMessage.oldCreated + 'Z');
         formattedOldCreated = format(formattedOldCreated, CONST.DATE.FNS_FORMAT_STRING);
-        return `changed the request date to ${reportActionOriginalMessage.created} (previously ${formattedOldCreated})`;
+
+        const formattedCurrentCreated = format(new Date(reportActionOriginalMessage.created + 'Z'), CONST.DATE.FNS_FORMAT_STRING);
+        return `changed the request date to ${formattedCurrentCreated} (previously ${formattedOldCreated})`;
     }
 }
 

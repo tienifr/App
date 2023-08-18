@@ -954,6 +954,8 @@ function editMoneyRequest(transactionID, transactionThreadReportID, transactionC
     // STEP 2: Build new modified expense report action.
     const updatedReportAction = ReportUtils.buildOptimisticModifiedExpenseReportAction(transactionThread, transaction, transactionChanges, isFromExpenseReport);
     const updatedTransaction = TransactionUtils.getUpdatedTransaction(transaction, transactionChanges, isFromExpenseReport);
+
+    console.log('updatedTransaction', updatedTransaction);
     // STEP 3: Compute the IOU total and update the report preview message so LHN amount owed is correct
     // STEP 4: Compose the optimistic data
     const optimisticData = [
@@ -1013,7 +1015,7 @@ function editMoneyRequest(transactionID, transactionThreadReportID, transactionC
         {
             transactionID,
             reportActionID: updatedReportAction.reportActionID,
-            created,
+            created: TransactionUtils.getCreated(updatedTransaction),
             amount,
             currency,
             comment,

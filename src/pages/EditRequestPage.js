@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import lodashGet from 'lodash/get';
+import { getTime, parseISO } from 'date-fns';
 import {withOnyx} from 'react-native-onyx';
 import compose from '../libs/compose';
 import CONST from '../CONST';
@@ -15,6 +16,7 @@ import EditRequestAmountPage from './EditRequestAmountPage';
 import reportPropTypes from './reportPropTypes';
 import * as IOU from '../libs/actions/IOU';
 import * as CurrencyUtils from '../libs/CurrencyUtils';
+import DateUtils from '../libs/DateUtils';
 
 const propTypes = {
     /** Route from navigation */
@@ -49,7 +51,9 @@ function EditRequestPage({report, route, parentReport}) {
     const defaultCurrency = lodashGet(route, 'params.currency', '') || transactionCurrency;
 
     // Take only the YYYY-MM-DD value
-    const transactionCreated = TransactionUtils.getCreated(transaction);
+    const transactionCreated = TransactionUtils.getCreatedDate(transaction);
+
+    console.log('transactionCreated', transactionCreated)
     const fieldToEdit = lodashGet(route, ['params', 'field'], '');
 
     const isDeleted = ReportActionsUtils.isDeletedAction(parentReportAction);
@@ -95,7 +99,12 @@ function EditRequestPage({report, route, parentReport}) {
                         Navigation.dismissModal();
                         return;
                     }
-                    editMoneyRequest(transactionChanges);
+
+                    console.log('edit money request created', DateUtils.getDBTime(getTime(parseISO(transactionChanges.created))));
+                    editMoneyRequest({
+                        ...transactionChanges,
+                        created: DateUtils.getDBTime(getTime(parseISO(transactionChanges.created)))
+                    });
                 }}
             />
         );
