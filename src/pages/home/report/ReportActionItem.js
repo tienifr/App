@@ -133,6 +133,7 @@ function ReportActionItem(props) {
     const downloadedPreviews = useRef([]);
     const originalReportID = ReportUtils.getOriginalReportID(props.report.reportID, props.action);
     const originalReport = props.report.reportID === originalReportID ? props.report : ReportUtils.getReport(originalReportID);
+    const willShowContextMenu = useRef(false);
 
     useEffect(
         () => () => {
@@ -199,6 +200,9 @@ function ReportActionItem(props) {
     }, [latestDecision, props.action.actionName]);
 
     const toggleContextMenuFromActiveReportAction = useCallback(() => {
+        if (willShowContextMenu.current) {
+            return;
+        }
         setIsContextMenuActive(ReportActionContextMenu.isActiveReportAction(props.action.reportActionID));
     }, [props.action.reportActionID]);
 
@@ -214,6 +218,7 @@ function ReportActionItem(props) {
                 return;
             }
 
+            willShowContextMenu.current = true;
             setIsContextMenuActive(true);
             const selection = SelectionScraper.getCurrentSelection();
             ReportActionContextMenu.showContextMenu(
@@ -224,7 +229,7 @@ function ReportActionItem(props) {
                 props.report.reportID,
                 props.action,
                 props.draftMessage,
-                () => {},
+                () => willShowContextMenu.current = false,
                 toggleContextMenuFromActiveReportAction,
                 ReportUtils.isArchivedRoom(originalReport),
                 ReportUtils.chatIncludesChronos(originalReport),
