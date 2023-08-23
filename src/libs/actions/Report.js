@@ -28,6 +28,7 @@ import * as PersonalDetailsUtils from '../PersonalDetailsUtils';
 import SidebarUtils from '../SidebarUtils';
 import * as OptionsListUtils from '../OptionsListUtils';
 import * as Environment from '../Environment/Environment';
+import * as Session from './Session';
 
 let currentUserAccountID;
 Onyx.connect({
@@ -1764,6 +1765,11 @@ function openReportFromDeepLink(url, isAuthenticated) {
     // Navigate to the report after sign-in/sign-up.
     InteractionManager.runAfterInteractions(() => {
         SidebarUtils.isSidebarLoadedReady().then(() => {
+            if (route === '' && Session.isAnonymousUser()) {
+                //Session.invalidateAuthToken();
+                Session.signOutAndRedirectToSignIn();
+            }
+            
             if (reportID) {
                 Navigation.navigate(ROUTES.getReportRoute(reportID), CONST.NAVIGATION.TYPE.UP);
             }
