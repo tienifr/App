@@ -39,10 +39,6 @@ function StatePicker({value, errorText, onInputChange, forwardedRef, label}) {
     const [isPickerVisible, setIsPickerVisible] = useState(false);
     const [searchValue, setSearchValue] = useState(lodashGet(allStates, `${value}.stateName`, ''));
 
-    useEffect(() => {
-        setSearchValue(lodashGet(allStates, `${value}.stateName`, ''));
-    }, [value, allStates]);
-
     const showPickerModal = () => {
         setSearchValue(lodashGet(allStates, `${value}.stateName`, ''));
         setIsPickerVisible(true);

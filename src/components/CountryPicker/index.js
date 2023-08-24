@@ -35,10 +35,6 @@ function CountryPicker({value, errorText, onInputChange, forwardedRef}) {
     const [isPickerVisible, setIsPickerVisible] = useState(false);
     const [searchValue, setSearchValue] = useState(lodashGet(allCountries, value, ''));
 
-    useEffect(() => {
-        setSearchValue(lodashGet(allCountries, value, ''));
-    }, [value, allCountries]);
-
     const showPickerModal = () => {
         setSearchValue(lodashGet(allCountries, value, ''));
         setIsPickerVisible(true);
