@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import React, {useState, useRef, useEffect, useMemo} from 'react';
 import PropTypes from 'prop-types';
-import {View, ScrollView} from 'react-native';
+import {View, ScrollView, InteractionManager} from 'react-native';
 import Button from '../Button';
 import Text from '../Text';
 import TextInput from '../TextInput';
@@ -67,7 +67,11 @@ function PDFPasswordForm({isFocused, isPasswordInvalid, shouldShowLoadingIndicat
         if (!textInputRef.current) {
             return;
         }
-        textInputRef.current.focus();
+
+        InteractionManager.runAfterInteractions(() => {
+            textInputRef.current.focus();
+        });
+        
     }, [isFocused]);
 
     const updatePassword = (newPassword) => {
