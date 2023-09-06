@@ -325,10 +325,13 @@ class BaseOptionsSelector extends Component {
             !this.props.isReadOnly && (this.props.shouldShowConfirmButton || this.props.footerContent) && !(this.props.canSelectMultipleOptions && _.isEmpty(this.props.selectedOptions));
         const defaultConfirmButtonText = _.isUndefined(this.props.confirmButtonText) ? this.props.translate('common.confirm') : this.props.confirmButtonText;
         const shouldShowDefaultConfirmButton = !this.props.footerContent && defaultConfirmButtonText;
-        const safeAreaPaddingBottomStyle = shouldShowFooter ? undefined : this.props.safeAreaPaddingBottomStyle;
+        const safeAreaPaddingBottomStyle = shouldShowFooter ? undefined : this.props.safeAreaPaddingBottomStyle;        
         const textInput = (
             <TextInput
-                ref={(el) => (this.textInput = el)}
+                ref={(el) => {
+                    this.textInput = el;
+                    this.props.forwardedRef(el);
+                }}
                 value={this.props.value}
                 label={this.props.textInputLabel}
                 accessibilityLabel={this.props.textInputLabel}
@@ -432,4 +435,13 @@ class BaseOptionsSelector extends Component {
 BaseOptionsSelector.defaultProps = defaultProps;
 BaseOptionsSelector.propTypes = propTypes;
 
-export default compose(withLocalize, withNavigationFocus)(BaseOptionsSelector);
+
+export default compose(withLocalize, withNavigationFocus)(
+    React.forwardRef((props, ref) => (
+        <BaseOptionsSelector
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...props}
+            forwardedRef={ref}
+        />
+    )
+));

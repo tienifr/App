@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useEffect, useMemo, useRef} from 'react';
 import {View} from 'react-native';
 import PropTypes from 'prop-types';
 import {withOnyx} from 'react-native-onyx';
@@ -18,6 +18,7 @@ import * as Browser from '../libs/Browser';
 import compose from '../libs/compose';
 import personalDetailsPropType from './personalDetailsPropType';
 import reportPropTypes from './reportPropTypes';
+import useSplashHiddenContext from '../components/SplashScreenHider/useSplashHiddenContext';
 
 const propTypes = {
     /** Whether screen is used to create group chat */
@@ -46,12 +47,37 @@ const defaultProps = {
 
 const excludedGroupEmails = _.without(CONST.EXPENSIFY_EMAILS, CONST.EMAIL.CONCIERGE);
 
+const useFocusOnTransitionEnd = () => {
+    const inputRef = useRef(null);
+    const [screenTransitionEnd, setScreenTransitionEnd] = React.useState(false);
+    const [isInputInitialized, setIsInputInitialized] = React.useState(false);
+    const isSplashHidden = useSplashHiddenContext();
+
+    const onEntryTransitionEnd = () => {
+        setScreenTransitionEnd(true);
+    }
+
+    useEffect(() => {
+        if (screenTransitionEnd && isInputInitialized && isSplashHidden && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [screenTransitionEnd, isInputInitialized, isSplashHidden]);
+
+    const inputCallbackRef = (ref) => {
+        inputRef.current = ref;
+        setIsInputInitialized(true);
+    };
+
+    return {onEntryTransitionEnd, inputCallbackRef};
+}
+
 function NewChatPage(props) {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredRecentReports, setFilteredRecentReports] = useState([]);
     const [filteredPersonalDetails, setFilteredPersonalDetails] = useState([]);
     const [filteredUserToInvite, setFilteredUserToInvite] = useState();
     const [selectedOptions, setSelectedOptions] = useState([]);
+    const {onEntryTransitionEnd, inputCallbackRef} = useFocusOnTransitionEnd();
 
     const maxParticipantsReached = selectedOptions.length === CONST.REPORT.MAXIMUM_PARTICIPANTS;
     const headerMessage = OptionsListUtils.getHeaderMessage(
@@ -184,12 +210,14 @@ function NewChatPage(props) {
         <ScreenWrapper
             includeSafeAreaPaddingBottom={false}
             shouldEnableMaxHeight
+            onEntryTransitionEnd={onEntryTransitionEnd}
         >
             {({didScreenTransitionEnd, safeAreaPaddingBottomStyle}) => (
                 <>
                     <HeaderWithBackButton title={props.isGroupChat ? props.translate('sidebarScreen.newGroup') : props.translate('sidebarScreen.newChat')} />
                     <View style={[styles.flex1, styles.w100, styles.pRelative, selectedOptions.length > 0 ? safeAreaPaddingBottomStyle : {}]}>
                         <OptionsSelector
+                            ref={inputCallbackRef}
                             canSelectMultipleOptions={props.isGroupChat}
                             sections={sections}
                             selectedOptions={selectedOptions}
@@ -205,6 +233,8 @@ function NewChatPage(props) {
                             onConfirmSelection={createGroup}
                             textInputLabel={props.translate('optionsSelector.nameEmailOrPhoneNumber')}
                             safeAreaPaddingBottomStyle={safeAreaPaddingBottomStyle}
+                            // focus is already handled onEntryTransitionEnd
+                            autoFocus={false}
                         />
                     </View>
                 </>

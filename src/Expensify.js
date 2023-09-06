@@ -12,6 +12,7 @@ import NavigationRoot from './libs/Navigation/NavigationRoot';
 import migrateOnyx from './libs/migrateOnyx';
 import PushNotification from './libs/Notification/PushNotification';
 import UpdateAppModal from './components/UpdateAppModal';
+import SplashScreenHiddenContext from './components/SplashScreenHider/SplashScreenHiddenContext';
 import Visibility from './libs/Visibility';
 import GrowlNotification from './components/GrowlNotification';
 import * as Growl from './libs/Growl';
@@ -193,40 +194,44 @@ function Expensify(props) {
     }
 
     return (
-        <DeeplinkWrapper isAuthenticated={isAuthenticated}>
-            {shouldInit && (
-                <>
-                    <DownloadAppModal isAuthenticated={isAuthenticated} />
-                    <KeyboardShortcutsModal />
-                    <GrowlNotification ref={Growl.growlRef} />
-                    <PopoverReportActionContextMenu ref={ReportActionContextMenu.contextMenuRef} />
-                    <EmojiPicker ref={EmojiPickerAction.emojiPickerRef} />
-                    {/* We include the modal for showing a new update at the top level so the option is always present. */}
-                    {props.updateAvailable ? <UpdateAppModal /> : null}
-                    {props.screenShareRequest ? (
-                        <ConfirmModal
-                            title={props.translate('guides.screenShare')}
-                            onConfirm={() => User.joinScreenShare(props.screenShareRequest.accessToken, props.screenShareRequest.roomName)}
-                            onCancel={User.clearScreenShareRequest}
-                            prompt={props.translate('guides.screenShareRequest')}
-                            confirmText={props.translate('common.join')}
-                            cancelText={props.translate('common.decline')}
-                            isVisible
+        <SplashScreenHiddenContext.Provider value={isSplashHidden}>
+            <DeeplinkWrapper isAuthenticated={isAuthenticated}>
+                {shouldInit && (
+                    <>
+                        <DownloadAppModal isAuthenticated={isAuthenticated} />
+                        <KeyboardShortcutsModal />
+                        <GrowlNotification ref={Growl.growlRef} />
+                        <PopoverReportActionContextMenu ref={ReportActionContextMenu.contextMenuRef} />
+                        <EmojiPicker ref={EmojiPickerAction.emojiPickerRef} />
+                        {/* We include the modal for showing a new update at the top level so the option is always present. */}
+                        {props.updateAvailable ? <UpdateAppModal /> : null}
+                        {props.screenShareRequest ? (
+                            <ConfirmModal
+                                title={props.translate('guides.screenShare')}
+                                onConfirm={() => User.joinScreenShare(props.screenShareRequest.accessToken, props.screenShareRequest.roomName)}
+                                onCancel={User.clearScreenShareRequest}
+                                prompt={props.translate('guides.screenShareRequest')}
+                                confirmText={props.translate('common.join')}
+                                cancelText={props.translate('common.decline')}
+                                isVisible
+                            />
+                        ) : null}
+                    </>
+                )}
+
+                <AppleAuthWrapper />
+                {hasAttemptedToOpenPublicRoom && (
+                    
+                        <NavigationRoot
+                            onReady={setNavigationReady}
+                            authenticated={isAuthenticated}
                         />
-                    ) : null}
-                </>
-            )}
+                    
+                )}
 
-            <AppleAuthWrapper />
-            {hasAttemptedToOpenPublicRoom && (
-                <NavigationRoot
-                    onReady={setNavigationReady}
-                    authenticated={isAuthenticated}
-                />
-            )}
-
-            {shouldHideSplash && <SplashScreenHider onHide={onSplashHide} />}
-        </DeeplinkWrapper>
+                {shouldHideSplash && <SplashScreenHider onHide={onSplashHide} />}
+            </DeeplinkWrapper>
+        </SplashScreenHiddenContext.Provider>
     );
 }
 
