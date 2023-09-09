@@ -32,7 +32,7 @@ const propTypes = {
     policy: PropTypes.shape({
         /** Name of the policy */
         name: PropTypes.string,
-    }).isRequired,
+    }),
 
     /** Personal details so we can get the ones for the report participants */
     personalDetails: PropTypes.objectOf(participantPropTypes).isRequired,
@@ -51,6 +51,7 @@ const defaultProps = {
         email: null,
     },
     parentReport: {},
+    policy: {},
 };
 
 function MoneyRequestHeader(props) {
