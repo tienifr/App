@@ -157,7 +157,7 @@ function ReportScreen({
 
     const policy = policies[`${ONYXKEYS.COLLECTION.POLICY}${report.policyID}`];
 
-    const isTopMostReportId = Navigation.getTopmostReportId() === getReportID(route);
+    const isTopmostReportId = () => Navigation.getTopmostReportId() === getReportID(route);
 
     let headerView = (
         <HeaderView
@@ -245,7 +245,7 @@ function ReportScreen({
         const unsubscribeVisibilityListener = Visibility.onVisibilityChange(() => {
             // If the report is not fully visible (AKA on small screen devices and LHR is open) or the report is optimistic (AKA not yet created)
             // we don't need to call openReport
-            if (!getIsReportFullyVisible(isTopMostReportId) || report.isOptimisticReport) {
+            if (!getIsReportFullyVisible(isTopmostReportId()) || report.isOptimisticReport) {
                 return;
             }
 
@@ -293,7 +293,7 @@ function ReportScreen({
         >
             <ScreenWrapper
                 style={screenWrapperStyle}
-                shouldEnableKeyboardAvoidingView={isTopMostReportId}
+                shouldEnableKeyboardAvoidingView={isTopmostReportId()}
             >
                 <FullPageNotFoundView
                     shouldShow={(!report.reportID && !report.isLoadingReportActions && !isLoading) || shouldHideReport}
