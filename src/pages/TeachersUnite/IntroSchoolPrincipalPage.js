@@ -19,6 +19,7 @@ import Navigation from '../../libs/Navigation/Navigation';
 import TeachersUnite from '../../libs/actions/TeachersUnite';
 import useLocalize from '../../hooks/useLocalize';
 import * as ValidationUtils from '../../libs/ValidationUtils';
+import * as LoginUtils from '../../libs/LoginUtils';
 
 const propTypes = {
     /** Login list for the user that is signed in */
@@ -79,6 +80,13 @@ function IntroSchoolPrincipalPage(props) {
         [props.loginList, translate],
     );
 
+    const isLoggedInEmailPublicDomain = LoginUtils.isEmailPublicDomain(props.session.email);
+    
+    if (isLoggedInEmailPublicDomain) {
+        Navigation.navigate(ROUTES.I_AM_A_TEACHER, CONST.NAVIGATION.TYPE.UP);
+        return null;
+    }
+
     return (
         <ScreenWrapper includeSafeAreaPaddingBottom={false}>
             <HeaderWithBackButton
@@ -138,4 +146,7 @@ IntroSchoolPrincipalPage.displayName = 'IntroSchoolPrincipalPage';
 
 export default withOnyx({
     loginList: {key: ONYXKEYS.LOGIN_LIST},
+    session: {
+        key: ONYXKEYS.SESSION,
+    },
 })(IntroSchoolPrincipalPage);

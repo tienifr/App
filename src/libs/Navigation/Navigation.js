@@ -80,7 +80,10 @@ function navigate(route = ROUTES.HOME, type) {
         // Store intended route if the navigator is not yet available,
         // we will try again after the NavigationContainer is ready
         Log.hmmm(`[Navigation] Container not yet ready, storing route as pending: ${route}`);
-        pendingRoute = route;
+        pendingRoute = {
+            route,
+            type
+        };
         return;
     }
 
@@ -239,7 +242,7 @@ function goToPendingRoute() {
         return;
     }
     Log.hmmm(`[Navigation] Container now ready, going to pending route: ${pendingRoute}`);
-    navigate(pendingRoute);
+    navigate(pendingRoute.route, pendingRoute.type);
     pendingRoute = null;
 }
 
