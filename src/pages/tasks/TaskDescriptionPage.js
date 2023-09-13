@@ -44,6 +44,11 @@ function TaskDescriptionPage(props) {
 
     const submit = useCallback(
         (values) => {
+            if (props.report.description === values.description) {
+                Navigation.dismissModal();
+                return;
+            }
+            
             // Set the description of the report in the store and then call Task.editTaskReport
             // to update the description of the report on the server
             Task.editTaskAndNavigate(props.report, props.session.accountID, {description: values.description});
