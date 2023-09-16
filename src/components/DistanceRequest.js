@@ -43,6 +43,7 @@ import ScreenWrapper from './ScreenWrapper';
 import FullPageNotFoundView from './BlockingViews/FullPageNotFoundView';
 import HeaderWithBackButton from './HeaderWithBackButton';
 
+
 const MAX_WAYPOINTS = 25;
 const MAX_WAYPOINTS_TO_DISPLAY = 4;
 
@@ -156,14 +157,6 @@ function DistanceRequest({iou, iouType, report, transaction, mapboxAccessToken, 
         MapboxToken.init();
         return MapboxToken.stop;
     }, []);
-
-    useEffect(() => {
-        if (!iou.transactionID || !_.isEmpty(waypoints)) {
-            return;
-        }
-        // Create the initial start and stop waypoints
-        Transaction.createInitialWaypoints(iou.transactionID);
-    }, [iou.transactionID, waypoints]);
 
     const updateGradientVisibility = (event = {}) => {
         // If a waypoint extends past the bottom of the visible area show the gradient, else hide it.

@@ -9,6 +9,7 @@ import DistanceRequest from '../../components/DistanceRequest';
 import reportPropTypes from '../reportPropTypes';
 import CONST from '../../CONST';
 import {iouPropTypes} from './propTypes';
+import * as Transaction from '../../libs/actions/Transaction';
 
 const propTypes = {
     /** Holds data related to Money Request view state, rather than the underlying Money Request data. */
@@ -40,17 +41,23 @@ const defaultProps = {
     },
 };
 
+// only for testing, in PR this will be moved to the folder for hooks and reuse
+const usePopulateDistanceRequestTransaction = (transactionID) => {
+    useEffect(() => {
+        if (transactionID) {
+            return;
+        }
+        const id = IOU.createEmptyTransaction();
+        Transaction.createInitialWaypoints(id);
+    }, [transactionID]);
+}
+
 // This component is responsible for getting the transactionID from the IOU key, or creating the transaction if it doesn't exist yet, and then passing the transactionID.
 // You can't use Onyx props in the withOnyx mapping, so we need to set up and access the transactionID here, and then pass it down so that DistanceRequest can subscribe to the transaction.
 function DistanceRequestPage({iou, report, route}) {
     const iouType = lodashGet(route, 'params.iouType', '');
 
-    useEffect(() => {
-        if (iou.transactionID) {
-            return;
-        }
-        IOU.createEmptyTransaction();
-    }, [iou.transactionID]);
+    usePopulateDistanceRequestTransaction(iou.transactionID);
 
     return (
         <DistanceRequest

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {withOnyx} from 'react-native-onyx';
 import WaypointEditor from './WaypointEditor';
 import ONYXKEYS from '../../ONYXKEYS';
+import * as IOU from '../../libs/actions/IOU';
+import * as Transaction from '../../libs/actions/Transaction';
 
 const propTypes = {
     /** The transactionID of this request */
@@ -30,9 +32,21 @@ const defaultProps = {
     },
 };
 
+const usePopulateDistanceRequestTransaction = (transactionID) => {
+    useEffect(() => {
+        if (transactionID) {
+            return;
+        }
+        const id = IOU.createEmptyTransaction();
+        Transaction.createInitialWaypoints(id);
+    }, [transactionID]);
+}
+
 // This component is responsible for grabbing the transactionID from the IOU key
 // You can't use Onyx props in the withOnyx mapping, so we need to set up and access the transactionID here, and then pass it down so that WaypointEditor can subscribe to the transaction.
 function WaypointEditorPage({transactionID, route}) {
+    usePopulateDistanceRequestTransaction(transactionID);
+
     return (
         <WaypointEditor
             transactionID={transactionID}
