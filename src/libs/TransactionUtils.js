@@ -426,7 +426,7 @@ function getValidWaypoints(waypoints, reArrangeIndexes = false) {
 
             const validatedWaypoints = {...acc, [`waypoint${reArrangeIndexes ? lastWaypointIndex + 1 : index}`]: currentWaypoint};
 
-            lastWaypointIndex += 1;
+            lastWaypointIndex = index;
 
             return validatedWaypoints;
         },
