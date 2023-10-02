@@ -36,10 +36,12 @@ function bindHandlerToKeydownEvent(getDisplayName, eventHandlers, keycommandEven
             shouldBubble = callback.shouldBubble();
         }
 
+        let isExecuted = false;
+
         if (_.isFunction(callback.callback)) {
-            callback.callback(event);
+            isExecuted = callback.callback(event) !== false;
         }
-        if (callback.shouldPreventDefault) {
+        if (isExecuted && callback.shouldPreventDefault) {
             event.preventDefault();
         }
 

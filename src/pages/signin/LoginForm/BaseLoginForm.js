@@ -215,6 +215,7 @@ function LoginForm(props) {
                     errorText={formErrorText}
                     hasError={hasError}
                     maxLength={CONST.LOGIN_CHARACTER_LIMIT}
+                    returnKeyType="next"
                 />
             </View>
             {!_.isEmpty(props.account.success) && <Text style={[styles.formSuccess]}>{props.account.success}</Text>}

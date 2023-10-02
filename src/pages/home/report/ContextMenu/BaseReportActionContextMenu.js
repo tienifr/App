@@ -112,7 +112,7 @@ function BaseReportActionContextMenu(props) {
         CONST.KEYBOARD_SHORTCUTS.ENTER,
         (event) => {
             if (!menuItemRefs.current[focusedIndex]) {
-                return;
+                return false;
             }
 
             // Ensures the event does not cause side-effects beyond the context menu, e.g. when an outside element is focused
