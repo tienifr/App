@@ -587,7 +587,7 @@ function isCreatedTaskReportAction(reportAction) {
  * @returns {Boolean}
  */
 function isMessageDeleted(reportAction) {
-    return lodashGet(reportAction, ['message', 0, 'isDeletedParentAction'], false);
+    return lodashGet(reportAction, ['message', 0, 'isDeletedParentAction'], false) || lodashGet(reportAction, ['originalMessage', 'isDeletedParentAction'], false);
 }
 
 /**

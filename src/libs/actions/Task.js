@@ -725,6 +725,7 @@ function getShareDestination(reportID, reports, personalDetails) {
 function cancelTask(taskReportID, taskTitle, originalStateNum, originalStatusNum) {
     const message = `deleted task: ${taskTitle}`;
     const optimisticCancelReportAction = ReportUtils.buildOptimisticTaskReportAction(taskReportID, CONST.REPORT.ACTIONS.TYPE.TASKCANCELLED, message);
+    optimisticCancelReportAction.originalMessage.isDeletedParentAction = true;
     const optimisticReportActionID = optimisticCancelReportAction.reportActionID;
     const taskReport = ReportUtils.getReport(taskReportID);
     const parentReportAction = ReportActionsUtils.getParentReportAction(taskReport);
