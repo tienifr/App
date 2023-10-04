@@ -111,6 +111,7 @@ function ReportActionItemMessageEdit(props) {
     const textInputRef = useRef(null);
     const isFocusedRef = useRef(false);
     const insertedEmojis = useRef([]);
+    const selectionAfterFocus = useRef();
 
     useEffect(() => {
         if (ReportActionsUtils.isDeletedAction(props.action) || props.draftMessage === props.action.message[0].html) {
@@ -122,6 +123,11 @@ function ReportActionItemMessageEdit(props) {
     useEffect(() => {
         // required for keeping last state of isFocused variable
         isFocusedRef.current = isFocused;
+ 
+        if (isFocused && selectionAfterFocus.current) {
+            setSelection(selectionAfterFocus.current);
+            selectionAfterFocus.current = undefined;
+        }
     }, [isFocused]);
 
     // We consider the report action active if it's focused, its emoji picker is open or its context menu is open
@@ -277,10 +283,10 @@ function ReportActionItemMessageEdit(props) {
      * @param {String} emoji
      */
     const addEmojiToTextBox = (emoji) => {
-        setSelection((prevSelection) => ({
-            start: prevSelection.start + emoji.length + CONST.SPACE_LENGTH,
-            end: prevSelection.start + emoji.length + CONST.SPACE_LENGTH,
-        }));
+        selectionAfterFocus.current = {
+            start: selection.start + emoji.length + CONST.SPACE_LENGTH,
+            end: selection.start + emoji.length + CONST.SPACE_LENGTH,
+        }
         updateDraft(ComposerUtils.insertText(draft, selection, `${emoji} `));
     };
 
