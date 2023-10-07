@@ -294,12 +294,12 @@ function AddressSearch(props) {
                         )
                     }
                     listLoaderComponent={
-                        <View style={[styles.pv4]}>
+                        props.network.isOffline ? null : (<View style={[styles.pv4]}>
                             <ActivityIndicator
                                 color={themeColors.spinner}
                                 size="small"
                             />
-                        </View>
+                        </View>)
                     }
                     renderHeaderComponent={() =>
                         !props.value &&
