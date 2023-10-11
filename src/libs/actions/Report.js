@@ -1389,15 +1389,21 @@ function updateWriteCapabilityAndNavigate(report, newValue) {
 /**
  * Navigates to the 1:1 report with Concierge
  */
-function navigateToConciergeChat() {
+function navigateToConciergeChat(shouldPopLoadingScreen = false) {
     if (!conciergeChatReportID) {
         // In order to avoid creating concierge repeatedly,
         // we need to ensure that the server data has been successfully pulled
         Welcome.serverDataIsReadyPromise().then(() => {
             // If we don't have a chat with Concierge then create it
+            if (shouldPopLoadingScreen) {
+                Navigation.goBack(ROUTES.HOME);
+            }
             navigateToAndOpenReport([CONST.EMAIL.CONCIERGE], false);
         });
     } else {
+        if (shouldPopLoadingScreen) {
+            Navigation.goBack(ROUTES.HOME);
+        }
         Navigation.navigate(ROUTES.REPORT_WITH_ID.getRoute(conciergeChatReportID));
     }
 }
