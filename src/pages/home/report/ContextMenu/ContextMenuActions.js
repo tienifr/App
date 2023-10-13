@@ -128,7 +128,7 @@ export default [
             const isCommentAction = reportAction.actionName === CONST.REPORT.ACTIONS.TYPE.ADDCOMMENT && !ReportUtils.isThreadFirstChat(reportAction, reportID);
             const isReportPreviewAction = reportAction.actionName === CONST.REPORT.ACTIONS.TYPE.REPORTPREVIEW;
             const isIOUAction = reportAction.actionName === CONST.REPORT.ACTIONS.TYPE.IOU && !ReportActionsUtils.isSplitBillAction(reportAction);
-            return isCommentAction || isReportPreviewAction || isIOUAction;
+            return (isCommentAction || isReportPreviewAction || isIOUAction) && !ReportActionsUtils.isWhisperAction(reportAction);
         },
         onPress: (closePopover, {reportAction, reportID}) => {
             if (closePopover) {
