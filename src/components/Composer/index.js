@@ -373,6 +373,7 @@ function Composer({
     }, [updateNumberOfLines]);
 
     useEffect(() => {
+        console.log('abcdef')
         // we need to handle listeners on navigation focus/blur as Composer is not unmounting
         // when navigating away to different report
         const unsubscribeFocus = navigation.addListener('focus', () => document.addEventListener('paste', handlePaste));
