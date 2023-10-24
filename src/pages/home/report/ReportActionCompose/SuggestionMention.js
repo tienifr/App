@@ -202,12 +202,12 @@ function SuggestionMention({
             }
 
             const leftString = value.substring(0, suggestionEndIndex);
-            const words = leftString.split(CONST.REGEX.SPACE_OR_EMOJI);
-            const lastWord = _.last(words);
-
+            const lastIndexOfMentionSignal = leftString.lastIndexOf('@')
+            const lastWord = lastIndexOfMentionSignal>=0 ? leftString.substring(lastIndexOfMentionSignal) : ''
+            const numberOfSpaceFollowedByLastMention = lastWord.split(" ").length - 1
             let atSignIndex;
-            if (lastWord.startsWith('@')) {
-                atSignIndex = leftString.lastIndexOf(lastWord);
+            if (lastWord) {
+                atSignIndex = lastIndexOfMentionSignal
             }
 
             const prefix = lastWord.substring(1);
@@ -220,7 +220,7 @@ function SuggestionMention({
 
             const isCursorBeforeTheMention = valueAfterTheCursor.startsWith(lastWord);
 
-            if (!isCursorBeforeTheMention && isMentionCode(lastWord)) {
+            if (!isCursorBeforeTheMention && isMentionCode(lastWord) && numberOfSpaceFollowedByLastMention<=5) {
                 const suggestions = getMentionOptions(personalDetails, prefix);
                 nextState.suggestedMentions = suggestions;
                 nextState.shouldShowSuggestionMenu = !_.isEmpty(suggestions);
