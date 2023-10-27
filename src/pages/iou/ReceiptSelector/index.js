@@ -1,5 +1,5 @@
 import {View, Text, PixelRatio, ActivityIndicator, PanResponder} from 'react-native';
-import React, {useCallback, useContext, useReducer, useRef, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useReducer, useRef, useState} from 'react';
 import lodashGet from 'lodash/get';
 import _ from 'underscore';
 import PropTypes from 'prop-types';
@@ -29,6 +29,7 @@ import NavigationAwareCamera from './NavigationAwareCamera';
 import * as Browser from '../../../libs/Browser';
 import Hand from '../../../../assets/images/hand.svg';
 import PressableWithFeedback from '../../../components/Pressable/PressableWithFeedback';
+import { reverse } from 'lodash';
 
 const propTypes = {
     /** The report on which the request is initiated on */
@@ -84,6 +85,33 @@ function ReceiptSelector({route, transactionID, iou, report}) {
     const [isFlashLightOn, toggleFlashlight] = useReducer((state) => !state, false);
     const [isTorchAvailable, setIsTorchAvailable] = useState(true);
     const cameraRef = useRef(null);
+    const [videoConstraints, setVideoConstraints] = useState();
+
+    useEffect(() => {
+        let constraints={audio:true,video:true};
+        navigator.mediaDevices.getUserMedia(constraints).then((result) => {
+                console.log('result', result);
+                //setVideoConstraints({facingMode: {exact: 'environment'}});
+            if (!navigator.mediaDevices?.enumerateDevices) {
+                console.log("enumerateDevices() not supported.");
+                setVideoConstraints({facingMode: {exact: 'environment'}});
+            } else {
+                navigator.mediaDevices.enumerateDevices().then(devices => {                       
+                    const reversedDevices = reverse(devices);
+                    const lastBackDevice = reversedDevices.find(item => item.label && item.label.endsWith('facing back'));
+                    
+                    if (lastBackDevice?.deviceId) {
+                        setVideoConstraints({deviceId: lastBackDevice?.deviceId});
+                    } else {
+                        setVideoConstraints({facingMode: {exact: 'environment'}});
+                    }
+                    
+                })
+            }
+        })
+    }, []);
+
+    console.log('videoConstraints', videoConstraints)
 
     const hideReciptModal = () => {
         setIsAttachmentInvalid(false);
@@ -191,17 +219,19 @@ function ReceiptSelector({route, transactionID, iou, report}) {
                         <Text style={[styles.subTextReceiptUpload]}>{translate('receipt.cameraAccess')}</Text>
                     </View>
                 )}
-                <NavigationAwareCamera
-                    onUserMedia={() => setCameraPermissionState('granted')}
-                    onUserMediaError={() => setCameraPermissionState('denied')}
-                    style={{...styles.videoContainer, display: cameraPermissionState !== 'granted' ? 'none' : 'block'}}
-                    ref={cameraRef}
-                    screenshotFormat="image/png"
-                    videoConstraints={{facingMode: {exact: 'environment'}}}
-                    torchOn={isFlashLightOn}
-                    onTorchAvailability={setIsTorchAvailable}
-                    forceScreenshotSourceSize
-                />
+                {videoConstraints &&
+                    <NavigationAwareCamera
+                        onUserMedia={() => setCameraPermissionState('granted')}
+                        onUserMediaError={() => setCameraPermissionState('denied')}
+                        style={{...styles.videoContainer, display: cameraPermissionState !== 'granted' ? 'none' : 'block'}}
+                        ref={cameraRef}
+                        screenshotFormat="image/png"
+                        videoConstraints={videoConstraints}
+                        torchOn={isFlashLightOn}
+                        onTorchAvailability={setIsTorchAvailable}
+                        forceScreenshotSourceSize
+                    />
+                }
             </View>
 
             <View style={[styles.flexRow, styles.justifyContentAround, styles.alignItemsCenter, styles.pv3]}>
