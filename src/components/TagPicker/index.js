@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useMemo, useState, useEffect} from 'react';
 import _ from 'underscore';
 import lodashGet from 'lodash/get';
 import {withOnyx} from 'react-native-onyx';
@@ -21,6 +21,12 @@ function TagPicker({selectedTag, tag, policyTags, policyRecentlyUsedTags, onSubm
     const isTagsCountBelowThreshold = policyTagsCount < CONST.TAG_LIST_THRESHOLD;
 
     const shouldShowTextInput = !isTagsCountBelowThreshold;
+
+    useEffect(() => {
+        if (!shouldShowTextInput) {
+            setSearchValue('');
+        }
+    }, [shouldShowTextInput]);
 
     const selectedOptions = useMemo(() => {
         if (!selectedTag) {
@@ -53,7 +59,7 @@ function TagPicker({selectedTag, tag, policyTags, policyRecentlyUsedTags, onSubm
         [searchValue, selectedOptions, policyTagList, policyRecentlyUsedTagsList],
     );
 
-    const headerMessage = OptionsListUtils.getHeaderMessageForNonUserList(lodashGet(sections, '[0].data.length', 0) > 0, '');
+    const headerMessage = OptionsListUtils.getHeaderMessageForNonUserList(lodashGet(sections, '[0].data.length', 0) > 0, searchValue);
 
     return (
         <OptionsSelector
