@@ -19,7 +19,7 @@ const defaultProps = {
 
 export default function (WrappedComponent) {
     // The component with tab animation prop
-    function WrappedComponentWithTabAnimation(props) {
+    const WrappedComponentWithTabAnimation = React.forwardRef((props, ref) => {
         const animation = useTabAnimation();
 
         return (
@@ -27,46 +27,36 @@ export default function (WrappedComponent) {
                 // eslint-disable-next-line react/jsx-props-no-spreading
                 {...props}
                 tabAnimation={animation}
+                ref={ref}
             />
         );
-    }
+    })
 
     WrappedComponentWithTabAnimation.displayName = `withAnimation(${getComponentDisplayName(WrappedComponent)})`;
 
     // Return a component with tab animation prop if this component is in tab navigator, otherwise return itself
-    function WithTabAnimation({forwardedRef, ...rest}) {
-        if (rest.isInTabNavigator) {
+    const WithTabAnimation = React.forwardRef((props, ref) => {
+        if (props.isInTabNavigator) {
             return (
                 <WrappedComponentWithTabAnimation
                     // eslint-disable-next-line react/jsx-props-no-spreading
-                    {...rest}
-                    ref={forwardedRef}
+                    {...props}
+                    ref={ref}
                 />
             );
         }
         return (
             <WrappedComponent
                 // eslint-disable-next-line react/jsx-props-no-spreading
-                {...rest}
-                ref={forwardedRef}
+                {...props}
+                ref={ref}
             />
         );
-    }
+    });
 
     WithTabAnimation.propTypes = propTypes;
     WithTabAnimation.defaultProps = defaultProps;
     WithTabAnimation.displayName = `withTabAnimation(${getComponentDisplayName(WrappedComponent)})`;
 
-    // eslint-disable-next-line rulesdir/no-negated-variables
-    const WithTabAnimationWithRef = React.forwardRef((props, ref) => (
-        <WithTabAnimation
-            // eslint-disable-next-line react/jsx-props-no-spreading
-            {...props}
-            forwardedRef={ref}
-        />
-    ));
-
-    WithTabAnimationWithRef.displayName = `withTabAnimationWithRef(${getComponentDisplayName(WrappedComponent)})`;
-
-    return WithTabAnimationWithRef;
+    return WithTabAnimation;
 }
