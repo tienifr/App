@@ -81,6 +81,7 @@ class BaseOptionsSelector extends Component {
         this.sliceSections = this.sliceSections.bind(this);
         this.calculateAllVisibleOptionsCount = this.calculateAllVisibleOptionsCount.bind(this);
         this.relatedTarget = null;
+        this.currentKeyForList = 0;
 
         const allOptions = this.flattenSections();
         const sections = this.sliceSections();
@@ -95,7 +96,10 @@ class BaseOptionsSelector extends Component {
             errorMessage: '',
             paginationPage: 1,
         };
+
+    
     }
+
 
     componentDidMount() {
         this.subscribeToKeyboardShortcut();
@@ -149,7 +153,9 @@ class BaseOptionsSelector extends Component {
             });
             return;
         }
-        const newFocusedIndex = this.props.selectedOptions.length;
+
+        const currentIndex = newOptions.findIndex(n=>n.keyForList===this.currentKeyForList)
+        const newFocusedIndex = currentIndex>-1? currentIndex: this.props.selectedOptions.length;
         const isNewFocusedIndex = newFocusedIndex !== this.state.focusedIndex;
 
         // eslint-disable-next-line react/no-did-update-set-state
@@ -361,10 +367,14 @@ class BaseOptionsSelector extends Component {
         return allOptions;
     }
 
+    updateKeyForList(index){
+        this.currentKeyForList = this.state.allOptions[index].keyForList
+    }
     /**
      * @param {Number} index
      */
     updateFocusedIndex(index) {
+        this.updateKeyForList(index)
         this.setState({focusedIndex: index}, () => this.scrollToIndex(index));
     }
 
@@ -425,6 +435,7 @@ class BaseOptionsSelector extends Component {
                 return;
             }
 
+            this.updateKeyForList(this.props.selectedOptions.length)
             // Focus the first unselected item from the list (i.e: the best result according to the current search term)
             this.setState({
                 focusedIndex: this.props.selectedOptions.length,
