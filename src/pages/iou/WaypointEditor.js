@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import lodashGet from 'lodash/get';
 import PropTypes from 'prop-types';
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {View} from 'react-native';
 import {withOnyx} from 'react-native-onyx';
 import _ from 'underscore';
@@ -174,6 +174,20 @@ function WaypointEditor({route: {params: {iouType = '', transactionID = '', wayp
         Navigation.goBack(ROUTES.MONEY_REQUEST_DISTANCE_TAB.getRoute(iouType));
     };
 
+    const validateOnMounted = ()=>{
+        const errors = {}
+        if(transaction.pendingFields){
+            return errors;
+        }
+        const waypointValue = transaction.comment.waypoints[`waypoint${waypointIndex}`];
+
+        if(_.isEmpty(waypointValue) || (waypointValue.lat && waypointValue.lng)){
+            return errors;
+        }
+        ErrorUtils.addErrorMessage(errors, `waypoint${waypointIndex}`, 'distance.errors.selectSuggestedAddress');
+        return errors
+    }
+
     return (
         <ScreenWrapper
             includeSafeAreaPaddingBottom={false}
@@ -217,6 +231,7 @@ function WaypointEditor({route: {params: {iouType = '', transactionID = '', wayp
                     shouldValidateOnChange={false}
                     shouldValidateOnBlur={false}
                     submitButtonText={translate('common.save')}
+                    validateOnMounted={validateOnMounted}
                 >
                     <View>
                         <AddressSearch
@@ -256,7 +271,7 @@ WaypointEditor.defaultProps = defaultProps;
 export default withOnyx({
     transaction: {
         key: ({route}) => `${ONYXKEYS.COLLECTION.TRANSACTION}${lodashGet(route, 'params.transactionID')}`,
-        selector: (transaction) => (transaction ? {transactionID: transaction.transactionID, comment: {waypoints: lodashGet(transaction, 'comment.waypoints')}} : null),
+        selector: (transaction) => (transaction ? {transactionID: transaction.transactionID, comment: {waypoints: lodashGet(transaction, 'comment.waypoints')}, pendingFields: transaction.pendingFields} : null),
     },
     recentWaypoints: {
         key: ONYXKEYS.NVP_RECENT_WAYPOINTS,

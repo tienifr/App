@@ -195,17 +195,22 @@ function DistanceRequest({transactionID, report, transaction, route, isEditingRe
                     onDragEnd={updateWaypoints}
                     scrollEventThrottle={variables.distanceScrollEventThrottle}
                     ref={scrollViewRef}
-                    renderItem={({item, drag, isActive, getIndex}) => (
-                        <DistanceRequestRenderItem
-                            waypoints={waypoints}
-                            item={item}
-                            onSecondaryInteraction={drag}
-                            isActive={isActive}
-                            getIndex={getIndex}
-                            onPress={navigateToWaypointEditPage}
-                            disabled={isLoadingRoute}
-                        />
-                    )}
+                    renderItem={({item, drag, isActive, getIndex}) => {
+                        const waypointValue = transaction.comment?.waypoints?.[`waypoint${getIndex()}`];
+                        const hasError = !transaction.pendingFields && !_.isEmpty(waypointValue) && (!waypointValue.lat || !waypointValue.lng)
+                        return (
+                            <DistanceRequestRenderItem
+                                waypoints={waypoints}
+                                item={item}
+                                onSecondaryInteraction={drag}
+                                isActive={isActive}
+                                getIndex={getIndex}
+                                onPress={navigateToWaypointEditPage}
+                                disabled={isLoadingRoute}
+                                brickRoadIndicator={hasError && 'error'}
+                            />
+                        )
+                    }}
                     ListFooterComponent={
                         <DistanceRequestFooter
                             waypoints={waypoints}

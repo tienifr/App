@@ -194,6 +194,7 @@ function getRoute(transactionID: string, waypoints: WaypointCollection) {
                         comment: {
                             isLoading: false,
                         },
+                        pendingFields: null
                     },
                 },
             ],
@@ -205,6 +206,7 @@ function getRoute(transactionID: string, waypoints: WaypointCollection) {
                         comment: {
                             isLoading: false,
                         },
+                        pendingFields: null
                     },
                 },
             ],

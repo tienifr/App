@@ -47,7 +47,7 @@ const defaultProps = {
     disabled: false,
 };
 
-function DistanceRequestRenderItem({waypoints, item, onSecondaryInteraction, getIndex, isActive, onPress, disabled}) {
+function DistanceRequestRenderItem({waypoints, brickRoadIndicator, item, onSecondaryInteraction, getIndex, isActive, onPress, disabled}) {
     const theme = useTheme();
     const {translate} = useLocalize();
     const numberOfWaypoints = _.size(waypoints);
@@ -84,6 +84,7 @@ function DistanceRequestRenderItem({waypoints, item, onSecondaryInteraction, get
             focused={isActive}
             key={item}
             disabled={disabled}
+            brickRoadIndicator={brickRoadIndicator}
         />
     );
 }
