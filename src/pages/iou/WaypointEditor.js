@@ -8,7 +8,8 @@ import _ from 'underscore';
 import AddressSearch from '@components/AddressSearch';
 import FullPageNotFoundView from '@components/BlockingViews/FullPageNotFoundView';
 import ConfirmModal from '@components/ConfirmModal';
-import Form from '@components/Form';
+import FormProvider from '@components/Form/FormProvider';
+import InputWrapper from '@components/Form/InputWrapper';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
 import * as Expensicons from '@components/Icon/Expensicons';
 import ScreenWrapper from '@components/ScreenWrapper';
@@ -144,6 +145,7 @@ function WaypointEditor({route: {params: {iouType = '', transactionID = '', wayp
                 lat: null,
                 lng: null,
                 address: waypointValue,
+                name: null,
             };
             saveWaypoint(waypoint);
         }
@@ -163,7 +165,7 @@ function WaypointEditor({route: {params: {iouType = '', transactionID = '', wayp
             lat: values.lat,
             lng: values.lng,
             address: values.address,
-            name: values.name,
+            name: values.name || null,
         };
         saveWaypoint(waypoint);
 
@@ -174,8 +176,10 @@ function WaypointEditor({route: {params: {iouType = '', transactionID = '', wayp
         Navigation.goBack(ROUTES.MONEY_REQUEST_DISTANCE_TAB.getRoute(iouType));
     };
 
+    console.log('ooookoko')
     const validateOnMounted = ()=>{
         const errors = {}
+        console.log('transaction1111',transaction)
         if(transaction.pendingFields){
             return errors;
         }
@@ -222,7 +226,7 @@ function WaypointEditor({route: {params: {iouType = '', transactionID = '', wayp
                     cancelText={translate('common.cancel')}
                     danger
                 />
-                <Form
+                <FormProvider
                     style={[styles.flexGrow1, styles.mh5]}
                     formID={ONYXKEYS.FORMS.WAYPOINT_FORM}
                     enabledWhenOffline
@@ -233,33 +237,32 @@ function WaypointEditor({route: {params: {iouType = '', transactionID = '', wayp
                     submitButtonText={translate('common.save')}
                     validateOnMounted={validateOnMounted}
                 >
-                    <View>
-                        <AddressSearch
-                            canUseCurrentLocation
-                            inputID={`waypoint${waypointIndex}`}
-                            ref={(e) => (textInput.current = e)}
-                            hint={!isOffline ? 'distance.errors.selectSuggestedAddress' : ''}
-                            containerStyles={[styles.mt3]}
-                            label={translate('distance.address')}
-                            defaultValue={waypointAddress}
-                            onPress={selectWaypoint}
-                            maxInputLength={CONST.FORM_CHARACTER_LIMIT}
-                            renamedInputKeys={{
-                                address: `waypoint${waypointIndex}`,
-                                city: null,
-                                country: null,
-                                street: null,
-                                street2: null,
-                                zipCode: null,
-                                lat: null,
-                                lng: null,
-                                state: null,
-                            }}
-                            predefinedPlaces={recentWaypoints}
-                            resultTypes=""
-                        />
-                    </View>
-                </Form>
+                    <InputWrapper
+                        InputComponent={AddressSearch}
+                        canUseCurrentLocation
+                        inputID={`waypoint${waypointIndex}`}
+                        ref={(e) => (textInput.current = e)}
+                        hint={!isOffline ? 'distance.errors.selectSuggestedAddress' : ''}
+                        containerStyles={[styles.mt3]}
+                        label={translate('distance.address')}
+                        defaultValue={waypointAddress}
+                        onPress={selectWaypoint}
+                        maxInputLength={CONST.FORM_CHARACTER_LIMIT}
+                        renamedInputKeys={{
+                            address: `waypoint${waypointIndex}`,
+                            city: null,
+                            country: null,
+                            street: null,
+                            street2: null,
+                            zipCode: null,
+                            lat: null,
+                            lng: null,
+                            state: null,
+                        }}
+                        predefinedPlaces={recentWaypoints}
+                        resultTypes=""
+                    />
+                </FormProvider>
             </FullPageNotFoundView>
         </ScreenWrapper>
     );

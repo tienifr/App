@@ -1,6 +1,6 @@
 import lodashGet from 'lodash/get';
 import PropTypes from 'prop-types';
-import React, {createRef, useCallback, useMemo, useRef, useState} from 'react';
+import React, {createRef, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {withOnyx} from 'react-native-onyx';
 import _ from 'underscore';
 import networkPropTypes from '@components/networkPropTypes';
@@ -109,7 +109,7 @@ function getInitialValueByType(valueType) {
     }
 }
 
-function FormProvider({validate, formID, shouldValidateOnBlur, shouldValidateOnChange, children, formState, network, enabledWhenOffline, draftValues, onSubmit, ...rest}) {
+function FormProvider({validate, formID, shouldValidateOnBlur, shouldValidateOnChange, children, formState, network, enabledWhenOffline, draftValues, onSubmit, validateOnMounted, ...rest}) {
     const inputRefs = useRef({});
     const touchedInputs = useRef({});
     const [inputValues, setInputValues] = useState({});
@@ -208,6 +208,14 @@ function FormProvider({validate, formID, shouldValidateOnBlur, shouldValidateOnC
         onSubmit(trimmedStringValues);
     }, [enabledWhenOffline, formState.isLoading, inputValues, network.isOffline, onSubmit, onValidate]);
 
+    useEffect(()=>{
+        if(!validateOnMounted){
+            return;
+        }
+        const errors = validateOnMounted()
+        setErrors(errors)
+    },[])
+
     const registerInput = useCallback(
         (inputID, propsToParse = {}) => {
             const newRef = inputRefs.current[inputID] || propsToParse.ref || createRef();
@@ -237,8 +245,6 @@ function FormProvider({validate, formID, shouldValidateOnBlur, shouldValidateOnC
                     .first()
                     .value() || '';
 
-            const value = !_.isUndefined(inputValues[`${inputID}ToDisplay`]) ? inputValues[`${inputID}ToDisplay`] : inputValues[inputID];
-
             return {
                 ...propsToParse,
                 ref:
@@ -251,7 +257,7 @@ function FormProvider({validate, formID, shouldValidateOnBlur, shouldValidateOnC
                 inputID,
                 key: propsToParse.key || inputID,
                 errorText: errors[inputID] || fieldErrorMessage,
-                value,
+                value: inputValues[inputID],
                 // As the text input is controlled, we never set the defaultValue prop
                 // as this is already happening by the value prop.
                 defaultValue: undefined,
@@ -311,19 +317,13 @@ function FormProvider({validate, formID, shouldValidateOnBlur, shouldValidateOnC
                         propsToParse.onBlur(event);
                     }
                 },
-                onInputChange: (inputValue, key) => {
+                onInputChange: (value, key) => {
                     const inputKey = key || inputID;
                     setInputValues((prevState) => {
-                        const newState = _.isFunction(propsToParse.valueParser)
-                            ? {
-                                  ...prevState,
-                                  [inputKey]: propsToParse.valueParser(inputValue),
-                                  [`${inputKey}ToDisplay`]: _.isFunction(propsToParse.displayParser) ? propsToParse.displayParser(inputValue) : inputValue,
-                              }
-                            : {
-                                  ...prevState,
-                                  [inputKey]: inputValue,
-                              };
+                        const newState = {
+                            ...prevState,
+                            [inputKey]: value,
+                        };
 
                         if (shouldValidateOnChange) {
                             onValidate(newState);
@@ -336,7 +336,7 @@ function FormProvider({validate, formID, shouldValidateOnBlur, shouldValidateOnC
                     }
 
                     if (_.isFunction(propsToParse.onValueChange)) {
-                        propsToParse.onValueChange(inputValue, inputKey);
+                        propsToParse.onValueChange(value, inputKey);
                     }
                 },
             };
