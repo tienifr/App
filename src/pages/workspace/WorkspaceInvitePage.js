@@ -86,7 +86,7 @@ function WorkspaceInvitePage(props) {
         return _.size(errors) <= 0;
     };
 
-    const inviteUser = () => {
+    const inviteUsers = () => {
         if (!validate()) {
             return;
         }
@@ -132,7 +132,7 @@ function WorkspaceInvitePage(props) {
                     />
                     <MemberInviteList
                         didScreenTransitionEnd={didScreenTransitionEnd}
-                        inviteUsers={inviteUser}
+                        inviteUsers={inviteUsers}
                         selectedOptions={selectedOptions}
                         setSelectedOptions={setSelectedOptions}
                         excludedUsers={excludedUsers}
@@ -143,7 +143,7 @@ function WorkspaceInvitePage(props) {
                             isDisabled={!selectedOptions.length}
                             isAlertVisible={shouldShowAlertPrompt}
                             buttonText={translate('common.next')}
-                            onSubmit={inviteUser}
+                            onSubmit={inviteUsers}
                             message={props.policy.alertMessage}
                             containerStyles={[styles.flexReset, styles.flexGrow0, styles.flexShrink0, styles.flexBasisAuto, styles.mb5]}
                             enabledWhenOffline
