@@ -5,7 +5,6 @@ import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeed
 import useLocalize from '@hooks/useLocalize';
 import useThemeStyles from '@hooks/useThemeStyles';
 import CONST from '@src/CONST';
-import useWindowDimensions from '@hooks/useWindowDimensions';
 
 type OverlayProps = {
     /* Callback to close the modal */
