@@ -1,6 +1,6 @@
 import lodashGet from 'lodash/get';
 import PropTypes from 'prop-types';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {View} from 'react-native';
 import {withOnyx} from 'react-native-onyx';
 import _ from 'underscore';
@@ -144,7 +144,9 @@ function ReportPreview(props) {
 
     const isApproved = ReportUtils.isReportApproved(props.iouReport);
     const isMoneyRequestReport = ReportUtils.isMoneyRequestReport(props.iouReport);
-    const transactionsWithReceipts = ReportUtils.getTransactionsWithReceipts(props.iouReportID);
+    const [transactionsWithReceipts, setTransactionsWithReceipts] = useState([]);
+    const transactionsWithReceiptsRef = useRef([])
+
     const numberOfScanningReceipts = _.filter(transactionsWithReceipts, (transaction) => TransactionUtils.isReceiptBeingScanned(transaction)).length;
     const hasReceipts = transactionsWithReceipts.length > 0;
     const isScanning = hasReceipts && areAllRequestsBeingSmartScanned;
@@ -217,7 +219,16 @@ function ReportPreview(props) {
                 if (_.isEmpty(allTransactions)) {
                     return;
                 }
+                const newTransactionsWithReceipts = ReportUtils.getTransactionsWithReceipts(props.iouReportID).map(t=>({
+                    receipt: t.receipt,
+                    filename: t.filename,
+                    pendingFields: t.pendingFields,
+                    }))
 
+                if(!_.isEqual(newTransactionsWithReceipts, transactionsWithReceiptsRef.current)){ // deep comparison
+                    setTransactionsWithReceipts(newTransactionsWithReceipts)
+                    transactionsWithReceiptsRef.current = newTransactionsWithReceipts
+                }
                 sethasMissingSmartscanFields(ReportUtils.hasMissingSmartscanFields(props.iouReportID));
                 setAreAllRequestsBeingSmartScanned(ReportUtils.areAllRequestsBeingSmartScanned(props.iouReportID, props.action));
                 setHasOnlyDistanceRequests(ReportUtils.hasOnlyDistanceRequestTransactions(props.iouReportID));
