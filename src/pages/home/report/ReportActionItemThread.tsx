@@ -47,6 +47,7 @@ function ReportActionItemThread({numberOfReplies, icons, mostRecentReply, childR
                 role={CONST.ROLE.BUTTON}
                 accessibilityLabel={`${numberOfReplies} ${replyText}`}
                 onSecondaryInteraction={onSecondaryInteraction}
+                withoutFocusOnSecondaryInteraction
             >
                 <View style={[styles.flexRow, styles.alignItemsCenter, styles.mt2]}>
                     <MultipleAvatars

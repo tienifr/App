@@ -8,6 +8,7 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import * as Modal from '@userActions/Modal';
 import PopoverWithoutOverlayProps from './types';
+import FocusTrap from 'focus-trap-react';
 
 function PopoverWithoutOverlay(
     {
@@ -116,9 +117,15 @@ function PopoverWithoutOverlay(
     }
 
     return (
+        <FocusTrap
+        focusTrapOptions={{
+            initialFocus: false
+        }}
+    >
         <View
             style={[modalStyle, {zIndex: 1}]}
             ref={withoutOverlayRef}
+            tabIndex={0}
         >
             <View
                 style={{
@@ -131,6 +138,7 @@ function PopoverWithoutOverlay(
                 <ColorSchemeWrapper>{children}</ColorSchemeWrapper>
             </View>
         </View>
+        </FocusTrap>
     );
 }
 
