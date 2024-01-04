@@ -25,6 +25,7 @@ import variables from '@styles/variables';
 import CONST from '@src/CONST';
 import BaseListItem from './BaseListItem';
 import {propTypes as selectionListPropTypes} from './selectionListPropTypes';
+import usePrevious from '@hooks/usePrevious';
 
 const propTypes = {
     ...keyboardStatePropTypes,
@@ -368,13 +369,28 @@ function BaseSelectionList({
         if (isInitialRender) {
             return;
         }
-
-        // set the focus on the first item when the sections list is changed
-        if (sections.length > 0) {
-            updateAndScrollToFocusedIndex(0);
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sections]);
+
+    const prevTextInputValue = usePrevious(textInputValue);
+    
+useEffect(() => {
+    // only do the focusing when the text input actually changes
+    if (prevTextInputValue === textInputValue) {
+        return;
+    }
+    
+    if (textInputValue) {
+        // For multiple selections list, focus on the first non-selected item. 
+        // For single selection list, focus on first item
+        updateAndScrollToFocusedIndex(canSelectMultiple ? flattenedSections.selectedOptions.length : 0);
+    } else {
+        // When the text input is cleared, remove focus completely
+        // I think this should apply to both the multiple and single selection list, but we can modify accordingly if the behavior for multiple selection list is different.
+        setFocusedIndex(-1);
+    }
+
+}, [textInputValue, prevTextInputValue, flattenedSections.selectedOptions.length, canSelectMultiple, updateAndScrollToFocusedIndex]);
 
     /** Selects row when pressing Enter */
     useKeyboardShortcut(CONST.KEYBOARD_SHORTCUTS.ENTER, selectFocusedOption, {
