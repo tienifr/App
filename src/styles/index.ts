@@ -1261,7 +1261,6 @@ const styles = (theme: ThemeColors) =>
 
         signInBackground: {
             position: 'absolute',
-            bottom: 0,
             left: 0,
             minHeight: 700,
         },

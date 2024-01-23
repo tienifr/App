@@ -166,7 +166,8 @@ function SignInPageLayout(props) {
                             isSmallScreen
                             pointerEvents="none"
                             width={variables.signInHeroBackgroundWidthMobile}
-                        />
+                            fillColor={theme.signInPage}
+                        />         
                         <SignInPageContent
                             welcomeHeader={props.welcomeHeader}
                             welcomeText={props.welcomeText}

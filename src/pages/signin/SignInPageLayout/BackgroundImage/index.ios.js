@@ -6,6 +6,7 @@ import MobileBackgroundImage from '@assets/images/home-background--mobile-new.sv
 import useStyleUtils from '@hooks/useStyleUtils';
 import useThemeStyles from '@hooks/useThemeStyles';
 import defaultPropTypes from './propTypes';
+import {View} from 'react-native';
 
 const defaultProps = {
     isSmallScreen: false,
@@ -23,10 +24,21 @@ function BackgroundImage(props) {
     const src = useMemo(() => (props.isSmallScreen ? MobileBackgroundImage : DesktopBackgroundImage), [props.isSmallScreen]);
 
     return (
-        <Image
-            source={src}
-            style={[styles.signInBackground, StyleUtils.getWidthStyle(props.width)]}
-        />
+        <View
+            style={[
+                styles.signInBackground,
+                {
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: props.fillColor,
+                }
+            ]}
+        >
+            <Image
+                source={src}
+                style={[styles.signInBackground, StyleUtils.getWidthStyle(props.width)]}
+            />
+        </View>
     );
 }
 
