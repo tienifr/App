@@ -3,7 +3,7 @@ import type {MutableRefObject} from 'react';
 import React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import type {GestureResponderEvent, Text as RNText, View} from 'react-native';
-import type {OnyxEntry} from 'react-native-onyx';
+import {OnyxEntry} from 'react-native-onyx';
 import type {Emoji} from '@assets/emojis/types';
 import * as Expensicons from '@components/Icon/Expensicons';
 import MiniQuickEmojiReactions from '@components/Reactions/MiniQuickEmojiReactions';
@@ -502,7 +502,7 @@ const ContextMenuActions: ContextMenuAction[] = [
         textTranslateKey: 'reportActionContextMenu.menu',
         icon: Expensicons.ThreeDots,
         shouldShow: (type, reportAction, isArchivedRoom, betas, anchor, isChronosReport, reportID, isPinnedChat, isUnreadChat, isOffline, isMini) => isMini,
-        onPress: (closePopover, {reportAction, reportID, event, anchor, selection, draftMessage, checkIfContextMenuActive}) => {
+        onPress: (closePopover, {reportAction, reportID, event, anchor, anchorRef, selection, draftMessage, checkIfContextMenuActive}) => {
             const originalReportID = ReportUtils.getOriginalReportID(reportID, reportAction);
             const originalReport = ReportUtils.getReport(originalReportID);
             showContextMenu(
@@ -518,11 +518,15 @@ const ContextMenuActions: ContextMenuAction[] = [
                 checkIfContextMenuActive,
                 ReportUtils.isArchivedRoom(originalReport),
                 ReportUtils.chatIncludesChronos(originalReport),
+                false,
+                false,
+                anchorRef
             );
         },
         getDescription: () => {},
     },
 ];
 
-export default ContextMenuActions;
+export default ContextMenuActions
+
 export type {ContextMenuActionPayload};

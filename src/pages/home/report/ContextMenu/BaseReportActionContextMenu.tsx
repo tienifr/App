@@ -20,7 +20,6 @@ import {isEmptyObject} from '@src/types/utils/EmptyObject';
 import type {ContextMenuActionPayload} from './ContextMenuActions';
 import ContextMenuActions from './ContextMenuActions';
 import type {ContextMenuType} from './ReportActionContextMenu';
-import {hideContextMenu} from './ReportActionContextMenu';
 
 type BaseReportActionContextMenuOnyxProps = {
     /** Beta features list */
@@ -105,6 +104,7 @@ function BaseReportActionContextMenu({
     const {translate} = useLocalize();
     const {isSmallScreenWidth} = useWindowDimensions();
     const menuItemRefs = useRef<MenuItemRefs>({});
+    const anchorRef = useRef();
     const [shouldKeepOpen, setShouldKeepOpen] = useState(false);
     const wrapperStyle = StyleUtils.getReportActionContextMenuStyles(isMini, isSmallScreenWidth);
     const {isOffline} = useNetwork();
@@ -208,13 +208,14 @@ function BaseReportActionContextMenu({
                             ref={(ref) => {
                                 menuItemRefs.current[index] = ref;
                             }}
+                            {...(index===3?{anchorRef}:{})}
                             icon={contextAction.icon}
                             text={text ?? ''}
                             successIcon={contextAction.successIcon}
                             successText={contextAction.successTextTranslateKey ? translate(contextAction.successTextTranslateKey) : undefined}
                             isMini={isMini}
                             key={contextAction.textTranslateKey}
-                            onPress={(event) => interceptAnonymousUser(() => contextAction.onPress?.(closePopup, {...payload, event}), contextAction.isAnonymousAction)}
+                            onPress={(event) => interceptAnonymousUser(() => contextAction.onPress?.(closePopup, {...payload, anchorRef, event}), contextAction.isAnonymousAction)}
                             description={contextAction.getDescription?.(selection) ?? ''}
                             isAnonymousAction={contextAction.isAnonymousAction}
                             isFocused={focusedIndex === index}

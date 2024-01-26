@@ -161,9 +161,11 @@ function PopoverReportActionContextMenu(_props: never, ref: ForwardedRef<ReportA
         isChronosReport = false,
         isPinnedChat = false,
         isUnreadChat = false,
+        anchor
     ) => {
         const {pageX = 0, pageY = 0} = extractPointerEvent(event);
         contextMenuAnchorRef.current = contextMenuAnchor;
+        anchorRef.current=anchor.current
         contextMenuTargetNode.current = event.target as HTMLElement;
 
         setInstanceID(Math.random().toString(36).substr(2, 5));

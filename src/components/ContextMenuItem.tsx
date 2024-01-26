@@ -45,7 +45,7 @@ type ContextMenuItemHandle = {
 };
 
 function ContextMenuItem(
-    {onPress, successIcon, successText = '', icon, text, isMini = false, description = '', isAnonymousAction = false, isFocused = false}: ContextMenuItemProps,
+    {onPress, successIcon, successText = '', icon, text, isMini = false, description = '', isAnonymousAction = false, isFocused = false, anchorRef}: ContextMenuItemProps,
     ref: ForwardedRef<ContextMenuItemHandle>,
 ) {
     const styles = useThemeStyles();
@@ -70,12 +70,12 @@ function ContextMenuItem(
 
     const itemIcon = !isThrottledButtonActive && successIcon ? successIcon : icon;
     const itemText = !isThrottledButtonActive && successText ? successText : text;
-
     return isMini ? (
         <BaseMiniContextMenuItem
             tooltipText={itemText}
             onPress={triggerPressAndUpdateSuccess}
             isDelayButtonStateComplete={!isThrottledButtonActive}
+            ref={anchorRef}
         >
             {({hovered, pressed}) => (
                 <Icon
