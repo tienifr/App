@@ -3,21 +3,21 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 2000 913.1" style="enable-background:new 0 0 2000 913.1;" xml:space="preserve">
 <style type="text/css">
-	.st0{clip-path:url(#SVGID_00000113316024087532142450000011570730249525384602_);}
+	.st0{clip-path:url(#SVGID_00000150780655329767374820000009548529087361689489_);}
 	.st1{fill:#072419;}
 	.st2{opacity:6.000000e-02;}
 	.st3{fill:#5BE3AA;}
-	.st4{fill:url(#SVGID_00000169532218886054855560000002680343222029906619_);}
+	.st4{fill:url(#SVGID_00000151524069636089212350000002690661007243819934_);}
 </style>
 <g>
 	<g>
 		<defs>
 			<rect id="SVGID_1_" y="101.1" width="2000" height="812"/>
 		</defs>
-		<clipPath id="SVGID_00000054953470122647950720000014191084236579172232_">
+		<clipPath id="SVGID_00000124847667803041939620000002464455935134336959_">
 			<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
 		</clipPath>
-		<g style="clip-path:url(#SVGID_00000054953470122647950720000014191084236579172232_);">
+		<g style="clip-path:url(#SVGID_00000124847667803041939620000002464455935134336959_);">
 			<rect y="101.1" class="st1" width="2000" height="812"/>
 			<g class="st2">
 				<g>
@@ -8773,13 +8773,13 @@
 				</g>
 			</g>
 			
-				<linearGradient id="SVGID_00000093887480339359381980000005815525295908973246_" gradientUnits="userSpaceOnUse" x1="1000" y1="534.9551" x2="1000" y2="1181.0551" gradientTransform="matrix(1 0 0 1 0 -268)">
+				<linearGradient id="SVGID_00000045586344439857542840000015769842529964396946_" gradientUnits="userSpaceOnUse" x1="1000" y1="534.9551" x2="1000" y2="1181.0551" gradientTransform="matrix(1 0 0 1 0 -268)">
 				<stop  offset="0" style="stop-color:#002E22;stop-opacity:0"/>
 				<stop  offset="1" style="stop-color:#002E22"/>
 			</linearGradient>
-			<path style="fill:url(#SVGID_00000093887480339359381980000005815525295908973246_);" d="M2000,267H0v646.1h2000V267z"/>
+			<path style="fill:url(#SVGID_00000045586344439857542840000015769842529964396946_);" d="M2000,267H0v646.1h2000V267z"/>
 		</g>
 	</g>
 </g>
-<rect class="st1" width="2000" height="101.1"/>
+<rect class="st1" width="2000" height="110.8"/>
 </svg>
