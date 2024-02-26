@@ -214,7 +214,7 @@ function IOURequestStepScan({
                     style={{...styles.videoContainer, display: cameraPermissionState !== 'granted' ? 'none' : 'block'}}
                     ref={cameraRef}
                     screenshotFormat="image/png"
-                    videoConstraints={{facingMode: {exact: 'environment'}}}
+                    videoConstraints={{facingMode: {exact: 'environment'}, zoom: {ideal: 1}}}
                     torchOn={isFlashLightOn}
                     onTorchAvailability={setIsTorchAvailable}
                     forceScreenshotSourceSize
