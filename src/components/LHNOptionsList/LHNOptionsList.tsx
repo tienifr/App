@@ -15,6 +15,7 @@ import type {LHNOptionsListOnyxProps, LHNOptionsListProps, RenderItemProps} from
 
 const keyExtractor = (item: string) => `report_${item}`;
 
+console.log('test')
 function LHNOptionsList({
     style,
     contentContainerStyles,
