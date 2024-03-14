@@ -8,6 +8,7 @@ import MentionUserRenderer from './MentionUserRenderer';
 import NextStepEmailRenderer from './NextStepEmailRenderer';
 import PreRenderer from './PreRenderer';
 import VideoRenderer from './VideoRenderer';
+import ThreadTitleRenderer from './ThreadTitleRenderer';
 
 /**
  * This collection defines our custom renderers. It is a mapping from HTML tag type to the corresponding component.
@@ -26,6 +27,7 @@ const HTMLEngineProviderComponentList: CustomTagRendererRecord = {
     'mention-user': MentionUserRenderer,
     'mention-here': MentionHereRenderer,
     'next-step-email': NextStepEmailRenderer,
+    'thread-title': ThreadTitleRenderer
     /* eslint-enable @typescript-eslint/naming-convention */
 };
 
