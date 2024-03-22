@@ -84,6 +84,7 @@ function App({url}: AppProps) {
                     <ErrorBoundary errorMessage="NewExpensify crash caught by error boundary">
                         <ColorSchemeWrapper>
                             <Expensify />
+                            
                         </ColorSchemeWrapper>
                     </ErrorBoundary>
                 </ComposeProviders>
