@@ -62,6 +62,7 @@ function updateIOUOwnerAndTotal<TReport extends OnyxEntry<Report>>(
     currency: string,
     isDeleting = false,
     isUpdating = false,
+    isReimbursable = true,
 ): TReport {
     // For the update case, we have calculated the diff amount in the calculateDiffAmount function so there is no need to compare currencies here
     if ((currency !== iouReport?.currency && !isUpdating) || !iouReport) {
@@ -76,6 +77,10 @@ function updateIOUOwnerAndTotal<TReport extends OnyxEntry<Report>>(
 
     if (actorAccountID === iouReport.ownerAccountID) {
         iouReportUpdate.total += isDeleting ? -amount : amount;
+
+        if (!isReimbursable) {
+            iouReportUpdate.nonReimbursableTotal += isDeleting ? -amount : amount;
+        }
     } else {
         iouReportUpdate.total += isDeleting ? amount : -amount;
     }

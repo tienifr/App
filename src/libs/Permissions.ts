@@ -27,6 +27,7 @@ function canUseViolations(betas: OnyxEntry<Beta[]>): boolean {
 }
 
 function canUseTrackExpense(betas: OnyxEntry<Beta[]>): boolean {
+    return true;
     return !!betas?.includes(CONST.BETAS.TRACK_EXPENSE) || canUseAllBetas(betas);
 }
 

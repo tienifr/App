@@ -3159,7 +3159,7 @@ function populateOptimisticReportFormula(formula: string, report: OptimisticExpe
  * @param total - Amount in cents
  * @param currency
  */
-function buildOptimisticExpenseReport(chatReportID: string, policyID: string, payeeAccountID: number, total: number, currency: string): OptimisticExpenseReport {
+function buildOptimisticExpenseReport(chatReportID: string, policyID: string, payeeAccountID: number, total: number, currency: string, isReimbursable = true): OptimisticExpenseReport {
     // The amount for Expense reports are stored as negative value in the database
     const storedTotal = total * -1;
     const policyName = getPolicyName(allReports?.[`${ONYXKEYS.COLLECTION.REPORT}${chatReportID}`]);
@@ -3187,6 +3187,10 @@ function buildOptimisticExpenseReport(chatReportID: string, policyID: string, pa
         parentReportID: chatReportID,
         lastVisibleActionCreated: DateUtils.getDBTime(),
     };
+
+    if (!isReimbursable) {
+        expenseReport.nonReimbursableTotal = storedTotal;
+    }
 
     // The account defined in the policy submitsTo field is the approver/ manager for this report
     if (policy?.submitsTo) {
@@ -4712,9 +4716,9 @@ function getMoneyRequestOptions(report: OnyxEntry<Report>, policy: OnyxEntry<Pol
     }
 
     // TODO: Re-enable this when we have a clarity on track expense in policy expense chat
-    // if (canUseTrackExpense && isPolicyExpenseChat(report) && report?.isOwnPolicyExpenseChat) {
-    //     options = [...options, CONST.IOU.TYPE.TRACK_EXPENSE];
-    // }
+    if (canUseTrackExpense && isPolicyExpenseChat(report) && report?.isOwnPolicyExpenseChat) {
+        options = [...options, CONST.IOU.TYPE.TRACK_EXPENSE];
+    }
 
     if (canRequestMoney(report, policy, otherParticipants)) {
         options = [...options, CONST.IOU.TYPE.REQUEST];
