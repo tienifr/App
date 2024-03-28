@@ -1331,7 +1331,7 @@ function getTrackExpenseInformation(
     if (!iouReport || shouldCreateNewMoneyRequestReport) {
         iouReport = isPolicyExpenseChat
             ? ReportUtils.buildOptimisticExpenseReport(chatReport.reportID, chatReport.policyID ?? '', payeeAccountID, amount, currency, false)
-            : ReportUtils.buildOptimisticIOUReport(payeeAccountID, payerAccountID, amount, chatReport.reportID, currency);
+            : ReportUtils.buildOptimisticIOUReport(payeeAccountID, userAccountID, amount, chatReport.reportID, currency);
     } else if (isPolicyExpenseChat) {
         iouReport = {...iouReport};
         if (iouReport?.currency === currency && typeof iouReport.total === 'number') {
