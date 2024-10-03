@@ -2407,6 +2407,10 @@ function setIsComposerFullSize(reportID: string, isComposerFullSize: boolean) {
     Onyx.merge(`${ONYXKEYS.COLLECTION.REPORT_IS_COMPOSER_FULL_SIZE}${reportID}`, isComposerFullSize);
 }
 
+function setIsComposerEditFullSize(reportID: string, reportActionID: string, isComposerFullSize: boolean) {
+    Onyx.merge(`${ONYXKEYS.COLLECTION.REPORT_IS_COMPOSER_EDIT_FULL_SIZE}${reportID}`, {[reportActionID]: isComposerFullSize});
+}
+
 /**
  * @param action the associated report action (optional)
  * @param isRemote whether or not this notification is a remote push notification
@@ -4192,4 +4196,5 @@ export {
     exportToIntegration,
     markAsManuallyExported,
     handleReportChanged,
+    setIsComposerEditFullSize
 };

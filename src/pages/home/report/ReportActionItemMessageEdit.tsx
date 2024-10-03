@@ -50,6 +50,8 @@ import getScrollPosition from './ReportActionCompose/getScrollPosition';
 import type {SuggestionsRef} from './ReportActionCompose/ReportActionCompose';
 import Suggestions from './ReportActionCompose/Suggestions';
 import shouldUseEmojiPickerSelection from './shouldUseEmojiPickerSelection';
+import useWindowDimensions from '@hooks/useWindowDimensions';
+import { HEADER_HEIGHT } from '@hooks/useEmptyViewHeaderHeight/const';
 
 type ReportActionItemMessageEditProps = {
     /** All the data of the action */
@@ -295,6 +297,7 @@ function ReportActionItemMessageEdit(
      */
     const deleteDraft = useCallback(() => {
         Report.deleteReportActionDraft(reportID, action);
+        Report.setIsComposerEditFullSize(reportID, action.reportActionID, false);
 
         if (isActive()) {
             ReportActionComposeFocusManager.clear(true);
@@ -461,10 +464,26 @@ function ReportActionItemMessageEdit(
         }
     }, [isFocused, hideSuggestionMenu]);
 
+    const isBlockedFromConcierge = false
+
+    const disabled = false
+    
+    const [isComposerFullSize] = useOnyx(`${ONYXKEYS.COLLECTION.REPORT_IS_COMPOSER_EDIT_FULL_SIZE}${reportID}`, {
+        selector: (composerEditFullSize) => {
+            return composerEditFullSize?.[action.reportActionID];
+        },
+        initialValue: false
+    });
+
+    const [isFullComposerAvailable, setIsFullComposerAvailable] = useState(isComposerFullSize);
+    const {windowHeight} = useWindowDimensions();
+
     return (
         <>
             <View
-                style={[styles.chatItemMessage, styles.flexRow]}
+                style={[styles.chatItemMessage, styles.flexRow, isComposerFullSize && {
+                    height: windowHeight - HEADER_HEIGHT - 16 // padding
+                }]}
                 ref={containerRef}
             >
                 <View
@@ -476,7 +495,49 @@ function ReportActionItemMessageEdit(
                         hasExceededMaxCommentLength && styles.borderColorDanger,
                     ]}
                 >
-                    <View style={[styles.justifyContentEnd, styles.mb1]}>
+                    <View style={[styles.justifyContentEnd, styles.mb1, isFullComposerAvailable || isComposerFullSize ? styles.justifyContentBetween : styles.justifyContentCenter]}>
+                    {isComposerFullSize && (
+                                <Tooltip text={translate('reportActionCompose.collapse')}>
+                                    <PressableWithFeedback
+                                        onPress={(e) => {
+                                            e?.preventDefault();
+                                            Report.setIsComposerEditFullSize(reportID, action.reportActionID, false);
+                                        }}
+                                        // Keep focus on the composer when Collapse button is clicked.
+                                        onMouseDown={(e) => e.preventDefault()}
+                                        style={styles.composerSizeButton}
+                                        disabled={isBlockedFromConcierge || disabled}
+                                        role={CONST.ROLE.BUTTON}
+                                        accessibilityLabel={translate('reportActionCompose.collapse')}
+                                    >
+                                        <Icon
+                                            fill={theme.icon}
+                                            src={Expensicons.Collapse}
+                                        />
+                                    </PressableWithFeedback>
+                                </Tooltip>
+                            )}
+                    {!isComposerFullSize && isFullComposerAvailable && (
+                                <Tooltip text={translate('reportActionCompose.expand')}>
+                                    <PressableWithFeedback
+                                        onPress={(e) => {
+                                            e?.preventDefault();
+                                            Report.setIsComposerEditFullSize(reportID, action.reportActionID, true);
+                                        }}
+                                        // Keep focus on the composer when Expand button is clicked.
+                                        onMouseDown={(e) => e.preventDefault()}
+                                        style={styles.composerSizeButton}
+                                        disabled={isBlockedFromConcierge || disabled}
+                                        role={CONST.ROLE.BUTTON}
+                                        accessibilityLabel={translate('reportActionCompose.expand')}
+                                    >
+                                        <Icon
+                                            fill={theme.icon}
+                                            src={Expensicons.Expand}
+                                        />
+                                    </PressableWithFeedback>
+                                </Tooltip>
+                            )}
                         <Tooltip text={translate('common.cancel')}>
                             <PressableWithFeedback
                                 onPress={deleteDraft}
@@ -548,6 +609,8 @@ function ReportActionItemMessageEdit(
                             isGroupPolicyReport={isGroupPolicyReport}
                             shouldCalculateCaretPosition
                             onScroll={onSaveScrollAndHideSuggestionMenu}
+                            setIsFullComposerAvailable={setIsFullComposerAvailable}
+                            isComposerFullSize={isComposerFullSize}
                         />
                     </View>
 

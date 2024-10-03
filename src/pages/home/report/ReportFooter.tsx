@@ -182,6 +182,12 @@ function ReportFooter({
         // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
         [report.reportID, handleCreateTask],
     );
+    const [isComposerEditFullSize] = useOnyx(`${ONYXKEYS.COLLECTION.REPORT_IS_COMPOSER_EDIT_FULL_SIZE}${report.reportID}`, {
+        selector: (composerEditFullSize) => {
+            return Object.values(composerEditFullSize ?? {}).some(c=>c);
+        },
+        initialValue: false
+    });
 
     return (
         <>
@@ -215,7 +221,7 @@ function ReportFooter({
                     )}
                 </View>
             )}
-            {!shouldHideComposer && (!!shouldShowComposeInput || !shouldUseNarrowLayout) && (
+            {!shouldHideComposer && (!!shouldShowComposeInput || !shouldUseNarrowLayout) && !isComposerEditFullSize && (
                 <View style={[chatFooterStyles, isComposerFullSize && styles.chatFooterFullCompose]}>
                     <SwipeableView onSwipeDown={Keyboard.dismiss}>
                         <ReportActionCompose

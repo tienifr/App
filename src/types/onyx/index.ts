@@ -107,6 +107,7 @@ import type WalletStatement from './WalletStatement';
 import type WalletTerms from './WalletTerms';
 import type WalletTransfer from './WalletTransfer';
 import type WorkspaceTooltip from './WorkspaceTooltip';
+import type ReportIsComposerEditFullSize from './ReportIsComposerEditFullSize'
 
 export type {
     TryNewDot,
@@ -234,4 +235,5 @@ export type {
     RecentSearchItem,
     ImportedSpreadsheet,
     ValidateMagicCodeAction,
+    ReportIsComposerEditFullSize
 };
